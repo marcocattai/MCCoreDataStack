@@ -33,12 +33,12 @@ target 'MyApp' do
 end
 ```
 
-###Manually (iOS 7+, OS X 10.9+)
+###Manually (iOS 7+)
 
-To use this library in your project manually you may:
-
-for Projects, just drag Library folder to the project tree
-Build the project and import #import "[YourProductModuleName]-Swift.h"
+To use this library on iOS 7 
+- drag Library folder to the project tree
+- Build the project
+- #import "[YourProductModuleName]-Swift.h"
 
 ##How to use:
 
