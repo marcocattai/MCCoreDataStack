@@ -42,11 +42,5 @@ To use this library on iOS 7
 
 ##How to use:
 
-###Initialization:
-
-```swift
-MCCoreDataRepository.sharedInstance.setupWithStoreName("store.sqlite", modelName: "MyDataModel", domainName: "uk.co.myApplication")
-```
-
 ... Please, refer to the unit tests
 
