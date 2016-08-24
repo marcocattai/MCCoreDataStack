@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="10174" systemVersion="15F34" minimumToolsVersion="Xcode 7.0">
+    <entity name="MCCategoryTest" representedClassName="MCCategoryTest" syncable="YES">
+        <attribute name="categoryID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="categoryName" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="subCategory" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MCSubCategoryTest" inverseName="parent" inverseEntity="MCSubCategoryTest" syncable="YES"/>
+        <userInfo>
+            <entry key="relatedByAttribute" value="categoryID"/>
+        </userInfo>
+    </entity>
+    <entity name="MCSubCategoryTest" representedClassName="MCSubCategoryTest" syncable="YES">
+        <attribute name="subCategoryID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="subCategoryName" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="parent" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MCCategoryTest" inverseName="subCategory" inverseEntity="MCCategoryTest" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="MCCategoryTest" positionX="-54" positionY="-9" width="128" height="90"/>
+        <element name="MCSubCategoryTest" positionX="-63" positionY="-18" width="128" height="90"/>
+    </elements>
+</model>
