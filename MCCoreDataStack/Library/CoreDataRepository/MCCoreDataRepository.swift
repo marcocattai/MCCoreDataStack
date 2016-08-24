@@ -147,6 +147,7 @@ import CoreData
     ///- Parameter MOC: ManagedObjectContext created in the current thread
     ///- Parameter resultType: this can be  .ManagedObject .ManagedObjectID .Dictionary .Count
     ///- Return: array of results
+    
     @objc public func fetchObjectsInCurrentQueue(byPredicate predicate: NSPredicate, entityName: String, MOC: NSManagedObjectContext, resultType: NSFetchRequestResultType) -> [AnyObject]?
     {
         return self._fetchObjectsInCurrentQueue(byPredicate: predicate, entityName: entityName, MOC: MOC, resultType: resultType)
