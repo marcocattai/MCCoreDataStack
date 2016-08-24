@@ -22,7 +22,7 @@ This class includes all the basic functionalities to setup a CoreData Stack. It 
 
 ##Integrate in your existing project
 
-You can use Cocoapods to install EUCoreDataStack adding it to your Pod file
+###You can use Cocoapods to install EUCoreDataStack adding it to your Pod file
 
 ```
 platform :ios, '8.0'
@@ -32,6 +32,14 @@ target 'MyApp' do
     pod 'EUCoreDataStack'
 end
 ```
+
+###Manually (iOS 7+, OS X 10.9+)
+
+To use this library in your project manually you may:
+
+for Projects, just drag Library folder to the project tree
+Build the project and import #import "[YourProductModuleName]-Swift.h"
+
 ##How to use:
 
 ###Initialization:
