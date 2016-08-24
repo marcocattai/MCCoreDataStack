@@ -41,13 +41,12 @@ import CoreData
     
     //MARK: Setup
     
-    ///### Setup a coreDataRepository
+    ///### Setup a coreDataRepository. It looks up all models in the specified bundles and merges them
     ///- Parameter storeName: Name of the sql store
-    ///- Parameter modelName: Name of the data Model
     ///- Parameter domainName: Domain Name
     ///- Return: Bool
     
-    @objc public func setupWithStoreName(storeName storeName: String, modelName: String, domainName: String) -> Bool
+    @objc public func setupWithStoreName(storeName storeName: String) -> Bool
     {
         let dirPath = StackManagerHelper.Path.DocumentsFolder
         let defaultStoreURL = NSURL(fileURLWithPath: dirPath.stringByAppendingString("/"+storeName))
@@ -57,6 +56,24 @@ import CoreData
         
         print(defaultStoreURL.path)
         self.coreDataStackManager = MCCoreDataStackManager(domain: "co.uk.test.CoreDataStackManager", model: managedObjectModel)
+        
+        return self.coreDataStackManager.configureCoreDataStackWithStoreURL(storeURL: defaultStoreURL, configuration: nil)
+    }
+
+    ///### Setup a coreDataRepository
+    ///- Parameter storeName: Name of the sql store
+    ///- Parameter modelName: Name of the data Model
+    ///- Parameter domainName: Domain Name
+    ///- Return: Bool
+    
+    @objc public func setupWithStoreName(storeName storeName: String, modelName: String, domainName: String) -> Bool
+    {
+        
+        let dirPath = StackManagerHelper.Path.DocumentsFolder
+        let defaultStoreURL = NSURL(fileURLWithPath: dirPath.stringByAppendingString("/"+storeName))
+        let defaultModelURL = NSBundle(forClass: MCCoreDataRepository.self).URLForResource(modelName, withExtension: "momd")!
+
+        self.coreDataStackManager = MCCoreDataStackManager(domainName: domainName, model: defaultModelURL)!
         
         return self.coreDataStackManager.configureCoreDataStackWithStoreURL(storeURL: defaultStoreURL, configuration: nil)
     }
