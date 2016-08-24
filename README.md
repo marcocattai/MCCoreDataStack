@@ -3,20 +3,18 @@ EUCoreDataStack is a simple SWIFT wrapper around Apple's Core Data Framework to 
 
 ##Introduction:
 
-EUCoreDataStack makes it easy to deal with CoreData data.
+It is a very simple, thread safe, swift library that helps you dig into the CoreData Framework. 
+I have created it for a personal project and it is on my personal library since February 2016.
 
-It is a very simple, thread safe, swift library that helps you dig into CoreData Framework. 
-I have created it for a personal project and it on my personal library since February 2016.
-
-Hopefully here it will be useful to other developers that hopefully will contribute to it. Fell free to create pull requests. Thank you in advance for that. 
+Hopefully here it will be useful to other developers that hopefully will contribute to it. Feel free to create pull requests. Thank you in advance for that. 
 ####MCCoreDataStackManager 
 
-This class includes all the basic functionalities to setup a core data Stack. It uses the approach described by Core Data guru Marcus Zarra which builds on the above Parent/Child method but adds an additional context exclusively for writing to disk. A lenghty write operation might block the main thread for a short time causing the UI to freeze. This smart approach uncouples the writing into its own private queue and keeps the UI smooth.
+This class includes all the basic functionalities to setup a CoreData Stack. It uses the approach described by Core Data guru Marcus Zarra which builds on the above Parent/Child method but adds an additional context exclusively for writing to disk. A lenghty write operation might block the main thread for a short time causing the UI to freeze. This smart approach uncouples the writing into its own private queue and keeps the UI smooth.
 
 ![alt tag](https://dl.dropboxusercontent.com/u/7201536/model.png)
 
 ####MCCoreDataRepository
- This class includes an helper method to setup a coredataStack using MCCoreDataStackManager. This class provides basic functionalities to create, delete and fetch NSManagedObjects.
+ This class includes an helper method to setup a CoreDataStack using MCCoreDataStackManager. This class provides basic functionalities to create, delete and fetch NSManagedObjects.
 
 ##Integrate in your existing project
 
