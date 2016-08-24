@@ -25,7 +25,7 @@ This class includes all the basic functionalities to setup a CoreData Stack. It 
 You can use Cocoapods to install EUCoreDataStack adding it to your Pod file
 
 ```
-platform :ios, '7.0'
+platform :ios, '8.0'
 use_frameworks!
 
 target 'MyApp' do
