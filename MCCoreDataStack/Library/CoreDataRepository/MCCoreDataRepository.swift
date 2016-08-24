@@ -46,7 +46,7 @@ import CoreData
     ///- Parameter domainName: Domain Name
     ///- Return: Bool
     
-    @objc public func setupWithStoreName(storeName storeName: String, domainName: String) -> Bool
+    @objc public func setup(storeName storeName: String, domainName: String) -> Bool
     {
         let dirPath = StackManagerHelper.Path.DocumentsFolder
         let defaultStoreURL = NSURL(fileURLWithPath: dirPath.stringByAppendingString("/"+storeName))
@@ -66,7 +66,7 @@ import CoreData
     ///- Parameter domainName: Domain Name
     ///- Return: Bool
     
-    @objc public func setupWithStoreName(storeName storeName: String, modelName: String, domainName: String) -> Bool
+    @objc public func setup(storeName storeName: String, modelName: String, domainName: String) -> Bool
     {
         
         let dirPath = StackManagerHelper.Path.DocumentsFolder

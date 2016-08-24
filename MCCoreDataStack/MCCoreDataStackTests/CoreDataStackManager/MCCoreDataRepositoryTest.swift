@@ -33,7 +33,7 @@ class MCCoreDataRepositoryTest: XCTestCase
         
         self.defaultStoreURL = NSURL(fileURLWithPath: dirPath.stringByAppendingString("/TestDB.sqlite"))
         
-        MCCoreDataRepository.sharedInstance.setupWithStoreName(storeName: "TestDB.sqlite", domainName: "co.uk.tests")
+        MCCoreDataRepository.sharedInstance.setup(storeName: "TestDB.sqlite", domainName: "co.uk.tests")
         
         self.coreDataRepo = MCCoreDataRepository.sharedInstance
         self.coreDataStackManager = MCCoreDataRepository.sharedInstance.coreDataStackManager
