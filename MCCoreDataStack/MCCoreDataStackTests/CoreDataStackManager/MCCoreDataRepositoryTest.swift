@@ -33,7 +33,7 @@ class MCCoreDataRepositoryTest: XCTestCase
         
         self.defaultStoreURL = NSURL(fileURLWithPath: dirPath.stringByAppendingString("/TestDB.sqlite"))
         
-        MCCoreDataRepository.sharedInstance.setupWithStoreName(storeName: "TestDB.sqlite", modelName: "TestDB", domainName: "")
+        MCCoreDataRepository.sharedInstance.setupWithStoreName(storeName: "TestDB.sqlite", domainName: "co.uk.tests")
         
         self.coreDataRepo = MCCoreDataRepository.sharedInstance
         self.coreDataStackManager = MCCoreDataRepository.sharedInstance.coreDataStackManager
@@ -67,9 +67,9 @@ class MCCoreDataRepositoryTest: XCTestCase
 
         let dictionary: [String: AnyObject] = ["categoryID": "12345", "categoryName": "Test12345", "subCategory": subDictionary]
 
-        self.coreDataStackManager.performOperationInBackgroundQueueWithBlockAndSave({ (MOC) in
+        self.coreDataStackManager.performOperationInBackgroundQueueWithBlockAndSave(operationBlock: { (MOC) in
 
-            let createdObject = self.coreDataRepo?.createObjectWithDictionary(dictionary, entityName: "MCCategoryTest", MOC: MOC)
+            let createdObject = self.coreDataRepo?.createObjectWithDictionary(dictionary: dictionary, entityName: "MCCategoryTest", MOC: MOC)
 
             XCTAssertFalse(createdObject == nil)
             
@@ -110,7 +110,7 @@ class MCCoreDataRepositoryTest: XCTestCase
 
     }
     
-    func testIfTestIsDeletingStoreCreatedFromPreviousTest_03()
+    func testCoreDataRepositoryObjectCreationSaveAndDeletion_03()
     {
         
         self.expectation = expectationWithDescription("Create and save object")
@@ -119,9 +119,9 @@ class MCCoreDataRepositoryTest: XCTestCase
         
         let dictionary: [String: AnyObject] = ["categoryID": "12345", "categoryName": "Test12345", "subCategory": subDictionary]
         
-        self.coreDataStackManager.performOperationInBackgroundQueueWithBlockAndSave({ (MOC) in
+        self.coreDataStackManager.performOperationInBackgroundQueueWithBlockAndSave(operationBlock: { (MOC) in
             
-            let createdObject = self.coreDataRepo?.createObjectWithDictionary(dictionary, entityName: "MCCategoryTest", MOC: MOC)
+            let createdObject = self.coreDataRepo?.createObjectWithDictionary(dictionary: dictionary, entityName: "MCCategoryTest", MOC: MOC)
             
             XCTAssertFalse(createdObject == nil)
             
@@ -139,7 +139,7 @@ class MCCoreDataRepositoryTest: XCTestCase
             }
         }, completion: {
             
-            self.coreDataStackManager.performOperationInBackgroundQueueWithBlockAndSave({ (MOC) in
+            self.coreDataStackManager.performOperationInBackgroundQueueWithBlockAndSave(operationBlock: { (MOC) in
             
                 let results = self.coreDataRepo?.fetchAllObjects(byEntityName: "MCCategoryTest", MOC: MOC, resultType: .ManagedObjectResultType) as? [NSManagedObject]
                 
@@ -169,7 +169,7 @@ class MCCoreDataRepositoryTest: XCTestCase
         let dictionary: [String: AnyObject] = ["categoryID": "12345", "categoryName": "Test12345"]
         let dictionaryNew: [String: AnyObject] = ["categoryID": "12345", "categoryName": "Test"]
         
-        self.coreDataStackManager.performOperationInBackgroundQueueWithBlockAndSave({ (MOC) in
+        self.coreDataStackManager.performOperationInBackgroundQueueWithBlockAndSave(operationBlock: { (MOC) in
             
             var firstObject: NSManagedObject? = nil
             var duplicatedObject: NSManagedObject? = nil
@@ -178,7 +178,7 @@ class MCCoreDataRepositoryTest: XCTestCase
 
             if let value = results {
                 if value[0] as! NSInteger == 0 {
-                    firstObject = self.coreDataRepo?.createObjectWithDictionary(dictionary, entityName: "MCCategoryTest", MOC: MOC)
+                    firstObject = self.coreDataRepo?.createObjectWithDictionary(dictionary: dictionary, entityName: "MCCategoryTest", MOC: MOC)
                 }
             }
 
@@ -186,7 +186,7 @@ class MCCoreDataRepositoryTest: XCTestCase
 
             if let value = results {
                 if value[0] as! NSInteger == 0 {
-                    duplicatedObject = self.coreDataRepo?.createObjectWithDictionary(dictionaryNew, entityName: "MCCategoryTest", MOC: MOC)
+                    duplicatedObject = self.coreDataRepo?.createObjectWithDictionary(dictionary: dictionaryNew, entityName: "MCCategoryTest", MOC: MOC)
                 }
             }
             
@@ -203,7 +203,7 @@ class MCCoreDataRepositoryTest: XCTestCase
             
             }, completion: {
                 
-                self.coreDataStackManager.performOperationInBackgroundQueueWithBlock({ (MOC) in
+                self.coreDataStackManager.performOperationInBackgroundQueueWithBlock(operationBlock: { (MOC) in
                     let results = self.coreDataRepo?.fetchObjectsInCurrentQueue(byPredicate: NSPredicate(format: "%K = %@", "categoryID", "12345"), entityName: "MCCategoryTest", MOC: MOC)
                     
                     if let value = results {
@@ -232,9 +232,9 @@ class MCCoreDataRepositoryTest: XCTestCase
         
         let dictionary: [String: AnyObject] = ["categoryID": "12345", "categoryName": "Test12345"]
         
-        self.coreDataStackManager.performOperationInBackgroundQueueWithBlockAndSave({ (MOC) in
+        self.coreDataStackManager.performOperationInBackgroundQueueWithBlockAndSave(operationBlock: { (MOC) in
             
-            self.coreDataRepo?.createObjectWithDictionary(dictionary, entityName: "MCCategoryTest", MOC: MOC)
+            self.coreDataRepo?.createObjectWithDictionary(dictionary: dictionary, entityName: "MCCategoryTest", MOC: MOC)
             
             for index in 1...1000 {
                 
@@ -243,13 +243,13 @@ class MCCoreDataRepositoryTest: XCTestCase
                 
                 let dictionary: [String: AnyObject] = ["categoryID": categoryID, "categoryName": categoryName]
                 
-                self.coreDataRepo?.createObjectWithDictionary(dictionary, entityName: "MCCategoryTest", MOC: MOC)
+                self.coreDataRepo?.createObjectWithDictionary(dictionary: dictionary, entityName: "MCCategoryTest", MOC: MOC)
             }
             
             
             }, completion: {
                 
-                self.coreDataStackManager.performOperationInBackgroundQueueWithBlock({ (MOC) in
+                self.coreDataStackManager.performOperationInBackgroundQueueWithBlock(operationBlock: { (MOC) in
                     let results = self.coreDataRepo?.fetchObjectsInCurrentQueue(byPredicate: NSPredicate(format: "%K = %@", "categoryName", "categoryName"), entityName: "MCCategoryTest", MOC: MOC)
                     
                         XCTAssertTrue(results?.count == 1000)
@@ -273,9 +273,9 @@ class MCCoreDataRepositoryTest: XCTestCase
         
         
         
-        self.coreDataStackManager.performOperationInBackgroundQueueWithBlockAndSave({ (MOC) in
+        self.coreDataStackManager.performOperationInBackgroundQueueWithBlockAndSave(operationBlock: { (MOC) in
             
-            self.coreDataRepo?.createObjectWithDictionary(dictionary, entityName: "MCCategoryTest", MOC: MOC)
+            self.coreDataRepo?.createObjectWithDictionary(dictionary: dictionary, entityName: "MCCategoryTest", MOC: MOC)
             
             for index in 1...1000 {
                 
@@ -284,12 +284,12 @@ class MCCoreDataRepositoryTest: XCTestCase
                 
                 let dictionary: [String: AnyObject] = ["categoryID": categoryID, "categoryName": categoryName]
                 
-                self.coreDataRepo?.createObjectWithDictionary(dictionary, entityName: "MCCategoryTest", MOC: MOC)
+                self.coreDataRepo?.createObjectWithDictionary(dictionary: dictionary, entityName: "MCCategoryTest", MOC: MOC)
             }
             
             }, completion: {
                 
-                self.coreDataStackManager.performOperationInBackgroundQueueWithBlock({ (MOC) in
+                self.coreDataStackManager.performOperationInBackgroundQueueWithBlock(operationBlock: { (MOC) in
                     let results = self.coreDataRepo?.fetchObjectsInCurrentQueue(byPredicate: NSPredicate(format: "%K = %@", "categoryName", "categoryName"), entityName: "MCCategoryTest", MOC: MOC, resultType: .ManagedObjectIDResultType)
                     
                     XCTAssertTrue(results?.count == 1000)
@@ -305,7 +305,7 @@ class MCCoreDataRepositoryTest: XCTestCase
 
                         self.coreDataRepo.deleteObjects(containedInArray: objs, completionBlock: {
 
-                            self.coreDataStackManager.performOperationInBackgroundQueueWithBlock({ (MOC) in
+                            self.coreDataStackManager.performOperationInBackgroundQueueWithBlock(operationBlock: { (MOC) in
                                 let results = self.coreDataRepo?.fetchObjectsInCurrentQueue(byPredicate: NSPredicate(format: "%K = %@", "categoryName", "categoryName"), entityName: "MCCategoryTest", MOC: MOC, resultType: .ManagedObjectIDResultType)
                                 
                                 XCTAssertTrue(results?.count == 0)
@@ -334,9 +334,9 @@ class MCCoreDataRepositoryTest: XCTestCase
         let dictionary: [String: AnyObject] = ["categoryID": "12345", "categoryName": "Test12345"]
         
         
-        self.coreDataStackManager.performOperationInBackgroundQueueWithBlockAndSave({ (MOC) in
+        self.coreDataStackManager.performOperationInBackgroundQueueWithBlockAndSave(operationBlock: { (MOC) in
             
-            self.coreDataRepo?.createObjectWithDictionary(dictionary, entityName: "MCCategoryTest", MOC: MOC)
+            self.coreDataRepo?.createObjectWithDictionary(dictionary: dictionary, entityName: "MCCategoryTest", MOC: MOC)
             
             for index in 1...5000 {
                 
@@ -345,12 +345,12 @@ class MCCoreDataRepositoryTest: XCTestCase
                 
                 let dictionary: [String: AnyObject] = ["categoryID": categoryID, "categoryName": categoryName]
                 
-                self.coreDataRepo?.createObjectWithDictionary(dictionary, entityName: "MCCategoryTest", MOC: MOC)
+                self.coreDataRepo?.createObjectWithDictionary(dictionary: dictionary, entityName: "MCCategoryTest", MOC: MOC)
             }
             
             }, completion: {
                 
-                self.coreDataStackManager.performOperationInBackgroundQueueWithBlock({ (MOC) in
+                self.coreDataStackManager.performOperationInBackgroundQueueWithBlock(operationBlock: { (MOC) in
                     let results = self.coreDataRepo?.fetchObjectsInCurrentQueue(byPredicate: NSPredicate(format: "%K = %@", "categoryName", "categoryName"), entityName: "MCCategoryTest", MOC: MOC, resultType: .ManagedObjectIDResultType)
                     
                     XCTAssertTrue(results?.count == 5000)
@@ -370,7 +370,7 @@ class MCCoreDataRepositoryTest: XCTestCase
                         
                         self.coreDataRepo.deleteObjects(containedInArray: subArray, completionBlock: {
                             
-                            self.coreDataStackManager.performOperationInBackgroundQueueWithBlock({ (MOC) in
+                            self.coreDataStackManager.performOperationInBackgroundQueueWithBlock(operationBlock: { (MOC) in
                                 let results = self.coreDataRepo?.fetchObjectsInCurrentQueue(byPredicate: NSPredicate(format: "%K = %@", "categoryName", "categoryName"), entityName: "MCCategoryTest", MOC: MOC, resultType: .ManagedObjectIDResultType)
                                 
                                 XCTAssertTrue(results?.count == 2500)

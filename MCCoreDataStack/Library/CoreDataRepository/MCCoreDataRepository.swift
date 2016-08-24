@@ -46,7 +46,7 @@ import CoreData
     ///- Parameter domainName: Domain Name
     ///- Return: Bool
     
-    @objc public func setupWithStoreName(storeName storeName: String) -> Bool
+    @objc public func setupWithStoreName(storeName storeName: String, domainName: String) -> Bool
     {
         let dirPath = StackManagerHelper.Path.DocumentsFolder
         let defaultStoreURL = NSURL(fileURLWithPath: dirPath.stringByAppendingString("/"+storeName))
@@ -55,7 +55,7 @@ import CoreData
         let managedObjectModel = NSManagedObjectModel.mergedModelFromBundles([bundle])!
         
         print(defaultStoreURL.path)
-        self.coreDataStackManager = MCCoreDataStackManager(domain: "co.uk.test.CoreDataStackManager", model: managedObjectModel)
+        self.coreDataStackManager = MCCoreDataStackManager(domain: domainName, model: managedObjectModel)
         
         return self.coreDataStackManager.configureCoreDataStackWithStoreURL(storeURL: defaultStoreURL, configuration: nil)
     }
