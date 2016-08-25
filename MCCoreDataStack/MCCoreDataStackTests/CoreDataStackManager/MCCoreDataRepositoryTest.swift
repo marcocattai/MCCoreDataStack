@@ -85,7 +85,7 @@ class MCCoreDataRepositoryTest: XCTestCase
             
         }, completion: {
             
-            let result = self.coreDataRepo?.fetchAllObjects(byEntityName: "MCCategoryTest", MOC: (self.coreDataRepo?.coreDataStackManager.mainMOC)!, resultType: .ManagedObjectResultType)
+            let result = self.coreDataRepo?.fetchAllObjects(byEntityName: "MCCategoryTest", MOC: nil, resultType: .ManagedObjectResultType)
             
             for resultItem in result! {
                 let category = resultItem as! MCCategoryTest
