@@ -52,7 +52,7 @@ class MCCoreDataStackManagerTest: XCTestCase
     {
         let coreDataStackManager = MCCoreDataStackManager(domainName: "co.uk.test.CoreDataStackManager", model: self.defaultModelURL)
         
-        let configured = coreDataStackManager!.configureCoreDataStackWithStoreURL(storeURL: self.defaultStoreURL, configuration: "TestConfiguration")
+        let configured = coreDataStackManager!.configure(storeURL: self.defaultStoreURL, configuration: "TestConfiguration")
         XCTAssertTrue(configured)
     
         XCTAssertTrue(NSFileManager.defaultManager().fileExistsAtPath(self.defaultStoreURL.path!))

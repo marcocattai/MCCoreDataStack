@@ -144,7 +144,7 @@ public struct StackManagerHelper {
     ///- Parameter storeURL: the URL of your sqlite file. See StackManagerHelper for Help
     ///- Parameter configuration: configuration Name
     ///- Return: Bool
-    @objc public func configureCoreDataStackWithStoreURL(storeURL storeURL: NSURL, configuration: String?) -> Bool {
+    @objc public func configure(storeURL storeURL: NSURL, configuration: String?) -> Bool {
         
         guard storeURL.absoluteString.isEmpty == false else {
             return false
@@ -164,7 +164,9 @@ public struct StackManagerHelper {
         
         return success
     }
-    
+
+    //MARK: Private MOC Creation
+
     ///### Create a private NSManagedObjectContext of type PrivateQueueConcurrencyType with mainMOC as parentContext
     ///- Return: New NSManagedObjectContext
 
@@ -186,10 +188,12 @@ public struct StackManagerHelper {
         return moc
     }
     
+    //MARK: Read
+    
     ///### Helper to perform a background operation on a new privateMOC
     ///- Parameter operationBlock: The operation block to be performed in background
 
-    @objc public func performOperationInBackgroundQueueWithBlock(operationBlock operationBlock: ((MOC: NSManagedObjectContext) -> Void)?)
+    @objc public func asyncRead(operationBlock operationBlock: ((MOC: NSManagedObjectContext) -> Void)?)
     {
         self.isPersistentStoreAvailable {
             let bkgMOC = self.createPrivateMOC()
@@ -203,10 +207,12 @@ public struct StackManagerHelper {
         }
     }
     
+    //MARK: Write
+
     ///### Helper to perform a background operation, on a new privateMOC, and automatically save the changes
     ///- Parameter operationBlock: The operation block to be performed in background
 
-    @objc public func performOperationInBackgroundQueueWithBlockAndSave(operationBlock operationBlock: ((MOC: NSManagedObjectContext) -> Void)?, completion completionBlock: (() -> Void)?)
+    @objc public func asyncWrite(operationBlock operationBlock: ((MOC: NSManagedObjectContext) -> Void)?, completion completionBlock: (() -> Void)?)
     {
         self.isPersistentStoreAvailable {
             let bkgMOC = self.createPrivateMOC()
@@ -217,7 +223,7 @@ public struct StackManagerHelper {
                 if let operationBlockUnWrapped = operationBlock {
                     operationBlockUnWrapped(MOC: bkgMOC)
                 }
-                strongSelf.saveContext(MOC: bkgMOC, completionBlock: completionBlock)
+                strongSelf.save(MOC: bkgMOC, completionBlock: completionBlock)
                 
             })
         }
@@ -226,7 +232,7 @@ public struct StackManagerHelper {
     ///### Helper to perform an operation on the main MOC, mainThread, and automatically save the changes
     ///- Parameter operationBlock: The operation block to be performed in background
 
-    @objc public func performOperationInMainQueueWithBlockAndSave(operationBlock operationBlock: ((MOC: NSManagedObjectContext) -> Void)?, completion completionBlock: (() -> Void)?)
+    @objc public func write(operationBlock operationBlock: ((MOC: NSManagedObjectContext) -> Void)?, completion completionBlock: (() -> Void)?)
     {
         self.isPersistentStoreAvailable {
             self.mainMOC!.performBlock({ [weak self] in
@@ -236,7 +242,7 @@ public struct StackManagerHelper {
                     operationBlockUnWrapped(MOC: (strongSelf.mainMOC)!)
                 }
                 
-                strongSelf.saveContext(MOC: strongSelf.mainMOC!, completionBlock: completionBlock)
+                strongSelf.save(MOC: strongSelf.mainMOC!, completionBlock: completionBlock)
             })
         }
     }
@@ -244,7 +250,7 @@ public struct StackManagerHelper {
     ///### Helper to perform an operation on the main MOC in the mainThread
     ///- Parameter operationBlock: The operation block to be performed in background
 
-    @objc public func performOperationInMainQueueWithBlock(operationBlock operationBlock: ((MOC: NSManagedObjectContext) -> Void)?)
+    @objc public func performMainThreadOperation(operationBlock operationBlock: ((MOC: NSManagedObjectContext) -> Void)?)
     {
         self.isPersistentStoreAvailable {
             self.mainMOC!.performBlock({ [weak self] in
@@ -257,18 +263,20 @@ public struct StackManagerHelper {
         }
     }
     
+    //MARK: Save
+
     ///### Save the specified context and all its parents
     ///- Parameter completionBlock: completion Block
 
-    @objc public func saveContext(MOC MOC: NSManagedObjectContext, completionBlock: (() -> Void)?) -> Void {
+    @objc public func save(MOC MOC: NSManagedObjectContext, completionBlock: (() -> Void)?) -> Void {
         
         weak var weakSelf = self
         
-        MOC.saveContext(completionBlock: { (inner) in
+        MOC.save(completionBlock: { (inner) in
             do {
                 try inner()
                 
-                weakSelf!.mainMOC?.saveContext(completionBlock: { (inner) in
+                weakSelf!.mainMOC?.save(completionBlock: { (inner) in
                     do {
                         try inner()
                         
@@ -282,7 +290,7 @@ public struct StackManagerHelper {
                             }
                         }
                         
-                        weakSelf!.rootMOC?.saveContext(completionBlock: { (inner) in
+                        weakSelf!.rootMOC?.save(completionBlock: { (inner) in
                             do {
                                 try inner()
                                 

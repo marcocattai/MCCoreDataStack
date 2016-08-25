@@ -431,9 +431,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:FC15MCCoreDataStack22MCCoreDataStackManager34configureCoreDataStackWithStoreURLFT8storeURLCSo5NSURL13configurationGSqSS__Sb"></a>
-                    <a name="//apple_ref/swift/Method/configureCoreDataStackWithStoreURL(storeURL:configuration:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:FC15MCCoreDataStack22MCCoreDataStackManager34configureCoreDataStackWithStoreURLFT8storeURLCSo5NSURL13configurationGSqSS__Sb">configureCoreDataStackWithStoreURL(storeURL:configuration:)</a>
+                    <a name="/s:FC15MCCoreDataStack22MCCoreDataStackManager9configureFT8storeURLCSo5NSURL13configurationGSqSS__Sb"></a>
+                    <a name="//apple_ref/swift/Method/configure(storeURL:configuration:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC15MCCoreDataStack22MCCoreDataStackManager9configureFT8storeURLCSo5NSURL13configurationGSqSS__Sb">configure(storeURL:configuration:)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -459,7 +459,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">@objc</span> <span class="kd">public</span> <span class="kd">func</span> <span class="nf">configureCoreDataStackWithStoreURL</span><span class="p">(</span><span class="n"><a href="../Classes/MCCoreDataStackManager.html#/s:vC15MCCoreDataStack22MCCoreDataStackManager8storeURLGSqCSo5NSURL_">storeURL</a></span> <span class="nv">storeURL</span><span class="p">:</span> <span class="kt">NSURL</span><span class="p">,</span> <span class="nv">configuration</span><span class="p">:</span> <span class="kt">String</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+                          <pre class="highlight"><code><span class="kd">@objc</span> <span class="kd">public</span> <span class="kd">func</span> <span class="nf">configure</span><span class="p">(</span><span class="n"><a href="../Classes/MCCoreDataStackManager.html#/s:vC15MCCoreDataStack22MCCoreDataStackManager8storeURLGSqCSo5NSURL_">storeURL</a></span> <span class="nv">storeURL</span><span class="p">:</span> <span class="kt">NSURL</span><span class="p">,</span> <span class="nv">configuration</span><span class="p">:</span> <span class="kt">String</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
 
                         </div>
                       </div>
@@ -499,6 +499,17 @@
                     </section>
                   </div>
                 </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Private%20MOC%20Creation"></a>
+                <a name="//apple_ref/swift/Section/Private MOC Creation" class="dashAnchor"></a>
+                <a href="#/Private%20MOC%20Creation">
+                  <h3 class="section-name">Private MOC Creation</h3>
+                </a>
+              </div>
+              <ul>
                 <li class="item">
                   <div>
                     <code>
@@ -530,12 +541,23 @@
                     </section>
                   </div>
                 </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Read"></a>
+                <a name="//apple_ref/swift/Section/Read" class="dashAnchor"></a>
+                <a href="#/Read">
+                  <h3 class="section-name">Read</h3>
+                </a>
+              </div>
+              <ul>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:FC15MCCoreDataStack22MCCoreDataStackManager42performOperationInBackgroundQueueWithBlockFT14operationBlockGSqFT3MOCCSo22NSManagedObjectContext_T___T_"></a>
-                    <a name="//apple_ref/swift/Method/performOperationInBackgroundQueueWithBlock(operationBlock:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:FC15MCCoreDataStack22MCCoreDataStackManager42performOperationInBackgroundQueueWithBlockFT14operationBlockGSqFT3MOCCSo22NSManagedObjectContext_T___T_">performOperationInBackgroundQueueWithBlock(operationBlock:)</a>
+                    <a name="/s:FC15MCCoreDataStack22MCCoreDataStackManager9asyncReadFT14operationBlockGSqFT3MOCCSo22NSManagedObjectContext_T___T_"></a>
+                    <a name="//apple_ref/swift/Method/asyncRead(operationBlock:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC15MCCoreDataStack22MCCoreDataStackManager9asyncReadFT14operationBlockGSqFT3MOCCSo22NSManagedObjectContext_T___T_">asyncRead(operationBlock:)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -555,7 +577,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">@objc</span> <span class="kd">public</span> <span class="kd">func</span> <span class="nf">performOperationInBackgroundQueueWithBlock</span><span class="p">(</span><span class="n">operationBlock</span> <span class="nv">operationBlock</span><span class="p">:</span> <span class="p">((</span><span class="kt">MOC</span><span class="p">:</span> <span class="kt">NSManagedObjectContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span></code></pre>
+                          <pre class="highlight"><code><span class="kd">@objc</span> <span class="kd">public</span> <span class="kd">func</span> <span class="nf">asyncRead</span><span class="p">(</span><span class="n">operationBlock</span> <span class="nv">operationBlock</span><span class="p">:</span> <span class="p">((</span><span class="kt">MOC</span><span class="p">:</span> <span class="kt">NSManagedObjectContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span></code></pre>
 
                         </div>
                       </div>
@@ -582,12 +604,23 @@
                     </section>
                   </div>
                 </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Write"></a>
+                <a name="//apple_ref/swift/Section/Write" class="dashAnchor"></a>
+                <a href="#/Write">
+                  <h3 class="section-name">Write</h3>
+                </a>
+              </div>
+              <ul>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:FC15MCCoreDataStack22MCCoreDataStackManager49performOperationInBackgroundQueueWithBlockAndSaveFT14operationBlockGSqFT3MOCCSo22NSManagedObjectContext_T__10completionGSqFT_T___T_"></a>
-                    <a name="//apple_ref/swift/Method/performOperationInBackgroundQueueWithBlockAndSave(operationBlock:completion:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:FC15MCCoreDataStack22MCCoreDataStackManager49performOperationInBackgroundQueueWithBlockAndSaveFT14operationBlockGSqFT3MOCCSo22NSManagedObjectContext_T__10completionGSqFT_T___T_">performOperationInBackgroundQueueWithBlockAndSave(operationBlock:completion:)</a>
+                    <a name="/s:FC15MCCoreDataStack22MCCoreDataStackManager10asyncWriteFT14operationBlockGSqFT3MOCCSo22NSManagedObjectContext_T__10completionGSqFT_T___T_"></a>
+                    <a name="//apple_ref/swift/Method/asyncWrite(operationBlock:completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC15MCCoreDataStack22MCCoreDataStackManager10asyncWriteFT14operationBlockGSqFT3MOCCSo22NSManagedObjectContext_T__10completionGSqFT_T___T_">asyncWrite(operationBlock:completion:)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -607,7 +640,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">@objc</span> <span class="kd">public</span> <span class="kd">func</span> <span class="nf">performOperationInBackgroundQueueWithBlockAndSave</span><span class="p">(</span><span class="n">operationBlock</span> <span class="nv">operationBlock</span><span class="p">:</span> <span class="p">((</span><span class="kt">MOC</span><span class="p">:</span> <span class="kt">NSManagedObjectContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?,</span> <span class="n">completion</span> <span class="nv">completionBlock</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span></code></pre>
+                          <pre class="highlight"><code><span class="kd">@objc</span> <span class="kd">public</span> <span class="kd">func</span> <span class="nf">asyncWrite</span><span class="p">(</span><span class="n">operationBlock</span> <span class="nv">operationBlock</span><span class="p">:</span> <span class="p">((</span><span class="kt">MOC</span><span class="p">:</span> <span class="kt">NSManagedObjectContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?,</span> <span class="n">completion</span> <span class="nv">completionBlock</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span></code></pre>
 
                         </div>
                       </div>
@@ -637,9 +670,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:FC15MCCoreDataStack22MCCoreDataStackManager43performOperationInMainQueueWithBlockAndSaveFT14operationBlockGSqFT3MOCCSo22NSManagedObjectContext_T__10completionGSqFT_T___T_"></a>
-                    <a name="//apple_ref/swift/Method/performOperationInMainQueueWithBlockAndSave(operationBlock:completion:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:FC15MCCoreDataStack22MCCoreDataStackManager43performOperationInMainQueueWithBlockAndSaveFT14operationBlockGSqFT3MOCCSo22NSManagedObjectContext_T__10completionGSqFT_T___T_">performOperationInMainQueueWithBlockAndSave(operationBlock:completion:)</a>
+                    <a name="/s:FC15MCCoreDataStack22MCCoreDataStackManager5writeFT14operationBlockGSqFT3MOCCSo22NSManagedObjectContext_T__10completionGSqFT_T___T_"></a>
+                    <a name="//apple_ref/swift/Method/write(operationBlock:completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC15MCCoreDataStack22MCCoreDataStackManager5writeFT14operationBlockGSqFT3MOCCSo22NSManagedObjectContext_T__10completionGSqFT_T___T_">write(operationBlock:completion:)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -659,7 +692,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">@objc</span> <span class="kd">public</span> <span class="kd">func</span> <span class="nf">performOperationInMainQueueWithBlockAndSave</span><span class="p">(</span><span class="n">operationBlock</span> <span class="nv">operationBlock</span><span class="p">:</span> <span class="p">((</span><span class="kt">MOC</span><span class="p">:</span> <span class="kt">NSManagedObjectContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?,</span> <span class="n">completion</span> <span class="nv">completionBlock</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span></code></pre>
+                          <pre class="highlight"><code><span class="kd">@objc</span> <span class="kd">public</span> <span class="kd">func</span> <span class="nf">write</span><span class="p">(</span><span class="n">operationBlock</span> <span class="nv">operationBlock</span><span class="p">:</span> <span class="p">((</span><span class="kt">MOC</span><span class="p">:</span> <span class="kt">NSManagedObjectContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?,</span> <span class="n">completion</span> <span class="nv">completionBlock</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span></code></pre>
 
                         </div>
                       </div>
@@ -689,9 +722,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:FC15MCCoreDataStack22MCCoreDataStackManager36performOperationInMainQueueWithBlockFT14operationBlockGSqFT3MOCCSo22NSManagedObjectContext_T___T_"></a>
-                    <a name="//apple_ref/swift/Method/performOperationInMainQueueWithBlock(operationBlock:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:FC15MCCoreDataStack22MCCoreDataStackManager36performOperationInMainQueueWithBlockFT14operationBlockGSqFT3MOCCSo22NSManagedObjectContext_T___T_">performOperationInMainQueueWithBlock(operationBlock:)</a>
+                    <a name="/s:FC15MCCoreDataStack22MCCoreDataStackManager26performMainThreadOperationFT14operationBlockGSqFT3MOCCSo22NSManagedObjectContext_T___T_"></a>
+                    <a name="//apple_ref/swift/Method/performMainThreadOperation(operationBlock:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC15MCCoreDataStack22MCCoreDataStackManager26performMainThreadOperationFT14operationBlockGSqFT3MOCCSo22NSManagedObjectContext_T___T_">performMainThreadOperation(operationBlock:)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -711,7 +744,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">@objc</span> <span class="kd">public</span> <span class="kd">func</span> <span class="nf">performOperationInMainQueueWithBlock</span><span class="p">(</span><span class="n">operationBlock</span> <span class="nv">operationBlock</span><span class="p">:</span> <span class="p">((</span><span class="kt">MOC</span><span class="p">:</span> <span class="kt">NSManagedObjectContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span></code></pre>
+                          <pre class="highlight"><code><span class="kd">@objc</span> <span class="kd">public</span> <span class="kd">func</span> <span class="nf">performMainThreadOperation</span><span class="p">(</span><span class="n">operationBlock</span> <span class="nv">operationBlock</span><span class="p">:</span> <span class="p">((</span><span class="kt">MOC</span><span class="p">:</span> <span class="kt">NSManagedObjectContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span></code></pre>
 
                         </div>
                       </div>
@@ -738,12 +771,23 @@
                     </section>
                   </div>
                 </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Save"></a>
+                <a name="//apple_ref/swift/Section/Save" class="dashAnchor"></a>
+                <a href="#/Save">
+                  <h3 class="section-name">Save</h3>
+                </a>
+              </div>
+              <ul>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:FC15MCCoreDataStack22MCCoreDataStackManager11saveContextFT3MOCCSo22NSManagedObjectContext15completionBlockGSqFT_T___T_"></a>
-                    <a name="//apple_ref/swift/Method/saveContext(MOC:completionBlock:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:FC15MCCoreDataStack22MCCoreDataStackManager11saveContextFT3MOCCSo22NSManagedObjectContext15completionBlockGSqFT_T___T_">saveContext(MOC:completionBlock:)</a>
+                    <a name="/s:FC15MCCoreDataStack22MCCoreDataStackManager4saveFT3MOCCSo22NSManagedObjectContext15completionBlockGSqFT_T___T_"></a>
+                    <a name="//apple_ref/swift/Method/save(MOC:completionBlock:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC15MCCoreDataStack22MCCoreDataStackManager4saveFT3MOCCSo22NSManagedObjectContext15completionBlockGSqFT_T___T_">save(MOC:completionBlock:)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -763,7 +807,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">@objc</span> <span class="kd">public</span> <span class="kd">func</span> <span class="nf">saveContext</span><span class="p">(</span><span class="kt">MOC</span> <span class="kt">MOC</span><span class="p">:</span> <span class="kt">NSManagedObjectContext</span><span class="p">,</span> <span class="nv">completionBlock</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span></code></pre>
+                          <pre class="highlight"><code><span class="kd">@objc</span> <span class="kd">public</span> <span class="kd">func</span> <span class="nf">save</span><span class="p">(</span><span class="kt">MOC</span> <span class="kt">MOC</span><span class="p">:</span> <span class="kt">NSManagedObjectContext</span><span class="p">,</span> <span class="nv">completionBlock</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span></code></pre>
 
                         </div>
                       </div>
@@ -795,7 +839,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2016 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2016-08-24)</p>
+          <p>&copy; 2016 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2016-08-25)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.7.0</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
         </section>
       </article>
