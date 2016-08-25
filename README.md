@@ -64,7 +64,7 @@ self.coreDataStackManager.asyncWrite(operationBlock: { (MOC) in
        let results = self.coreDataRepo?.fetchAll(byEntityName: "MCCategoryTest", MOC: MOC, resultType: .ManagedObjectResultType) as? [NSManagedObject]
 
 	   // Objects will be deleted in a background thread. Deletion will fetch the objects from the background context
-	   self.coreDataRepo.delete(containedInArray: results, completionBlock: nil)
+	   self.coreDataRepo?.delete(containedInArray: results, completionBlock: nil)
     })
 })
 ```
