@@ -14,7 +14,7 @@ internal extension MCCoreDataRepository
         
     //MARK Fetching in currentQueue
     
-    internal func _fetchAllObjectInCurrentQueue(entityName: String, MOC: NSManagedObjectContext, resultType: NSFetchRequestResultType) -> [AnyObject]?
+    internal func _fetchAllObjectInCurrentQueue(entityName: String, MOC: NSManagedObjectContext?, resultType: NSFetchRequestResultType) -> [AnyObject]?
     {
         let fetchRequest = NSFetchRequest.init(entityName: entityName)
         fetchRequest.resultType = resultType
@@ -22,9 +22,13 @@ internal extension MCCoreDataRepository
         #if DEBUG
             fetchRequest.returnsObjectsAsFaults = false;
         #endif
+        var managedObjectContext = MOC
+        if managedObjectContext == nil {
+            managedObjectContext = self.coreDataStackManager?.mainMOC
+        }
         
         do {
-            let results = try MOC.executeFetchRequest(fetchRequest)
+            let results = try managedObjectContext!.executeFetchRequest(fetchRequest)
             
             return results;
         } catch {
@@ -33,12 +37,18 @@ internal extension MCCoreDataRepository
         return []
     }
 
-    internal func _fetchObjectsInCurrentQueue(byPredicate predicate: NSPredicate, entityName: String, MOC: NSManagedObjectContext, resultType: NSFetchRequestResultType) -> [AnyObject]?
+    internal func _fetchObjectsInCurrentQueue(byPredicate predicate: NSPredicate, entityName: String, MOC: NSManagedObjectContext?, resultType: NSFetchRequestResultType) -> [AnyObject]?
     {
         let fetchRequest = NSFetchRequest.init()
         fetchRequest.predicate = predicate
         fetchRequest.resultType = resultType
-        let entityDescription = NSEntityDescription.entityForName(entityName, inManagedObjectContext: MOC)
+        
+        var managedObjectContext = MOC
+        if managedObjectContext == nil {
+            managedObjectContext = self.coreDataStackManager?.mainMOC
+        }
+
+        let entityDescription = NSEntityDescription.entityForName(entityName, inManagedObjectContext: managedObjectContext!)
         
         #if DEBUG
             fetchRequest.returnsObjectsAsFaults = false;
@@ -48,7 +58,7 @@ internal extension MCCoreDataRepository
         fetchRequest.entity = entityDescription;
         
         do {
-            results = try MOC.executeFetchRequest(fetchRequest)
+            results = try managedObjectContext!.executeFetchRequest(fetchRequest)
             
             return results
         } catch let error as NSError {
