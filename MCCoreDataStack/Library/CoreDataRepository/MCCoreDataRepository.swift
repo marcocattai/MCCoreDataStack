@@ -57,7 +57,7 @@ import CoreData
         print(defaultStoreURL.path)
         self.coreDataStackManager = MCCoreDataStackManager(domain: domainName, model: managedObjectModel)
         
-        return self.coreDataStackManager.configureCoreDataStackWithStoreURL(storeURL: defaultStoreURL, configuration: nil)
+        return self.coreDataStackManager.configure(storeURL: defaultStoreURL, configuration: nil)
     }
 
     ///### Setup a coreDataRepository
@@ -75,7 +75,7 @@ import CoreData
 
         self.coreDataStackManager = MCCoreDataStackManager(domainName: domainName, model: defaultModelURL)!
         
-        return self.coreDataStackManager.configureCoreDataStackWithStoreURL(storeURL: defaultStoreURL, configuration: nil)
+        return self.coreDataStackManager.configure(storeURL: defaultStoreURL, configuration: nil)
     }
     
     //MARK: Creation
@@ -85,7 +85,7 @@ import CoreData
     ///- Parameter MOC: ManagedObjectContext created in the current thread
     ///- Return: New NSManagedObject or nil
     
-    @objc public func createObjectWithDictionary(dictionary dictionary: Dictionary<String, AnyObject>, entityName: String, MOC moc: NSManagedObjectContext) -> NSManagedObject?
+    @objc public func create(dictionary dictionary: Dictionary<String, AnyObject>, entityName: String, MOC moc: NSManagedObjectContext) -> NSManagedObject?
     {
         return NSManagedObject.instanceWithDictionary(dictionary: dictionary, entityName: entityName, MOC: moc)
     }
@@ -96,12 +96,12 @@ import CoreData
     ///- Parameter array: Specify an array of NSManagedObject or NSManagedObjectID
     ///- Parameter completionBlock: Completion block
     
-    @objc public func deleteObjects(containedInArray array: [AnyObject], completionBlock: (() -> Void)?)
+    @objc public func delete(containedInArray array: [AnyObject], completionBlock: (() -> Void)?)
     {
         if array is [NSManagedObject] {
-            self._deleteObjects(containedInArray: array as! [NSManagedObject], completionBlock: completionBlock)
+            self._delete(containedInArray: array as! [NSManagedObject], completionBlock: completionBlock)
         } else if array is [NSManagedObjectID] {
-            self._deleteObjectsID(containedInArray: array as! [NSManagedObjectID], completionBlock: completionBlock)
+            self._deleteIDs(containedInArray: array as! [NSManagedObjectID], completionBlock: completionBlock)
         }
     }
 
@@ -109,12 +109,12 @@ import CoreData
     ///- Parameter array: Specify an array of NSManagedObject or NSManagedObjectID
     ///- Parameter MOC: a specific NSManagedObjectContext
 
-    @objc public func deleteObjects(containedInArray array: [AnyObject], MOC moc: NSManagedObjectContext)
+    @objc public func delete(containedInArray array: [AnyObject], MOC moc: NSManagedObjectContext)
     {
         if array is [NSManagedObject] {
-            self._deleteObjects(containedInArray: array as! [NSManagedObject], MOC: moc)
+            self._delete(containedInArray: array as! [NSManagedObject], MOC: moc)
         } else if array is [NSManagedObjectID] {
-            self._deleteObjectsID(containedInArray: array as! [NSManagedObjectID], MOC: moc)
+            self._deleteIDs(containedInArray: array as! [NSManagedObjectID], MOC: moc)
         }
     }
     
@@ -125,9 +125,9 @@ import CoreData
     ///- Parameter resultType: this can be  .ManagedObject .ManagedObjectID .Dictionary .Count
     ///- Return: New NSManagedObject or nil
     
-    @objc public func fetchAllObjects(byEntityName entityName: String, MOC: NSManagedObjectContext?, resultType: NSFetchRequestResultType) -> [AnyObject]?
+    @objc public func fetchAll(byEntityName entityName: String, MOC: NSManagedObjectContext?, resultType: NSFetchRequestResultType) -> [AnyObject]?
     {
-        return self._fetchAllObjectInCurrentQueue(entityName, MOC: MOC, resultType: resultType)
+        return self._fetchAll(entityName, MOC: MOC, resultType: resultType)
     }
     
     ///### fetch all the object of a specific entityName, by Predicate, in the current thread
@@ -136,9 +136,9 @@ import CoreData
     ///- Parameter MOC: ManagedObjectContext created in the current thread. If nil the call should be from the main Thread
     ///- Return: array of results
 
-    @objc public func fetchObjectsInCurrentQueue(byPredicate predicate: NSPredicate, entityName: String, MOC: NSManagedObjectContext?) -> [AnyObject]?
+    @objc public func fetch(byPredicate predicate: NSPredicate, entityName: String, MOC: NSManagedObjectContext?) -> [AnyObject]?
     {
-        return self._fetchObjectsInCurrentQueue(byPredicate: predicate, entityName: entityName, MOC: MOC, resultType: .ManagedObjectResultType)
+        return self._fetchAll(byPredicate: predicate, entityName: entityName, MOC: MOC, resultType: .ManagedObjectResultType)
     }
     
     ///### fetch all the object of a specific entityName, by Predicate, in the current thread
@@ -148,9 +148,9 @@ import CoreData
     ///- Parameter resultType: this can be  .ManagedObject .ManagedObjectID .Dictionary .Count
     ///- Return: array of results
     
-    @objc public func fetchObjectsInCurrentQueue(byPredicate predicate: NSPredicate, entityName: String, MOC: NSManagedObjectContext?, resultType: NSFetchRequestResultType) -> [AnyObject]?
+    @objc public func fetch(byPredicate predicate: NSPredicate, entityName: String, MOC: NSManagedObjectContext?, resultType: NSFetchRequestResultType) -> [AnyObject]?
     {
-        return self._fetchObjectsInCurrentQueue(byPredicate: predicate, entityName: entityName, MOC: MOC, resultType: resultType)
+        return self._fetchAll(byPredicate: predicate, entityName: entityName, MOC: MOC, resultType: resultType)
     }
     
 }

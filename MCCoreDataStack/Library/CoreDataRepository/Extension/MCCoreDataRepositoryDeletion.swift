@@ -12,7 +12,7 @@ import CoreData
 internal extension MCCoreDataRepository
 {
     
-    internal func _deleteObjects(containedInArray array: [NSManagedObject],
+    internal func _delete(containedInArray array: [NSManagedObject],
                                                   MOC moc: NSManagedObjectContext) {
         
         for object: NSManagedObject in array {
@@ -27,14 +27,14 @@ internal extension MCCoreDataRepository
         }
     }
     
-    internal func _deleteObjects(containedInArray array: [NSManagedObject],
+    internal func _delete(containedInArray array: [NSManagedObject],
                                                   completionBlock: (Void -> Void)?) {
         
         weak var weakSelf = self
         
-        self.coreDataStackManager.performOperationInBackgroundQueueWithBlockAndSave(operationBlock: { (MOC) in
+        self.coreDataStackManager.asyncWrite(operationBlock: { (MOC) in
             
-            weakSelf?._deleteObjects(containedInArray: array, MOC: MOC)
+            weakSelf?._delete(containedInArray: array, MOC: MOC)
             
             }, completion: {
                 if let completionBlockUnwrapped = completionBlock {
@@ -43,7 +43,7 @@ internal extension MCCoreDataRepository
         })
     }
     
-    internal func _deleteObjectsID(containedInArray array: [NSManagedObjectID],
+    internal func _deleteIDs(containedInArray array: [NSManagedObjectID],
                                          MOC moc: NSManagedObjectContext) {
         
         for objectID: NSManagedObjectID in array {
@@ -58,14 +58,14 @@ internal extension MCCoreDataRepository
         }
     }
     
-    internal func _deleteObjectsID(containedInArray array: [NSManagedObjectID],
+    internal func _deleteIDs(containedInArray array: [NSManagedObjectID],
                                          completionBlock: (Void -> Void)?) {
         
         weak var weakSelf = self
         
-        self.coreDataStackManager.performOperationInBackgroundQueueWithBlockAndSave(operationBlock: { (MOC) in
+        self.coreDataStackManager.asyncWrite(operationBlock: { (MOC) in
             
-            weakSelf?._deleteObjectsID(containedInArray: array, MOC: MOC)
+            weakSelf?._deleteIDs(containedInArray: array, MOC: MOC)
             
             }, completion: {
                 if let completionBlockUnwrapped = completionBlock {

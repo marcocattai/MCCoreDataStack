@@ -73,7 +73,7 @@ internal extension MCCoreDataStackManager
             })
             let queue: dispatch_queue_t = dispatch_get_global_queue(DISPATCH_QUMIPE_PRIORITY_DEFAULT, 0)
             dispatch_async(queue, {() -> Void in
-                weakSelf?.performOperationInBackgroundQueueWithBlock({ (MOC) -> Void in
+                weakSelf?.asyncRead({ (MOC) -> Void in
                     weakSelf!.terminateBackgroundTask()
                 })
             })

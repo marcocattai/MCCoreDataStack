@@ -14,7 +14,7 @@ internal extension MCCoreDataRepository
         
     //MARK Fetching in currentQueue
     
-    internal func _fetchAllObjectInCurrentQueue(entityName: String, MOC: NSManagedObjectContext?, resultType: NSFetchRequestResultType) -> [AnyObject]?
+    internal func _fetchAll(entityName: String, MOC: NSManagedObjectContext?, resultType: NSFetchRequestResultType) -> [AnyObject]?
     {
         let fetchRequest = NSFetchRequest.init(entityName: entityName)
         fetchRequest.resultType = resultType
@@ -37,7 +37,7 @@ internal extension MCCoreDataRepository
         return []
     }
 
-    internal func _fetchObjectsInCurrentQueue(byPredicate predicate: NSPredicate, entityName: String, MOC: NSManagedObjectContext?, resultType: NSFetchRequestResultType) -> [AnyObject]?
+    internal func _fetchAll(byPredicate predicate: NSPredicate, entityName: String, MOC: NSManagedObjectContext?, resultType: NSFetchRequestResultType) -> [AnyObject]?
     {
         let fetchRequest = NSFetchRequest.init()
         fetchRequest.predicate = predicate
