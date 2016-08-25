@@ -54,16 +54,16 @@ MCCoreDataRepository.sharedInstance.setup(storeName: "TestDB.sqlite", domainName
 let subDictionary: [String: AnyObject] = ["subCategoryID": "sub12345", "subCategoryName": "subTest12345"]
 let dictionary: [String: AnyObject] = ["categoryID": "12345", "categoryName": "Test12345", "subCategory": subDictionary]
 
-self.coreDataStackManager.performOperationInBackgroundQueueWithBlockAndSave(operationBlock: { (MOC) in
+self.coreDataStackManager.asyncWrite(operationBlock: { (MOC) in
 
-   self.coreDataRepo?.createObjectWithDictionary(dictionary: dictionary, entityName: "MCCategoryTest", MOC: MOC)
+   self.coreDataRepo?.create(dictionary: dictionary, entityName: "MCCategoryTest", MOC: MOC)
  
 }, completion: {
 
-   let results = self.coreDataRepo?.fetchAllObjects(byEntityName: "MCCategoryTest", MOC: nil, resultType: .ManagedObjectResultType) as? [NSManagedObject]
+   let results = self.coreDataRepo?.fetchAll(byEntityName: "MCCategoryTest", MOC: nil, resultType: .ManagedObjectResultType) as? [NSManagedObject]
 
    // Objects will be deleted in a background thread
-   self.coreDataRepo.deleteObjects(containedInArray: subArray, completionBlock: nil)
+   self.coreDataRepo.delete(containedInArray: subArray, completionBlock: nil)
 })
 ```
 
