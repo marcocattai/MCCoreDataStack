@@ -9,7 +9,7 @@ EUCoreDataStack is a simple SWIFT wrapper around Apple's Core Data Framework to 
 It is a very simple, thread safe, swift library that helps you dig into the CoreData Framework. 
 I have created it for a personal project and it is on my personal library since February 2016.
 
-Here it might be useful to other developers that hopefully will contribute to it. Feel free to create pull requests. Thank you in advance for that. 
+This library has been used with success and it doesn't have any particoular issue. Here on github it could be be useful to other developers that hopefully will contribute to it. Feel free to create pull requests. Thank you in advance for that. 
 
 ####MCCoreDataStackManager 
 
@@ -42,5 +42,44 @@ To use this library on iOS 7
 
 ##How to use:
 
+###Setup CoreDataStack
+```swift
+MCCoreDataRepository.sharedInstance.setup(storeName: "TestDB.sqlite", domainName: "co.uk.tests")
+```
+
+####Create one object in background
+```swift
+//Here we define our Dictionaries
+
+let subDictionary: [String: AnyObject] = ["subCategoryID": "sub12345", "subCategoryName": "subTest12345"]
+let dictionary: [String: AnyObject] = ["categoryID": "12345", "categoryName": "Test12345", "subCategory": subDictionary]
+
+self.coreDataStackManager.performOperationInBackgroundQueueWithBlockAndSave(operationBlock: { (MOC) in
+
+   self.coreDataRepo?.createObjectWithDictionary(dictionary: dictionary, entityName: "MCCategoryTest", MOC: MOC)
+ 
+}, completion: {
+
+   let results = self.coreDataRepo?.fetchAllObjects(byEntityName: "MCCategoryTest", MOC: nil, resultType: .ManagedObjectResultType) as? [NSManagedObject]
+
+   // Objects will be deleted in a background thread
+   self.coreDataRepo.deleteObjects(containedInArray: subArray, completionBlock: nil)
+})
+```
+
 ... Please, refer to the unit tests
+
+##Tracking Violations
+
+1) Please enable  Enable Core Data multi-threading assertions by passing following arguments during app launch.
+
+```
+-com.apple.CoreData.ConcurrencyDebug 1
+```
+2) Verify that Xcode prints out following text in console to indicate that the multi-threading assertions is enabled. 
+
+```
+CoreData: annotation: Core Data multi-threading assertions enabled.
+```
+3) Once the Core Data debugging is enabled, Xcode will throw an exception whenenver the app attempts to access an instance of managed object from a wrong context. You might want to check this change into your version control system so that everyone in your team can benefit from tracking these violations early during development.
 
