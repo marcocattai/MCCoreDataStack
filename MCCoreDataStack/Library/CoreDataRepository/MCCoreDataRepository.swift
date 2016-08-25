@@ -15,7 +15,7 @@ import CoreData
     //MARK: Public vars
     ///### Internal CoreDataStackManager
 
-    @objc private(set) public var coreDataStackManager: MCCoreDataStackManager! = nil
+    @objc private(set) public var cdsManager: MCCoreDataStackManager! = nil
 
     ///### Shared Instance
 
@@ -35,7 +35,7 @@ import CoreData
     
     @objc private init?(CoreDataStackManager stack: MCCoreDataStackManager?) {
         if let stackUnwrapped = stack {
-            self.coreDataStackManager = stackUnwrapped
+            self.cdsManager = stackUnwrapped
         }
     }
     
@@ -55,9 +55,9 @@ import CoreData
         let managedObjectModel = NSManagedObjectModel.mergedModelFromBundles([bundle])!
         
         print(defaultStoreURL.path)
-        self.coreDataStackManager = MCCoreDataStackManager(domain: domainName, model: managedObjectModel)
+        self.cdsManager = MCCoreDataStackManager(domain: domainName, model: managedObjectModel)
         
-        return self.coreDataStackManager.configure(storeURL: defaultStoreURL, configuration: nil)
+        return self.cdsManager.configure(storeURL: defaultStoreURL, configuration: nil)
     }
 
     ///### Setup a coreDataRepository
@@ -73,9 +73,9 @@ import CoreData
         let defaultStoreURL = NSURL(fileURLWithPath: dirPath.stringByAppendingString("/"+storeName))
         let defaultModelURL = NSBundle(forClass: MCCoreDataRepository.self).URLForResource(modelName, withExtension: "momd")!
 
-        self.coreDataStackManager = MCCoreDataStackManager(domainName: domainName, model: defaultModelURL)!
+        self.cdsManager = MCCoreDataStackManager(domainName: domainName, model: defaultModelURL)!
         
-        return self.coreDataStackManager.configure(storeURL: defaultStoreURL, configuration: nil)
+        return self.cdsManager.configure(storeURL: defaultStoreURL, configuration: nil)
     }
     
     //MARK: Creation
@@ -125,7 +125,7 @@ import CoreData
     ///- Parameter resultType: this can be  .ManagedObject .ManagedObjectID .Dictionary .Count
     ///- Return: New NSManagedObject or nil
     
-    @objc public func fetchAll(byEntityName entityName: String, MOC: NSManagedObjectContext?, resultType: NSFetchRequestResultType) -> [AnyObject]?
+    @objc public func fetchAll(byEntityName entityName: String, MOC: NSManagedObjectContext, resultType: NSFetchRequestResultType) -> [AnyObject]?
     {
         return self._fetchAll(entityName, MOC: MOC, resultType: resultType)
     }
@@ -136,7 +136,7 @@ import CoreData
     ///- Parameter MOC: ManagedObjectContext created in the current thread. If nil the call should be from the main Thread
     ///- Return: array of results
 
-    @objc public func fetch(byPredicate predicate: NSPredicate, entityName: String, MOC: NSManagedObjectContext?) -> [AnyObject]?
+    @objc public func fetch(byPredicate predicate: NSPredicate, entityName: String, MOC: NSManagedObjectContext) -> [AnyObject]?
     {
         return self._fetchAll(byPredicate: predicate, entityName: entityName, MOC: MOC, resultType: .ManagedObjectResultType)
     }
@@ -148,7 +148,7 @@ import CoreData
     ///- Parameter resultType: this can be  .ManagedObject .ManagedObjectID .Dictionary .Count
     ///- Return: array of results
     
-    @objc public func fetch(byPredicate predicate: NSPredicate, entityName: String, MOC: NSManagedObjectContext?, resultType: NSFetchRequestResultType) -> [AnyObject]?
+    @objc public func fetch(byPredicate predicate: NSPredicate, entityName: String, MOC: NSManagedObjectContext, resultType: NSFetchRequestResultType) -> [AnyObject]?
     {
         return self._fetchAll(byPredicate: predicate, entityName: entityName, MOC: MOC, resultType: resultType)
     }

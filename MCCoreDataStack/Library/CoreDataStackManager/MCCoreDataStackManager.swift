@@ -250,7 +250,7 @@ public struct StackManagerHelper {
     ///### Helper to perform an operation on the main MOC in the mainThread
     ///- Parameter operationBlock: The operation block to be performed in background
 
-    @objc public func performMainThreadOperation(operationBlock operationBlock: ((MOC: NSManagedObjectContext) -> Void)?)
+    @objc public func readOnMainThread(operationBlock operationBlock: ((MOC: NSManagedObjectContext) -> Void)?)
     {
         self.isPersistentStoreAvailable {
             self.mainMOC!.performBlock({ [weak self] in
