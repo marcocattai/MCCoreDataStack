@@ -50,7 +50,7 @@ class MCCoreDataStackManagerTest: XCTestCase
     
     func testCoreDataStackCreation01()
     {
-        let coreDataStackManager = MCCoreDataStackManager(domainName: "co.uk.test.CoreDataStackManager", model: self.defaultModelURL)
+        let coreDataStackManager = MCCoreDataStackManager(domainName: "co.uk.test.cdsManager", model: self.defaultModelURL)
         
         let configured = coreDataStackManager!.configure(storeURL: self.defaultStoreURL, configuration: "TestConfiguration")
         XCTAssertTrue(configured)

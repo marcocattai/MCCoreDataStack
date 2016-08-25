@@ -32,7 +32,7 @@ internal extension MCCoreDataRepository
         
         weak var weakSelf = self
         
-        self.coreDataStackManager.asyncWrite(operationBlock: { (MOC) in
+        self.cdsManager.asyncWrite(operationBlock: { (MOC) in
             
             weakSelf?._delete(containedInArray: array, MOC: MOC)
             
@@ -63,7 +63,7 @@ internal extension MCCoreDataRepository
         
         weak var weakSelf = self
         
-        self.coreDataStackManager.asyncWrite(operationBlock: { (MOC) in
+        self.cdsManager.asyncWrite(operationBlock: { (MOC) in
             
             weakSelf?._deleteIDs(containedInArray: array, MOC: MOC)
             
