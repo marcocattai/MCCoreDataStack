@@ -47,7 +47,7 @@ To use this library on iOS 7
 MCCoreDataRepository.sharedInstance.setup(storeName: "TestDB.sqlite", domainName: "co.uk.tests")
 ```
 
-####Create one object in background
+####Create one object in background, fetch it on the main queue and delete it in background
 ```swift
 //Here we define our Dictionaries
 
@@ -69,7 +69,7 @@ self.coreDataStackManager.asyncWrite(operationBlock: { (MOC) in
 })
 ```
 
-... Please, refer to the unit tests
+... Please, refer to the unit tests. On the unit tests I have tested the creation / fetch and deletion of thousand of objects
 
 ##Tracking Violations
 
