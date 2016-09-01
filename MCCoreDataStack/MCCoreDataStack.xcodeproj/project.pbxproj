@@ -20,10 +20,10 @@
 		F68FD4EB1D6C8C2E00E2A56C /* MCSubCategoryTest+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F68FD4E21D6C8C2E00E2A56C /* MCSubCategoryTest+CoreDataProperties.swift */; };
 		F68FD4EC1D6C8C2E00E2A56C /* MCSubCategoryTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F68FD4E31D6C8C2E00E2A56C /* MCSubCategoryTest.swift */; };
 		F68FD4EE1D6C8C2E00E2A56C /* TestModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F68FD4E51D6C8C2E00E2A56C /* TestModel.xcdatamodeld */; };
-		F68FD5011D6C8C3F00E2A56C /* MCCoreDataRepositoryDeletion.swift in Sources */ = {isa = PBXBuildFile; fileRef = F68FD4F21D6C8C3F00E2A56C /* MCCoreDataRepositoryDeletion.swift */; };
-		F68FD5021D6C8C3F00E2A56C /* MCCoreDataRepositoryDeletion.swift in Sources */ = {isa = PBXBuildFile; fileRef = F68FD4F21D6C8C3F00E2A56C /* MCCoreDataRepositoryDeletion.swift */; };
-		F68FD5031D6C8C3F00E2A56C /* MCCoreDataRepositoryFetching.swift in Sources */ = {isa = PBXBuildFile; fileRef = F68FD4F31D6C8C3F00E2A56C /* MCCoreDataRepositoryFetching.swift */; };
-		F68FD5041D6C8C3F00E2A56C /* MCCoreDataRepositoryFetching.swift in Sources */ = {isa = PBXBuildFile; fileRef = F68FD4F31D6C8C3F00E2A56C /* MCCoreDataRepositoryFetching.swift */; };
+		F68FD5011D6C8C3F00E2A56C /* MCCoreDataRepository+Delete.swift in Sources */ = {isa = PBXBuildFile; fileRef = F68FD4F21D6C8C3F00E2A56C /* MCCoreDataRepository+Delete.swift */; };
+		F68FD5021D6C8C3F00E2A56C /* MCCoreDataRepository+Delete.swift in Sources */ = {isa = PBXBuildFile; fileRef = F68FD4F21D6C8C3F00E2A56C /* MCCoreDataRepository+Delete.swift */; };
+		F68FD5031D6C8C3F00E2A56C /* MCCoreDataRepository+Fetch.swift in Sources */ = {isa = PBXBuildFile; fileRef = F68FD4F31D6C8C3F00E2A56C /* MCCoreDataRepository+Fetch.swift */; };
+		F68FD5041D6C8C3F00E2A56C /* MCCoreDataRepository+Fetch.swift in Sources */ = {isa = PBXBuildFile; fileRef = F68FD4F31D6C8C3F00E2A56C /* MCCoreDataRepository+Fetch.swift */; };
 		F68FD5051D6C8C3F00E2A56C /* NSManagedObject+Create.swift in Sources */ = {isa = PBXBuildFile; fileRef = F68FD4F41D6C8C3F00E2A56C /* NSManagedObject+Create.swift */; };
 		F68FD5061D6C8C3F00E2A56C /* NSManagedObject+Create.swift in Sources */ = {isa = PBXBuildFile; fileRef = F68FD4F41D6C8C3F00E2A56C /* NSManagedObject+Create.swift */; };
 		F68FD5071D6C8C3F00E2A56C /* NSManagedObjectContext+Fetch.swift in Sources */ = {isa = PBXBuildFile; fileRef = F68FD4F51D6C8C3F00E2A56C /* NSManagedObjectContext+Fetch.swift */; };
@@ -79,8 +79,8 @@
 		F68FD4E21D6C8C2E00E2A56C /* MCSubCategoryTest+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MCSubCategoryTest+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		F68FD4E31D6C8C2E00E2A56C /* MCSubCategoryTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MCSubCategoryTest.swift; sourceTree = "<group>"; };
 		F68FD4E61D6C8C2E00E2A56C /* TestModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TestModel.xcdatamodel; sourceTree = "<group>"; };
-		F68FD4F21D6C8C3F00E2A56C /* MCCoreDataRepositoryDeletion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = MCCoreDataRepositoryDeletion.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
-		F68FD4F31D6C8C3F00E2A56C /* MCCoreDataRepositoryFetching.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MCCoreDataRepositoryFetching.swift; sourceTree = "<group>"; };
+		F68FD4F21D6C8C3F00E2A56C /* MCCoreDataRepository+Delete.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = "MCCoreDataRepository+Delete.swift"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		F68FD4F31D6C8C3F00E2A56C /* MCCoreDataRepository+Fetch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MCCoreDataRepository+Fetch.swift"; sourceTree = "<group>"; };
 		F68FD4F41D6C8C3F00E2A56C /* NSManagedObject+Create.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSManagedObject+Create.swift"; sourceTree = "<group>"; };
 		F68FD4F51D6C8C3F00E2A56C /* NSManagedObjectContext+Fetch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSManagedObjectContext+Fetch.swift"; sourceTree = "<group>"; };
 		F68FD4F61D6C8C3F00E2A56C /* NSManagedObjectContext+Save.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSManagedObjectContext+Save.swift"; sourceTree = "<group>"; };
@@ -212,8 +212,8 @@
 		F68FD4F11D6C8C3F00E2A56C /* Extension */ = {
 			isa = PBXGroup;
 			children = (
-				F68FD4F21D6C8C3F00E2A56C /* MCCoreDataRepositoryDeletion.swift */,
-				F68FD4F31D6C8C3F00E2A56C /* MCCoreDataRepositoryFetching.swift */,
+				F68FD4F21D6C8C3F00E2A56C /* MCCoreDataRepository+Delete.swift */,
+				F68FD4F31D6C8C3F00E2A56C /* MCCoreDataRepository+Fetch.swift */,
 				F68FD4F41D6C8C3F00E2A56C /* NSManagedObject+Create.swift */,
 				F68FD4F51D6C8C3F00E2A56C /* NSManagedObjectContext+Fetch.swift */,
 				F68FD4F61D6C8C3F00E2A56C /* NSManagedObjectContext+Save.swift */,
@@ -383,8 +383,8 @@
 				F68FD5071D6C8C3F00E2A56C /* NSManagedObjectContext+Fetch.swift in Sources */,
 				F68FD50D1D6C8C3F00E2A56C /* MCManagedObjectProtocol.swift in Sources */,
 				F68FD5091D6C8C3F00E2A56C /* NSManagedObjectContext+Save.swift in Sources */,
-				F68FD5031D6C8C3F00E2A56C /* MCCoreDataRepositoryFetching.swift in Sources */,
-				F68FD5011D6C8C3F00E2A56C /* MCCoreDataRepositoryDeletion.swift in Sources */,
+				F68FD5031D6C8C3F00E2A56C /* MCCoreDataRepository+Fetch.swift in Sources */,
+				F68FD5011D6C8C3F00E2A56C /* MCCoreDataRepository+Delete.swift in Sources */,
 				F68FD5131D6C8C3F00E2A56C /* MCCoreDataStackManager.swift in Sources */,
 				F68FD5051D6C8C3F00E2A56C /* NSManagedObject+Create.swift in Sources */,
 				F68FD4B11D6C8BF500E2A56C /* ViewController.swift in Sources */,
@@ -398,14 +398,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				F68FD5081D6C8C3F00E2A56C /* NSManagedObjectContext+Fetch.swift in Sources */,
-				F68FD5041D6C8C3F00E2A56C /* MCCoreDataRepositoryFetching.swift in Sources */,
+				F68FD5041D6C8C3F00E2A56C /* MCCoreDataRepository+Fetch.swift in Sources */,
 				F68FD4EE1D6C8C2E00E2A56C /* TestModel.xcdatamodeld in Sources */,
 				F68FD4E71D6C8C2E00E2A56C /* MCCoreDataRepositoryTest.swift in Sources */,
 				F68FD5121D6C8C3F00E2A56C /* MCCoreDataStackManagerPrivate.swift in Sources */,
 				F68FD50A1D6C8C3F00E2A56C /* NSManagedObjectContext+Save.swift in Sources */,
 				F68FD5101D6C8C3F00E2A56C /* MCCoreDataStackManagerBackground.swift in Sources */,
 				F68FD4EC1D6C8C2E00E2A56C /* MCSubCategoryTest.swift in Sources */,
-				F68FD5021D6C8C3F00E2A56C /* MCCoreDataRepositoryDeletion.swift in Sources */,
+				F68FD5021D6C8C3F00E2A56C /* MCCoreDataRepository+Delete.swift in Sources */,
 				F68FD5061D6C8C3F00E2A56C /* NSManagedObject+Create.swift in Sources */,
 				F68FD50E1D6C8C3F00E2A56C /* MCManagedObjectProtocol.swift in Sources */,
 				F68FD4E81D6C8C2E00E2A56C /* MCCoreDataStackManagerTest.swift in Sources */,

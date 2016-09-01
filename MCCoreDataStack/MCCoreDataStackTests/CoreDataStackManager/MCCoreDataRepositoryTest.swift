@@ -87,7 +87,7 @@ class MCCoreDataRepositoryTest: XCTestCase
             
             
             self.coreDataRepo?.cdsManager.readOnMainThread(operationBlock: { (MOC) in
-                let result = self.coreDataRepo?.fetchAll(byEntityName: "MCCategoryTest", MOC: MOC, resultType: .ManagedObjectResultType)
+                let result = self.coreDataRepo?.fetchAll(entityName: "MCCategoryTest", MOC: MOC, resultType: .ManagedObjectResultType)
                 
                 for resultItem in result! {
                     let category = resultItem as! MCCategoryTest
@@ -144,7 +144,7 @@ class MCCoreDataRepositoryTest: XCTestCase
             
             self.cdsManager.asyncWrite(operationBlock: { (MOC) in
             
-                let results = self.coreDataRepo?.fetchAll(byEntityName: "MCCategoryTest", MOC: MOC, resultType: .ManagedObjectResultType) as? [NSManagedObject]
+                let results = self.coreDataRepo?.fetchAll(entityName: "MCCategoryTest", MOC: MOC, resultType: .ManagedObjectResultType) as? [NSManagedObject]
                 
                 XCTAssertTrue(results?.count > 0)
                 self.coreDataRepo?.delete(containedInArray: results!, MOC: MOC)
@@ -152,7 +152,7 @@ class MCCoreDataRepositoryTest: XCTestCase
             }, completion: {
 
                 self.coreDataRepo?.cdsManager.readOnMainThread(operationBlock: { (MOC) in
-                    let results = self.coreDataRepo?.fetchAll(byEntityName: "MCCategoryTest", MOC: MOC, resultType: .ManagedObjectResultType) as? [NSManagedObject]
+                    let results = self.coreDataRepo?.fetchAll(entityName: "MCCategoryTest", MOC: MOC, resultType: .ManagedObjectResultType) as? [NSManagedObject]
                     XCTAssertTrue(results?.count == 0)
                     self.expectation.fulfill()
                 })
@@ -178,7 +178,7 @@ class MCCoreDataRepositoryTest: XCTestCase
             var firstObject: NSManagedObject? = nil
             var duplicatedObject: NSManagedObject? = nil
             
-            var results = self.coreDataRepo?.fetch(byPredicate: NSPredicate(format: "%K = %@", "categoryID", dictionary["categoryID"] as! String), entityName: "MCCategoryTest", MOC: MOC, resultType: .CountResultType)
+            var results = self.coreDataRepo?.fetchAll(byPredicate: NSPredicate(format: "%K = %@", "categoryID", dictionary["categoryID"] as! String), entityName: "MCCategoryTest", MOC: MOC, resultType: .CountResultType)
 
             if let value = results {
                 if value[0] as! NSInteger == 0 {
@@ -186,7 +186,7 @@ class MCCoreDataRepositoryTest: XCTestCase
                 }
             }
 
-            results = self.coreDataRepo?.fetch(byPredicate: NSPredicate(format: "%K = %@", "categoryID", dictionaryNew["categoryID"] as! String), entityName: "MCCategoryTest", MOC: MOC, resultType: .CountResultType)
+            results = self.coreDataRepo?.fetchAll(byPredicate: NSPredicate(format: "%K = %@", "categoryID", dictionaryNew["categoryID"] as! String), entityName: "MCCategoryTest", MOC: MOC, resultType: .CountResultType)
 
             if let value = results {
                 if value[0] as! NSInteger == 0 {
@@ -208,7 +208,7 @@ class MCCoreDataRepositoryTest: XCTestCase
             }, completion: {
                 
                 self.cdsManager.asyncRead(operationBlock: { (MOC) in
-                    let results = self.coreDataRepo?.fetch(byPredicate: NSPredicate(format: "%K = %@", "categoryID", "12345"), entityName: "MCCategoryTest", MOC: MOC)
+                    let results = self.coreDataRepo?.fetchAll(byPredicate: NSPredicate(format: "%K = %@", "categoryID", "12345"), entityName: "MCCategoryTest", MOC: MOC, resultType: .ManagedObjectResultType)
                     
                     if let value = results {
                         XCTAssertTrue(value.count == 1)
@@ -254,7 +254,7 @@ class MCCoreDataRepositoryTest: XCTestCase
             }, completion: {
                 
                 self.cdsManager.asyncRead(operationBlock: { (MOC) in
-                    let results = self.coreDataRepo?.fetch(byPredicate: NSPredicate(format: "%K = %@", "categoryName", "categoryName"), entityName: "MCCategoryTest", MOC: MOC)
+                    let results = self.coreDataRepo?.fetchAll(byPredicate: NSPredicate(format: "%K = %@", "categoryName", "categoryName"), entityName: "MCCategoryTest", MOC: MOC, resultType: .ManagedObjectResultType)
                     
                         XCTAssertTrue(results?.count == 1000)
                     
@@ -294,7 +294,7 @@ class MCCoreDataRepositoryTest: XCTestCase
             }, completion: {
                 
                 self.cdsManager.asyncRead(operationBlock: { (MOC) in
-                    let results = self.coreDataRepo?.fetch(byPredicate: NSPredicate(format: "%K = %@", "categoryName", "categoryName"), entityName: "MCCategoryTest", MOC: MOC, resultType: .ManagedObjectIDResultType)
+                    let results = self.coreDataRepo?.fetchAll(byPredicate: NSPredicate(format: "%K = %@", "categoryName", "categoryName"), entityName: "MCCategoryTest", MOC: MOC, resultType: .ManagedObjectIDResultType)
                     
                     XCTAssertTrue(results?.count == 1000)
 
@@ -310,7 +310,7 @@ class MCCoreDataRepositoryTest: XCTestCase
                         self.coreDataRepo.delete(containedInArray: objs, completionBlock: {
 
                             self.cdsManager.asyncRead(operationBlock: { (MOC) in
-                                let results = self.coreDataRepo?.fetch(byPredicate: NSPredicate(format: "%K = %@", "categoryName", "categoryName"), entityName: "MCCategoryTest", MOC: MOC, resultType: .ManagedObjectIDResultType)
+                                let results = self.coreDataRepo?.fetchAll(byPredicate: NSPredicate(format: "%K = %@", "categoryName", "categoryName"), entityName: "MCCategoryTest", MOC: MOC, resultType: .ManagedObjectIDResultType)
                                 
                                 XCTAssertTrue(results?.count == 0)
                                 
@@ -355,7 +355,7 @@ class MCCoreDataRepositoryTest: XCTestCase
             }, completion: {
                 
                 self.cdsManager.asyncRead(operationBlock: { (MOC) in
-                    let results = self.coreDataRepo?.fetch(byPredicate: NSPredicate(format: "%K = %@", "categoryName", "categoryName"), entityName: "MCCategoryTest", MOC: MOC, resultType: .ManagedObjectIDResultType)
+                    let results = self.coreDataRepo?.fetchAll(byPredicate: NSPredicate(format: "%K = %@", "categoryName", "categoryName"), entityName: "MCCategoryTest", MOC: MOC, resultType: .ManagedObjectIDResultType)
                     
                     XCTAssertTrue(results?.count == 5000)
                     
@@ -375,7 +375,7 @@ class MCCoreDataRepositoryTest: XCTestCase
                         self.coreDataRepo.delete(containedInArray: subArray, completionBlock: {
                             
                             self.cdsManager.asyncRead(operationBlock: { (MOC) in
-                                let results = self.coreDataRepo?.fetch(byPredicate: NSPredicate(format: "%K = %@", "categoryName", "categoryName"), entityName: "MCCategoryTest", MOC: MOC, resultType: .ManagedObjectIDResultType)
+                                let results = self.coreDataRepo?.fetchAll(byPredicate: NSPredicate(format: "%K = %@", "categoryName", "categoryName"), entityName: "MCCategoryTest", MOC: MOC, resultType: .ManagedObjectIDResultType)
                                 
                                 XCTAssertTrue(results?.count == 2500)
                                 

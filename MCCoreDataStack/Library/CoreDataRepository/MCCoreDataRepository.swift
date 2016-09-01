@@ -118,39 +118,4 @@ import CoreData
         }
     }
     
-    //MARK: Fetching
-    ///### fetch all the objects by EntityName in the current thread
-    ///- Parameter entityName: Name of the corresponding entity
-    ///- Parameter MOC: ManagedObjectContext created in the current thread. If nil the call should be from the main Thread
-    ///- Parameter resultType: this can be  .ManagedObject .ManagedObjectID .Dictionary .Count
-    ///- Return: New NSManagedObject or nil
-    
-    @objc public func fetchAll(byEntityName entityName: String, MOC: NSManagedObjectContext, resultType: NSFetchRequestResultType) -> [AnyObject]?
-    {
-        return self._fetchAll(entityName, MOC: MOC, resultType: resultType)
-    }
-    
-    ///### fetch all the object of a specific entityName, by Predicate, in the current thread
-    ///- Parameter predicate: NSPredicate object
-    ///- Parameter entityName: Name of the corresponding entity
-    ///- Parameter MOC: ManagedObjectContext created in the current thread. If nil the call should be from the main Thread
-    ///- Return: array of results
-
-    @objc public func fetch(byPredicate predicate: NSPredicate, entityName: String, MOC: NSManagedObjectContext) -> [AnyObject]?
-    {
-        return self._fetchAll(byPredicate: predicate, entityName: entityName, MOC: MOC, resultType: .ManagedObjectResultType)
-    }
-    
-    ///### fetch all the object of a specific entityName, by Predicate, in the current thread
-    ///- Parameter predicate: NSPredicate object
-    ///- Parameter entityName: Name of the corresponding entity
-    ///- Parameter MOC: ManagedObjectContext created in the current thread. If nil the call should be from the main Thread
-    ///- Parameter resultType: this can be  .ManagedObject .ManagedObjectID .Dictionary .Count
-    ///- Return: array of results
-    
-    @objc public func fetch(byPredicate predicate: NSPredicate, entityName: String, MOC: NSManagedObjectContext, resultType: NSFetchRequestResultType) -> [AnyObject]?
-    {
-        return self._fetchAll(byPredicate: predicate, entityName: entityName, MOC: MOC, resultType: resultType)
-    }
-    
 }

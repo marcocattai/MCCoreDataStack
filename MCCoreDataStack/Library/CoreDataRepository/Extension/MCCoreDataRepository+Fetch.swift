@@ -9,12 +9,19 @@
 import Foundation
 import CoreData
 
-internal extension MCCoreDataRepository
+public extension MCCoreDataRepository
 {
         
     //MARK Fetching in currentQueue
     
-    internal func _fetchAll(entityName: String, MOC: NSManagedObjectContext, resultType: NSFetchRequestResultType) -> [AnyObject]?
+    //MARK: Fetching
+    ///### fetch all the objects by EntityName in the current thread
+    ///- Parameter entityName: Name of the corresponding entity
+    ///- Parameter MOC: ManagedObjectContext created in the current thread. If nil the call should be from the main Thread
+    ///- Parameter resultType: this can be  .ManagedObject .ManagedObjectID .Dictionary .Count
+    ///- Return: New NSManagedObject or nil
+
+    public func fetchAll(entityName entityName: String, MOC: NSManagedObjectContext, resultType: NSFetchRequestResultType) -> [AnyObject]?
     {
         let fetchRequest = NSFetchRequest.init(entityName: entityName)
         fetchRequest.resultType = resultType
@@ -33,7 +40,15 @@ internal extension MCCoreDataRepository
         return []
     }
 
-    internal func _fetchAll(byPredicate predicate: NSPredicate, entityName: String, MOC: NSManagedObjectContext, resultType: NSFetchRequestResultType) -> [AnyObject]?
+    
+    ///### fetch all the object of a specific entityName, by Predicate, in the current thread
+    ///- Parameter predicate: NSPredicate object
+    ///- Parameter entityName: Name of the corresponding entity
+    ///- Parameter MOC: ManagedObjectContext created in the current thread. If nil the call should be from the main Thread
+    ///- Parameter resultType: this can be  .ManagedObject .ManagedObjectID .Dictionary .Count
+    ///- Return: array of results
+    
+    public func fetchAll(byPredicate predicate: NSPredicate, entityName: String, MOC: NSManagedObjectContext, resultType: NSFetchRequestResultType) -> [AnyObject]?
     {
         let fetchRequest = NSFetchRequest.init()
         fetchRequest.predicate = predicate
