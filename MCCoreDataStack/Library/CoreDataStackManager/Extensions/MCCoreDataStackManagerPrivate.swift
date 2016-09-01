@@ -10,6 +10,10 @@ import Foundation
 import Swift
 import CoreData
 
+enum CDJournalMode  : String {
+    case WAL = "WAL"
+    case DELETE = "DELETE"
+}
 
 internal extension MCCoreDataStackManager
 {
@@ -50,24 +54,11 @@ internal extension MCCoreDataStackManager
         }
     }
     
-    internal func autoMigrationOptions_WAL() -> Dictionary<NSObject, AnyObject>
+    internal func autoMigrationWithJournalMode(mode: String) -> Dictionary<NSObject, AnyObject>
     {
         
         var sqliteOptions = Dictionary<NSObject, AnyObject>()
-        sqliteOptions["journal_mode"] = "WAL"
-        
-        var persistentStoreOptions = Dictionary<NSObject, AnyObject>()
-        persistentStoreOptions[NSMigratePersistentStoresAutomaticallyOption] = true
-        persistentStoreOptions[NSInferMappingModelAutomaticallyOption] = true
-        persistentStoreOptions[NSSQLitePragmasOption] = sqliteOptions
-        return persistentStoreOptions
-    }
-    
-    internal func autoMigrationOptions_DELETE() -> Dictionary<NSObject, AnyObject>
-    {
-        
-        var sqliteOptions = Dictionary<NSObject, AnyObject>()
-        sqliteOptions["journal_mode"] = "DELETE"
+        sqliteOptions["journal_mode"] = mode
         
         var persistentStoreOptions = Dictionary<NSObject, AnyObject>()
         persistentStoreOptions[NSMigratePersistentStoresAutomaticallyOption] = true
@@ -79,7 +70,7 @@ internal extension MCCoreDataStackManager
     internal func addSqliteStore(storeURL: NSURL, configuration: String?, completion: MCCoreDataAsyncCompletion?) -> Bool
     {
         
-        var options = self.autoMigrationOptions_WAL()
+        var options = self.autoMigrationWithJournalMode("WAL")
         
         self.createPathToStoreFileIfNeccessary(storeURL);
         
@@ -100,7 +91,7 @@ internal extension MCCoreDataStackManager
                         
                         if (!isModelCompatible)
                         {
-                            options = self.autoMigrationOptions_DELETE();
+                            options = self.autoMigrationWithJournalMode("DELETE")
                         }
                     }
                 }
