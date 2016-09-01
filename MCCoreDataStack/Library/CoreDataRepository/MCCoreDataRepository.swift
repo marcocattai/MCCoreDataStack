@@ -89,33 +89,5 @@ import CoreData
     {
         return NSManagedObject.instanceWithDictionary(dictionary: dictionary, entityName: entityName, MOC: moc)
     }
-    
-    //MARK: Deletion
-
-    ///### Delete objects contained into the specified array in a background thread
-    ///- Parameter array: Specify an array of NSManagedObject or NSManagedObjectID
-    ///- Parameter completionBlock: Completion block
-    
-    @objc public func delete(containedInArray array: [AnyObject], completionBlock: (() -> Void)?)
-    {
-        if array is [NSManagedObject] {
-            self._delete(containedInArray: array as! [NSManagedObject], completionBlock: completionBlock)
-        } else if array is [NSManagedObjectID] {
-            self._deleteIDs(containedInArray: array as! [NSManagedObjectID], completionBlock: completionBlock)
-        }
-    }
-
-    ///### Delete objects contained into the specified array in the current thread
-    ///- Parameter array: Specify an array of NSManagedObject or NSManagedObjectID
-    ///- Parameter MOC: a specific NSManagedObjectContext
-
-    @objc public func delete(containedInArray array: [AnyObject], MOC moc: NSManagedObjectContext)
-    {
-        if array is [NSManagedObject] {
-            self._delete(containedInArray: array as! [NSManagedObject], MOC: moc)
-        } else if array is [NSManagedObjectID] {
-            self._deleteIDs(containedInArray: array as! [NSManagedObjectID], MOC: moc)
-        }
-    }
-    
+        
 }
