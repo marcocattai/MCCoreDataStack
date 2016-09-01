@@ -34,10 +34,10 @@
 		F68FD50C1D6C8C3F00E2A56C /* MCCoreDataRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = F68FD4F71D6C8C3F00E2A56C /* MCCoreDataRepository.swift */; };
 		F68FD50D1D6C8C3F00E2A56C /* MCManagedObjectProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = F68FD4F91D6C8C3F00E2A56C /* MCManagedObjectProtocol.swift */; };
 		F68FD50E1D6C8C3F00E2A56C /* MCManagedObjectProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = F68FD4F91D6C8C3F00E2A56C /* MCManagedObjectProtocol.swift */; };
-		F68FD50F1D6C8C3F00E2A56C /* MCCoreDataStackManagerBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = F68FD4FC1D6C8C3F00E2A56C /* MCCoreDataStackManagerBackground.swift */; };
-		F68FD5101D6C8C3F00E2A56C /* MCCoreDataStackManagerBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = F68FD4FC1D6C8C3F00E2A56C /* MCCoreDataStackManagerBackground.swift */; };
-		F68FD5111D6C8C3F00E2A56C /* MCCoreDataStackManagerPrivate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F68FD4FD1D6C8C3F00E2A56C /* MCCoreDataStackManagerPrivate.swift */; };
-		F68FD5121D6C8C3F00E2A56C /* MCCoreDataStackManagerPrivate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F68FD4FD1D6C8C3F00E2A56C /* MCCoreDataStackManagerPrivate.swift */; };
+		F68FD50F1D6C8C3F00E2A56C /* MCCoreDataStackManager+Background.swift in Sources */ = {isa = PBXBuildFile; fileRef = F68FD4FC1D6C8C3F00E2A56C /* MCCoreDataStackManager+Background.swift */; };
+		F68FD5101D6C8C3F00E2A56C /* MCCoreDataStackManager+Background.swift in Sources */ = {isa = PBXBuildFile; fileRef = F68FD4FC1D6C8C3F00E2A56C /* MCCoreDataStackManager+Background.swift */; };
+		F68FD5111D6C8C3F00E2A56C /* MCCoreDataStackManager+Private.swift in Sources */ = {isa = PBXBuildFile; fileRef = F68FD4FD1D6C8C3F00E2A56C /* MCCoreDataStackManager+Private.swift */; };
+		F68FD5121D6C8C3F00E2A56C /* MCCoreDataStackManager+Private.swift in Sources */ = {isa = PBXBuildFile; fileRef = F68FD4FD1D6C8C3F00E2A56C /* MCCoreDataStackManager+Private.swift */; };
 		F68FD5131D6C8C3F00E2A56C /* MCCoreDataStackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F68FD4FE1D6C8C3F00E2A56C /* MCCoreDataStackManager.swift */; };
 		F68FD5141D6C8C3F00E2A56C /* MCCoreDataStackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F68FD4FE1D6C8C3F00E2A56C /* MCCoreDataStackManager.swift */; };
 /* End PBXBuildFile section */
@@ -86,8 +86,8 @@
 		F68FD4F61D6C8C3F00E2A56C /* NSManagedObjectContext+Save.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSManagedObjectContext+Save.swift"; sourceTree = "<group>"; };
 		F68FD4F71D6C8C3F00E2A56C /* MCCoreDataRepository.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MCCoreDataRepository.swift; sourceTree = "<group>"; };
 		F68FD4F91D6C8C3F00E2A56C /* MCManagedObjectProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MCManagedObjectProtocol.swift; sourceTree = "<group>"; };
-		F68FD4FC1D6C8C3F00E2A56C /* MCCoreDataStackManagerBackground.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MCCoreDataStackManagerBackground.swift; sourceTree = "<group>"; };
-		F68FD4FD1D6C8C3F00E2A56C /* MCCoreDataStackManagerPrivate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MCCoreDataStackManagerPrivate.swift; sourceTree = "<group>"; };
+		F68FD4FC1D6C8C3F00E2A56C /* MCCoreDataStackManager+Background.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MCCoreDataStackManager+Background.swift"; sourceTree = "<group>"; };
+		F68FD4FD1D6C8C3F00E2A56C /* MCCoreDataStackManager+Private.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MCCoreDataStackManager+Private.swift"; sourceTree = "<group>"; };
 		F68FD4FE1D6C8C3F00E2A56C /* MCCoreDataStackManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MCCoreDataStackManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -241,8 +241,8 @@
 		F68FD4FB1D6C8C3F00E2A56C /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				F68FD4FC1D6C8C3F00E2A56C /* MCCoreDataStackManagerBackground.swift */,
-				F68FD4FD1D6C8C3F00E2A56C /* MCCoreDataStackManagerPrivate.swift */,
+				F68FD4FC1D6C8C3F00E2A56C /* MCCoreDataStackManager+Background.swift */,
+				F68FD4FD1D6C8C3F00E2A56C /* MCCoreDataStackManager+Private.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -379,7 +379,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F68FD50B1D6C8C3F00E2A56C /* MCCoreDataRepository.swift in Sources */,
-				F68FD50F1D6C8C3F00E2A56C /* MCCoreDataStackManagerBackground.swift in Sources */,
+				F68FD50F1D6C8C3F00E2A56C /* MCCoreDataStackManager+Background.swift in Sources */,
 				F68FD5071D6C8C3F00E2A56C /* NSManagedObjectContext+Fetch.swift in Sources */,
 				F68FD50D1D6C8C3F00E2A56C /* MCManagedObjectProtocol.swift in Sources */,
 				F68FD5091D6C8C3F00E2A56C /* NSManagedObjectContext+Save.swift in Sources */,
@@ -389,7 +389,7 @@
 				F68FD5051D6C8C3F00E2A56C /* NSManagedObject+Create.swift in Sources */,
 				F68FD4B11D6C8BF500E2A56C /* ViewController.swift in Sources */,
 				F68FD4AF1D6C8BF500E2A56C /* AppDelegate.swift in Sources */,
-				F68FD5111D6C8C3F00E2A56C /* MCCoreDataStackManagerPrivate.swift in Sources */,
+				F68FD5111D6C8C3F00E2A56C /* MCCoreDataStackManager+Private.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -401,9 +401,9 @@
 				F68FD5041D6C8C3F00E2A56C /* MCCoreDataRepository+Fetch.swift in Sources */,
 				F68FD4EE1D6C8C2E00E2A56C /* TestModel.xcdatamodeld in Sources */,
 				F68FD4E71D6C8C2E00E2A56C /* MCCoreDataRepositoryTest.swift in Sources */,
-				F68FD5121D6C8C3F00E2A56C /* MCCoreDataStackManagerPrivate.swift in Sources */,
+				F68FD5121D6C8C3F00E2A56C /* MCCoreDataStackManager+Private.swift in Sources */,
 				F68FD50A1D6C8C3F00E2A56C /* NSManagedObjectContext+Save.swift in Sources */,
-				F68FD5101D6C8C3F00E2A56C /* MCCoreDataStackManagerBackground.swift in Sources */,
+				F68FD5101D6C8C3F00E2A56C /* MCCoreDataStackManager+Background.swift in Sources */,
 				F68FD4EC1D6C8C2E00E2A56C /* MCSubCategoryTest.swift in Sources */,
 				F68FD5021D6C8C3F00E2A56C /* MCCoreDataRepository+Delete.swift in Sources */,
 				F68FD5061D6C8C3F00E2A56C /* NSManagedObject+Create.swift in Sources */,
