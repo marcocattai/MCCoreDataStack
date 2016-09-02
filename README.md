@@ -40,13 +40,16 @@ To use this library on iOS 7
 - Build the project
 - #import "[YourProductModuleName]-Swift.h"
 
+###This library supports chaining
+
+This library supports chaining of write - read - read_MT operations. For more information please refer to the following examples.
+
 ##How to use:
 
 ###Setup CoreDataStack
 ```swift
 MCCoreDataRepository.sharedInstance.setup(storeName: "TestDB.sqlite", domainName: "co.uk.tests")
 ```
-
 ####Create one object in background, fetch it on the main queue and delete it in background
 ```swift
 //Here we define our Dictionaries
@@ -56,13 +59,17 @@ let dictionary: [String: AnyObject] = ["categoryID": "12345", "categoryName": "T
 
 self.coreDataRepo.write(operationBlock: { (context) in
 
-   	self.coreDataRepo?.create(dictionary: dictionary, entityName: "MCCategoryTest", MOC: MOC)
+   	self.coreDataRepo?.create(dictionary: dictionary, entityName: "MCCategoryTest", context: context)
  
    }) { (error) in
    
 	//Object is persisted on disk
 	
-}).read { (context) in
+})
+
+//Here we don't use chaining
+
+self.coreDataRepo.read_MT { (context) in
    
 	let results = self.coreDataRepo?.fetch(entityName: "MCCategoryTest", context: context, resultType: .ManagedObjectResultType) as? [NSManagedObject]
 
@@ -70,6 +77,68 @@ self.coreDataRepo.write(operationBlock: { (context) in
    	self.coreDataRepo?.delete(containedInArray: results, completionBlock: nil)
 }
 
+```
+###Let's try to Create 5000 fake objects in background and then fetch them, using chaining, to populate the UI
+
+```swift
+
+var dataSource: [AnyObject]? = nil
+        
+self.coreDataRepo.write(operationBlock: { (context) in
+            
+            for index in 0..<5000 {
+                
+                let categoryID = String(index)
+                let categoryName = "categoryName"
+                let dictionary: [String: AnyObject] = ["categoryID": categoryID, "categoryName": categoryName]
+                self.coreDataRepo?.create(dictionary: dictionary, entityName: "MCCategoryTest", context: context)
+            }
+
+            
+	}) { (error) in
+        	//Here they are persisted
+        	
+}.read_MT { (context) in
+
+	dataSource = self.coreDataRepo?.fetch(entityName: "MCCategoryTest", context: context, resultType: .ManagedObjectResultType)
+}
+```
+###Now We want to update the dataSource of the above example
+###After the update, we want to fetch it on the main context (used by the main Thread)
+
+```swift
+
+self.coreDataRepo.write(operationBlock: { (context) in
+            
+	let objs = context.moveInContext(managedObjects: dataSource as! [NSManagedObject])
+
+	for obj in objs {
+       		if let category = obj as? MCCategoryTest {
+                    category.categoryName = "UPDATED"
+                }
+        }
+            
+}) { (error) in
+            //Here they are persisted
+}.read_MT { (context) in
+	dataSource = self.coreDataRepo?.fetch(entityName: "MCCategoryTest", context: context, resultType: .ManagedObjectResultType)
+
+	//Here we have our updated objects
+
+}
+
+```
+####Read and update objects in background
+
+```swift
+
+	self.coreDataRepo.write(operationBlock: { (context) in
+		let results = self.coreDataRepo?.fetch(byPredicate: NSPredicate(format: "%K = %@", "categoryName", "categoryName"), entityName: "MCCategoryTest", context: context, resultType: .ManagedObjectResultType)
+		
+		//Here we update our objects in BKG
+	
+	}, completion: nil)
+		
 ```
 
 ... Please, refer to the unit tests. On the unit tests I have tested the creation / fetch and deletion of thousand of objects
