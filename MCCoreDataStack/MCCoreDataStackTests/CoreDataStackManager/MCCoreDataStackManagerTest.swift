@@ -18,7 +18,7 @@ class MCCoreDataStackManagerTest: XCTestCase
     private var coreDataRepo: MCCoreDataRepository!
     private var expectation: XCTestExpectation!
     
-    lazy var backgroundMOC: NSManagedObjectContext = {
+    lazy var backgroundcontext: NSManagedObjectContext = {
         let bkgQueue = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
         bkgQueue.mergePolicy = NSMergePolicy(mergeType: .OverwriteMergePolicyType)
         return bkgQueue

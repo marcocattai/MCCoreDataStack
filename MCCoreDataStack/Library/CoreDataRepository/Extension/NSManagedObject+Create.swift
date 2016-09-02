@@ -17,14 +17,14 @@ extension NSManagedObject: EUManagedObjectProtocol
     ///### Class method to create an Instance of a specific NSManagedObject using a Dictionary
     ///- Parameter dictionary: dictionary
     ///- Parameter entityName: the name of the entity
-    ///- Parameter MOC: NSManagedObjectContext
+    ///- Parameter context: NSManagedObjectContext
     ///- Return: NSManagedObject
 
     @objc public class func instanceWithDictionary(dictionary dictionary: Dictionary<String, AnyObject>,
                                                    entityName: String,
-                                                   MOC moc: NSManagedObjectContext) -> NSManagedObject?
+                                                   context: NSManagedObjectContext) -> NSManagedObject?
     {
-        let entity = NSEntityDescription.insertNewObjectForEntityForName(entityName, inManagedObjectContext: moc)
+        let entity = NSEntityDescription.insertNewObjectForEntityForName(entityName, inManagedObjectContext: context)
         entity.updateWithDictionary(dictionary: dictionary)
         
         return entity

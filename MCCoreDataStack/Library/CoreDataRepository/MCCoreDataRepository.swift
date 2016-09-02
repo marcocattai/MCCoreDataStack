@@ -79,15 +79,58 @@ import CoreData
     }
     
     //MARK: Creation
-    
     ///### Create a new object from a dictionary
     ///- Parameter entityName: Name of the corresponding entity
-    ///- Parameter MOC: ManagedObjectContext created in the current thread
+    ///- Parameter context: ManagedObjectContext created in the current thread
     ///- Return: New NSManagedObject or nil
     
-    @objc public func create(dictionary dictionary: Dictionary<String, AnyObject>, entityName: String, MOC moc: NSManagedObjectContext) -> NSManagedObject?
+    @objc public func create(dictionary dictionary: Dictionary<String, AnyObject>, entityName: String, context: NSManagedObjectContext) -> NSManagedObject?
     {
-        return NSManagedObject.instanceWithDictionary(dictionary: dictionary, entityName: entityName, MOC: moc)
+        return NSManagedObject.instanceWithDictionary(dictionary: dictionary, entityName: entityName, context: context)
     }
+ 
+    //MARK: read_MT
+    ///### read on a background queue
+    ///- Parameter operationBlock
+    ///- Parameter completionBlock - The operation is persisted in the disk
+    ///- Return: Self - (Chaining support)
+
+    @objc public func read(operationBlock operationBlock: (context: NSManagedObjectContext) -> Void) -> Self
+    {
+        self.cdsManager.read(operationBlock: { (context) in
+            operationBlock(context: context)
+        })
         
+        return self
+    }
+
+    //MARK: write_MT
+    ///### write on a background queue
+    ///- Parameter operationBlock
+    ///- Parameter completionBlock - The operation is persisted in the disk
+    ///- Return: Self - (Chaining support)
+
+    @objc public func write(operationBlock operationBlock: (context: NSManagedObjectContext) -> Void, completion completionBlock: (NSError? -> Void)?) -> Self
+    {
+        self.cdsManager.write(operationBlock: { (context) in
+            operationBlock(context: context)
+        }) { (error) in
+            
+            if let block = completionBlock {
+                block(error);
+            }
+        }
+        return self
+    }
+    
+    //MARK: read_MT
+    ///### read from the mainContext on the mainThread
+    ///- Parameter operationBlock
+
+    @objc public func read_MT(operationBlock operationBlock: (context: NSManagedObjectContext) -> Void) -> Void
+    {
+        self.cdsManager.read_MT { (context) in
+            operationBlock(context: context)
+        }
+    }
 }

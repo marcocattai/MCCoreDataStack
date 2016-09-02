@@ -28,14 +28,14 @@ public extension MCCoreDataRepository
     
     ///### Delete objects contained into the specified array in the current thread
     ///- Parameter array: Specify an array of NSManagedObject or NSManagedObjectID
-    ///- Parameter MOC: a specific NSManagedObjectContext
+    ///- Parameter context: a specific NSManagedObjectContext
     
-    @objc public func delete(containedInArray array: [AnyObject], MOC moc: NSManagedObjectContext)
+    @objc public func delete(containedInArray array: [AnyObject], context: NSManagedObjectContext)
     {
         if array is [NSManagedObject] {
-            self._delete(containedInArray: array as! [NSManagedObject], MOC: moc)
+            self._delete(containedInArray: array as! [NSManagedObject], context: context)
         } else if array is [NSManagedObjectID] {
-            self._deleteIDs(containedInArray: array as! [NSManagedObjectID], MOC: moc)
+            self._deleteIDs(containedInArray: array as! [NSManagedObjectID], context: context)
         }
     }
 }
@@ -43,14 +43,27 @@ public extension MCCoreDataRepository
 internal extension MCCoreDataRepository
 {
     
-    internal func _delete(containedInArray array: [NSManagedObject],
-                                                  MOC moc: NSManagedObjectContext) {
+    internal func _delete(containedInArray array: [NSManagedObject], context: NSManagedObjectContext) {
         
         for object: NSManagedObject in array {
             
             do {
-                let managedObject = try moc.existingObjectWithID(object.objectID)
-                moc.deleteObject(managedObject)
+                let managedObject = try context.existingObjectWithID(object.objectID)
+                context.deleteObject(managedObject)
+            } catch {
+                let fetchError = error as NSError
+                print("\(fetchError), \(fetchError.userInfo)")
+            }
+        }
+    }
+    
+    internal func _deleteIDs(containedInArray array: [NSManagedObjectID], context: NSManagedObjectContext) {
+        
+        for objectID: NSManagedObjectID in array {
+            
+            do {
+                let managedObject = try context.existingObjectWithID(objectID)
+                context.deleteObject(managedObject)
             } catch {
                 let fetchError = error as NSError
                 print("\(fetchError), \(fetchError.userInfo)")
@@ -59,49 +72,34 @@ internal extension MCCoreDataRepository
     }
     
     internal func _delete(containedInArray array: [NSManagedObject],
-                                                  completionBlock: (Void -> Void)?) {
+                                           completionBlock: (Void -> Void)?) {
         
         weak var weakSelf = self
         
-        self.cdsManager.asyncWrite(operationBlock: { (MOC) in
+        self.cdsManager.write(operationBlock: { (context) in
             
-            weakSelf?._delete(containedInArray: array, MOC: MOC)
+            weakSelf?._delete(containedInArray: array, context: context)
             
-            }, completion: {
-                if let completionBlockUnwrapped = completionBlock {
-                    completionBlockUnwrapped();
-                }
-        })
-    }
-    
-    internal func _deleteIDs(containedInArray array: [NSManagedObjectID],
-                                         MOC moc: NSManagedObjectContext) {
-        
-        for objectID: NSManagedObjectID in array {
+        }) { (error) in
             
-            do {
-                let managedObject = try moc.existingObjectWithID(objectID)
-                moc.deleteObject(managedObject)
-            } catch {
-                let fetchError = error as NSError
-                print("\(fetchError), \(fetchError.userInfo)")
+            if let completionBlockUnwrapped = completionBlock {
+                completionBlockUnwrapped();
             }
         }
     }
-    
+
     internal func _deleteIDs(containedInArray array: [NSManagedObjectID],
                                          completionBlock: (Void -> Void)?) {
         
         weak var weakSelf = self
         
-        self.cdsManager.asyncWrite(operationBlock: { (MOC) in
-            
-            weakSelf?._deleteIDs(containedInArray: array, MOC: MOC)
-            
-            }, completion: {
-                if let completionBlockUnwrapped = completionBlock {
-                    completionBlockUnwrapped();
-                }
-        })
+        self.cdsManager.write(operationBlock: { (context) in
+            weakSelf?._deleteIDs(containedInArray: array, context: context)
+
+        }) { (error) in
+            if let completionBlockUnwrapped = completionBlock {
+                completionBlockUnwrapped();
+            }
+        }
     }
 }

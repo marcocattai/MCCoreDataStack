@@ -35,7 +35,7 @@ extension NSManagedObjectContext {
                     
                 } catch {
                     completionBlock (inner: {
-                        throw CoreDataStackError.InternalError(description: "CoreDataStackManager: PersistentStore error")
+                        throw CoreDataStackError.InternalError(description: "We encountered a problem. Changes could not be saved.")
                     })
                 }
             } else {
@@ -66,7 +66,7 @@ extension NSManagedObjectContext {
                     
                 } catch {
                     completionBlock (inner: {
-                        throw CoreDataStackError.InternalError(description: "CoreDataStackManager: PersistentStore error")
+                        throw CoreDataStackError.InternalError(description: "We encountered a problem. Changes could not be saved.")
                     })
                 }
             } else {

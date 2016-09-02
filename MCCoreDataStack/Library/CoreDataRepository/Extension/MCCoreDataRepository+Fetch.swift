@@ -17,11 +17,11 @@ public extension MCCoreDataRepository
     //MARK: Fetching
     ///### fetch all the objects by EntityName in the current thread
     ///- Parameter entityName: Name of the corresponding entity
-    ///- Parameter MOC: ManagedObjectContext created in the current thread. If nil the call should be from the main Thread
+    ///- Parameter context: ManagedObjectContext created in the current thread. If nil the call should be from the main Thread
     ///- Parameter resultType: this can be  .ManagedObject .ManagedObjectID .Dictionary .Count
     ///- Return: New NSManagedObject or nil
-
-    public func fetchAll(entityName entityName: String, MOC: NSManagedObjectContext, resultType: NSFetchRequestResultType) -> [AnyObject]?
+    
+    public func fetch(entityName entityName: String, context: NSManagedObjectContext, resultType: NSFetchRequestResultType) -> [AnyObject]?
     {
         let fetchRequest = NSFetchRequest.init(entityName: entityName)
         fetchRequest.resultType = resultType
@@ -31,7 +31,7 @@ public extension MCCoreDataRepository
         #endif
         
         do {
-            let results = try MOC.executeFetchRequest(fetchRequest)
+            let results = try context.executeFetchRequest(fetchRequest)
             
             return results;
         } catch {
@@ -44,17 +44,17 @@ public extension MCCoreDataRepository
     ///### fetch all the object of a specific entityName, by Predicate, in the current thread
     ///- Parameter predicate: NSPredicate object
     ///- Parameter entityName: Name of the corresponding entity
-    ///- Parameter MOC: ManagedObjectContext created in the current thread. If nil the call should be from the main Thread
+    ///- Parameter context: ManagedObjectContext created in the current thread. If nil the call should be from the main Thread
     ///- Parameter resultType: this can be  .ManagedObject .ManagedObjectID .Dictionary .Count
     ///- Return: array of results
     
-    public func fetchAll(byPredicate predicate: NSPredicate, entityName: String, MOC: NSManagedObjectContext, resultType: NSFetchRequestResultType) -> [AnyObject]?
+    public func fetch(byPredicate predicate: NSPredicate, entityName: String, context: NSManagedObjectContext, resultType: NSFetchRequestResultType) -> [AnyObject]?
     {
         let fetchRequest = NSFetchRequest.init()
         fetchRequest.predicate = predicate
         fetchRequest.resultType = resultType
         
-        let entityDescription = NSEntityDescription.entityForName(entityName, inManagedObjectContext: MOC)
+        let entityDescription = NSEntityDescription.entityForName(entityName, inManagedObjectContext: context)
         
         #if DEBUG
             fetchRequest.returnsObjectsAsFaults = false;
@@ -64,7 +64,7 @@ public extension MCCoreDataRepository
         fetchRequest.entity = entityDescription;
         
         do {
-            results = try MOC.executeFetchRequest(fetchRequest)
+            results = try context.executeFetchRequest(fetchRequest)
             
             return results
         } catch let error as NSError {
