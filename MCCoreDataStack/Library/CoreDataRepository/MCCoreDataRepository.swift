@@ -129,8 +129,10 @@ import CoreData
 
     @objc public func read_MT(operationBlock operationBlock: (context: NSManagedObjectContext) -> Void) -> Void
     {
-        self.cdsManager.read_MT { (context) in
-            operationBlock(context: context)
-        }
+        dispatch_async(dispatch_get_main_queue(), {
+            self.cdsManager.read_MT { (context) in
+                    operationBlock(context: context)
+            }
+        })
     }
 }
