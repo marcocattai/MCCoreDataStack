@@ -1,5 +1,5 @@
 # MCCoreDataStack
-EUCoreDataStack is a simple SWIFT wrapper around Apple's Core Data Framework to create, save and fetch Managed Objects
+MCCoreDataStack is a simple SWIFT wrapper around Apple's Core Data Framework to create, save and fetch Managed Objects
 
 ##Documentation
 [API Reference](https://marcocattai.github.io/MCCoreDataStack/)
@@ -54,19 +54,22 @@ MCCoreDataRepository.sharedInstance.setup(storeName: "TestDB.sqlite", domainName
 let subDictionary: [String: AnyObject] = ["subCategoryID": "sub12345", "subCategoryName": "subTest12345"]
 let dictionary: [String: AnyObject] = ["categoryID": "12345", "categoryName": "Test12345", "subCategory": subDictionary]
 
-self.coreDataStackManager.asyncWrite(operationBlock: { (MOC) in
+self.coreDataRepo.write(operationBlock: { (context) in
 
-   self.coreDataRepo?.create(dictionary: dictionary, entityName: "MCCategoryTest", MOC: MOC)
+   	self.coreDataRepo?.create(dictionary: dictionary, entityName: "MCCategoryTest", MOC: MOC)
  
-}, completion: {
+   }) { (error) in
+   
+	//Object is persisted on disk
+	
+}).read { (context) in
+   
+	let results = self.coreDataRepo?.fetch(entityName: "MCCategoryTest", context: context, resultType: .ManagedObjectResultType) as? [NSManagedObject]
 
-    self.coreDataRepo?.cdsManager.readOnMainThread(operationBlock: { (MOC) in
-       let results = self.coreDataRepo?.fetchAll(byEntityName: "MCCategoryTest", MOC: MOC, resultType: .ManagedObjectResultType) as? [NSManagedObject]
+   	// Objects will be deleted in a background thread. Deletion will fetch the objects from the background context
+   	self.coreDataRepo?.delete(containedInArray: results, completionBlock: nil)
+}
 
-	   // Objects will be deleted in a background thread. Deletion will fetch the objects from the background context
-	   self.coreDataRepo?.delete(containedInArray: results, completionBlock: nil)
-    })
-})
 ```
 
 ... Please, refer to the unit tests. On the unit tests I have tested the creation / fetch and deletion of thousand of objects

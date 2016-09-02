@@ -79,78 +79,58 @@ import CoreData
     }
     
     //MARK: Creation
-    
     ///### Create a new object from a dictionary
     ///- Parameter entityName: Name of the corresponding entity
-    ///- Parameter MOC: ManagedObjectContext created in the current thread
+    ///- Parameter context: ManagedObjectContext created in the current thread
     ///- Return: New NSManagedObject or nil
     
-    @objc public func create(dictionary dictionary: Dictionary<String, AnyObject>, entityName: String, MOC moc: NSManagedObjectContext) -> NSManagedObject?
+    @objc public func create(dictionary dictionary: Dictionary<String, AnyObject>, entityName: String, context: NSManagedObjectContext) -> NSManagedObject?
     {
-        return NSManagedObject.instanceWithDictionary(dictionary: dictionary, entityName: entityName, MOC: moc)
+        return NSManagedObject.instanceWithDictionary(dictionary: dictionary, entityName: entityName, context: context)
+    }
+ 
+    //MARK: read
+    ///### read on a background queue
+    ///- Parameter operationBlock
+    ///- Parameter completionBlock - The operation is persisted in the disk
+    ///- Return: Self - (Chaining support)
+
+    @objc public func read(operationBlock operationBlock: (context: NSManagedObjectContext) -> Void) -> Self
+    {
+        self.cdsManager.read(operationBlock: { (context) in
+            operationBlock(context: context)
+        })
+        
+        return self
+    }
+
+    //MARK: write
+    ///### write on a background queue
+    ///- Parameter operationBlock
+    ///- Parameter completionBlock - The operation is persisted in the disk
+    ///- Return: Self - (Chaining support)
+
+    @objc public func write(operationBlock operationBlock: (context: NSManagedObjectContext) -> Void, completion completionBlock: (NSError? -> Void)?) -> Self
+    {
+        self.cdsManager.write(operationBlock: { (context) in
+            operationBlock(context: context)
+        }) { (error) in
+            
+            if let block = completionBlock {
+                block(error);
+            }
+        }
+        return self
     }
     
-    //MARK: Deletion
+    //MARK: read_MT
+    ///### read from the mainContext on the mainThread
+    ///- Parameter operationBlock
 
-    ///### Delete objects contained into the specified array in a background thread
-    ///- Parameter array: Specify an array of NSManagedObject or NSManagedObjectID
-    ///- Parameter completionBlock: Completion block
-    
-    @objc public func delete(containedInArray array: [AnyObject], completionBlock: (() -> Void)?)
+    @objc public func read_MT(operationBlock operationBlock: (context: NSManagedObjectContext) -> Void) -> Void
     {
-        if array is [NSManagedObject] {
-            self._delete(containedInArray: array as! [NSManagedObject], completionBlock: completionBlock)
-        } else if array is [NSManagedObjectID] {
-            self._deleteIDs(containedInArray: array as! [NSManagedObjectID], completionBlock: completionBlock)
+        self.cdsManager.read_MT { (context) in
+            operationBlock(context: context)
         }
     }
-
-    ///### Delete objects contained into the specified array in the current thread
-    ///- Parameter array: Specify an array of NSManagedObject or NSManagedObjectID
-    ///- Parameter MOC: a specific NSManagedObjectContext
-
-    @objc public func delete(containedInArray array: [AnyObject], MOC moc: NSManagedObjectContext)
-    {
-        if array is [NSManagedObject] {
-            self._delete(containedInArray: array as! [NSManagedObject], MOC: moc)
-        } else if array is [NSManagedObjectID] {
-            self._deleteIDs(containedInArray: array as! [NSManagedObjectID], MOC: moc)
-        }
-    }
-    
-    //MARK: Fetching
-    ///### fetch all the objects by EntityName in the current thread
-    ///- Parameter entityName: Name of the corresponding entity
-    ///- Parameter MOC: ManagedObjectContext created in the current thread. If nil the call should be from the main Thread
-    ///- Parameter resultType: this can be  .ManagedObject .ManagedObjectID .Dictionary .Count
-    ///- Return: New NSManagedObject or nil
-    
-    @objc public func fetchAll(byEntityName entityName: String, MOC: NSManagedObjectContext, resultType: NSFetchRequestResultType) -> [AnyObject]?
-    {
-        return self._fetchAll(entityName, MOC: MOC, resultType: resultType)
-    }
-    
-    ///### fetch all the object of a specific entityName, by Predicate, in the current thread
-    ///- Parameter predicate: NSPredicate object
-    ///- Parameter entityName: Name of the corresponding entity
-    ///- Parameter MOC: ManagedObjectContext created in the current thread. If nil the call should be from the main Thread
-    ///- Return: array of results
-
-    @objc public func fetch(byPredicate predicate: NSPredicate, entityName: String, MOC: NSManagedObjectContext) -> [AnyObject]?
-    {
-        return self._fetchAll(byPredicate: predicate, entityName: entityName, MOC: MOC, resultType: .ManagedObjectResultType)
-    }
-    
-    ///### fetch all the object of a specific entityName, by Predicate, in the current thread
-    ///- Parameter predicate: NSPredicate object
-    ///- Parameter entityName: Name of the corresponding entity
-    ///- Parameter MOC: ManagedObjectContext created in the current thread. If nil the call should be from the main Thread
-    ///- Parameter resultType: this can be  .ManagedObject .ManagedObjectID .Dictionary .Count
-    ///- Return: array of results
-    
-    @objc public func fetch(byPredicate predicate: NSPredicate, entityName: String, MOC: NSManagedObjectContext, resultType: NSFetchRequestResultType) -> [AnyObject]?
-    {
-        return self._fetchAll(byPredicate: predicate, entityName: entityName, MOC: MOC, resultType: resultType)
-    }
-    
 }

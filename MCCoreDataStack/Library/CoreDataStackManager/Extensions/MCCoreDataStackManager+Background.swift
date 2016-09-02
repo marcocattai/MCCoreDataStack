@@ -40,20 +40,20 @@ internal extension MCCoreDataStackManager
     
     internal func _applicationWillResignActive(notification: NSNotification)
     {
-        self.persistbkgMOC()
+        self.persistbkgcontext()
     }
     
     internal func _applicationDidEnterBackground(notification: NSNotification)
     {
-        self.persistbkgMOC()
+        self.persistbkgcontext()
     }
     
     internal func _applicationWillTerminate(notification: NSNotification)
     {
-        self.persistbkgMOC()
+        self.persistbkgcontext()
     }
     
-    internal func persistbkgMOC() {
+    internal func persistbkgcontext() {
         if UIDevice.currentDevice().respondsToSelector("isMultitaskingSupported") {
             self.bkgPersistTask = UIBackgroundTaskInvalid
             NSNotificationCenter.defaultCenter().addObserver(self, selector: "_doBackgroundTask:", name: UIApplicationDidEnterBackgroundNotification, object: nil)
@@ -73,7 +73,7 @@ internal extension MCCoreDataStackManager
             })
             let queue: dispatch_queue_t = dispatch_get_global_queue(DISPATCH_QUMIPE_PRIORITY_DEFAULT, 0)
             dispatch_async(queue, {() -> Void in
-                weakSelf?.asyncRead({ (MOC) -> Void in
+                weakSelf?.asyncRead({ (context) -> Void in
                     weakSelf!.terminateBackgroundTask()
                 })
             })

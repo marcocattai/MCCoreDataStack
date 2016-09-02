@@ -19,7 +19,7 @@ class MCCoreDataRepositoryTest: XCTestCase
     private var expectation: XCTestExpectation!
     private var cdsManager: MCCoreDataStackManager!
     
-    lazy var backgroundMOC: NSManagedObjectContext = {
+    lazy var backgroundcontext: NSManagedObjectContext = {
         let bkgQueue = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
         bkgQueue.mergePolicy = NSMergePolicy(mergeType: .OverwriteMergePolicyType)
         return bkgQueue
@@ -66,15 +66,15 @@ class MCCoreDataRepositoryTest: XCTestCase
         let subDictionary: [String: AnyObject] = ["subCategoryID": "sub12345", "subCategoryName": "subTest12345"]
 
         let dictionary: [String: AnyObject] = ["categoryID": "12345", "categoryName": "Test12345", "subCategory": subDictionary]
+        
+        self.coreDataRepo.write(operationBlock: { (context) in
 
-        self.cdsManager.asyncWrite(operationBlock: { (MOC) in
-
-            let createdObject = self.coreDataRepo?.create(dictionary: dictionary, entityName: "MCCategoryTest", MOC: MOC)
-
+            let createdObject = self.coreDataRepo?.create(dictionary: dictionary, entityName: "MCCategoryTest", context: context)
+            
             XCTAssertFalse(createdObject == nil)
             
             if let category = createdObject as? MCCategoryTest {
-
+                
                 XCTAssertTrue(category.categoryID == "12345")
                 XCTAssertTrue(category.categoryName == "Test12345")
                 XCTAssertTrue(category.subCategory?.subCategoryID == "sub12345")
@@ -83,29 +83,25 @@ class MCCoreDataRepositoryTest: XCTestCase
                 XCTAssertTrue(false)
             }
             
-        }, completion: {
+        }) { (error) in
+
+        
+        }.read { (context) in
+            let result = self.coreDataRepo?.fetch(entityName: "MCCategoryTest", context: context, resultType: .ManagedObjectResultType)
             
-            
-            self.coreDataRepo?.cdsManager.readOnMainThread(operationBlock: { (MOC) in
-                let result = self.coreDataRepo?.fetchAll(byEntityName: "MCCategoryTest", MOC: MOC, resultType: .ManagedObjectResultType)
+            for resultItem in result! {
+                let category = resultItem as! MCCategoryTest
                 
-                for resultItem in result! {
-                    let category = resultItem as! MCCategoryTest
-                    
-                    if let subCategory = category.subCategory {
-                        XCTAssertTrue(subCategory.subCategoryID == "sub12345")
-                        XCTAssertTrue(subCategory.subCategoryName == "subTest12345")
-                        XCTAssertTrue(subCategory.parent?.categoryID == "12345")
-                        XCTAssertTrue(subCategory.parent?.categoryName == "Test12345")
-                    }
+                if let subCategory = category.subCategory {
+                    XCTAssertTrue(subCategory.subCategoryID == "sub12345")
+                    XCTAssertTrue(subCategory.subCategoryName == "subTest12345")
+                    XCTAssertTrue(subCategory.parent?.categoryID == "12345")
+                    XCTAssertTrue(subCategory.parent?.categoryName == "Test12345")
                 }
-                
-                self.expectation.fulfill()
-            })
-
-
+            }
             
-        })
+            self.expectation.fulfill()
+        }
         
         self.waitForExpectationsWithTimeout(10) { (error) -> Void in
             XCTAssertNil(error);
@@ -122,9 +118,8 @@ class MCCoreDataRepositoryTest: XCTestCase
         
         let dictionary: [String: AnyObject] = ["categoryID": "12345", "categoryName": "Test12345", "subCategory": subDictionary]
         
-        self.cdsManager.asyncWrite(operationBlock: { (MOC) in
-            
-            let createdObject = self.coreDataRepo?.create(dictionary: dictionary, entityName: "MCCategoryTest", MOC: MOC)
+        self.coreDataRepo.write(operationBlock: { (context) in
+            let createdObject = self.coreDataRepo?.create(dictionary: dictionary, entityName: "MCCategoryTest", context: context)
             
             XCTAssertFalse(createdObject == nil)
             
@@ -140,24 +135,27 @@ class MCCoreDataRepositoryTest: XCTestCase
             } else {
                 XCTAssertTrue(false)
             }
-        }, completion: {
-            
-            self.cdsManager.asyncWrite(operationBlock: { (MOC) in
-            
-                let results = self.coreDataRepo?.fetchAll(byEntityName: "MCCategoryTest", MOC: MOC, resultType: .ManagedObjectResultType) as? [NSManagedObject]
+
+        }) { (error) in
+        
+        }.write(operationBlock: { (context) in
+                         
+                let results = self.coreDataRepo?.fetch(entityName: "MCCategoryTest", context: context, resultType: .ManagedObjectResultType) as? [NSManagedObject]
                 
                 XCTAssertTrue(results?.count > 0)
-                self.coreDataRepo?.delete(containedInArray: results!, MOC: MOC)
+                self.coreDataRepo?.delete(containedInArray: results!, context: context)
 
-            }, completion: {
-
-                self.coreDataRepo?.cdsManager.readOnMainThread(operationBlock: { (MOC) in
-                    let results = self.coreDataRepo?.fetchAll(byEntityName: "MCCategoryTest", MOC: MOC, resultType: .ManagedObjectResultType) as? [NSManagedObject]
-                    XCTAssertTrue(results?.count == 0)
-                    self.expectation.fulfill()
-                })
+        }) { (error) in
+            
+        }.read_MT { (context) in
+            
+            self.coreDataRepo?.read_MT(operationBlock: { (context) in
+                let results = self.coreDataRepo?.fetch(entityName: "MCCategoryTest", context: context, resultType: .ManagedObjectResultType) as? [NSManagedObject]
+                XCTAssertTrue(results?.count == 0)
+                self.expectation.fulfill()
             })
-        })
+            
+        }
         
         self.waitForExpectationsWithTimeout(10) { (error) -> Void in
             XCTAssertNil(error);
@@ -173,24 +171,23 @@ class MCCoreDataRepositoryTest: XCTestCase
         let dictionary: [String: AnyObject] = ["categoryID": "12345", "categoryName": "Test12345"]
         let dictionaryNew: [String: AnyObject] = ["categoryID": "12345", "categoryName": "Test"]
         
-        self.cdsManager.asyncWrite(operationBlock: { (MOC) in
-            
+        self.coreDataRepo.write(operationBlock: { (context) in
             var firstObject: NSManagedObject? = nil
             var duplicatedObject: NSManagedObject? = nil
             
-            var results = self.coreDataRepo?.fetch(byPredicate: NSPredicate(format: "%K = %@", "categoryID", dictionary["categoryID"] as! String), entityName: "MCCategoryTest", MOC: MOC, resultType: .CountResultType)
-
+            var results = self.coreDataRepo?.fetch(byPredicate: NSPredicate(format: "%K = %@", "categoryID", dictionary["categoryID"] as! String), entityName: "MCCategoryTest", context: context, resultType: .CountResultType)
+            
             if let value = results {
                 if value[0] as! NSInteger == 0 {
-                    firstObject = self.coreDataRepo?.create(dictionary: dictionary, entityName: "MCCategoryTest", MOC: MOC)
+                    firstObject = self.coreDataRepo?.create(dictionary: dictionary, entityName: "MCCategoryTest", context: context)
                 }
             }
-
-            results = self.coreDataRepo?.fetch(byPredicate: NSPredicate(format: "%K = %@", "categoryID", dictionaryNew["categoryID"] as! String), entityName: "MCCategoryTest", MOC: MOC, resultType: .CountResultType)
-
+            
+            results = self.coreDataRepo?.fetch(byPredicate: NSPredicate(format: "%K = %@", "categoryID", dictionaryNew["categoryID"] as! String), entityName: "MCCategoryTest", context: context, resultType: .CountResultType)
+            
             if let value = results {
                 if value[0] as! NSInteger == 0 {
-                    duplicatedObject = self.coreDataRepo?.create(dictionary: dictionaryNew, entityName: "MCCategoryTest", MOC: MOC)
+                    duplicatedObject = self.coreDataRepo?.create(dictionary: dictionaryNew, entityName: "MCCategoryTest", context: context)
                 }
             }
             
@@ -204,25 +201,26 @@ class MCCoreDataRepositoryTest: XCTestCase
             } else {
                 XCTAssertTrue(false)
             }
+
+        }) { (error) in
             
-            }, completion: {
+            XCTAssertTrue(error == nil)
+            
+            self.coreDataRepo.read(operationBlock: { (context) in
+                let results = self.coreDataRepo?.fetch(byPredicate: NSPredicate(format: "%K = %@", "categoryID", "12345"), entityName: "MCCategoryTest", context: context, resultType: .ManagedObjectResultType)
                 
-                self.cdsManager.asyncRead(operationBlock: { (MOC) in
-                    let results = self.coreDataRepo?.fetch(byPredicate: NSPredicate(format: "%K = %@", "categoryID", "12345"), entityName: "MCCategoryTest", MOC: MOC)
-                    
-                    if let value = results {
-                        XCTAssertTrue(value.count == 1)
-                    }
-                    
-                    if let category = results![0] as? MCCategoryTest {
-                        XCTAssertFalse(category.hasChanges)
-                    } else {
-                        XCTAssertTrue(false)
-                    }
-                     self.expectation.fulfill()
-                    })
+                if let value = results {
+                    XCTAssertTrue(value.count == 1)
+                }
                 
-        })
+                if let category = results![0] as? MCCategoryTest {
+                    XCTAssertFalse(category.hasChanges)
+                } else {
+                    XCTAssertTrue(false)
+                }
+                self.expectation.fulfill()
+            })
+        }
         
         self.waitForExpectationsWithTimeout(10) { (error) -> Void in
             XCTAssertNil(error);
@@ -236,9 +234,8 @@ class MCCoreDataRepositoryTest: XCTestCase
         
         let dictionary: [String: AnyObject] = ["categoryID": "12345", "categoryName": "Test12345"]
         
-        self.cdsManager.asyncWrite(operationBlock: { (MOC) in
-            
-            self.coreDataRepo?.create(dictionary: dictionary, entityName: "MCCategoryTest", MOC: MOC)
+        self.coreDataRepo.write(operationBlock: { (context) in
+            self.coreDataRepo?.create(dictionary: dictionary, entityName: "MCCategoryTest", context: context)
             
             for index in 1...1000 {
                 
@@ -247,22 +244,20 @@ class MCCoreDataRepositoryTest: XCTestCase
                 
                 let dictionary: [String: AnyObject] = ["categoryID": categoryID, "categoryName": categoryName]
                 
-                self.coreDataRepo?.create(dictionary: dictionary, entityName: "MCCategoryTest", MOC: MOC)
+                self.coreDataRepo?.create(dictionary: dictionary, entityName: "MCCategoryTest", context: context)
             }
             
-            
-            }, completion: {
-                
-                self.cdsManager.asyncRead(operationBlock: { (MOC) in
-                    let results = self.coreDataRepo?.fetch(byPredicate: NSPredicate(format: "%K = %@", "categoryName", "categoryName"), entityName: "MCCategoryTest", MOC: MOC)
-                    
-                        XCTAssertTrue(results?.count == 1000)
-                    
-                        self.expectation.fulfill()
-                    })
 
-        })
-        
+        }) { (error) in
+            
+            self.coreDataRepo.read(operationBlock: { (context) in
+                let results = self.coreDataRepo?.fetch(byPredicate: NSPredicate(format: "%K = %@", "categoryName", "categoryName"), entityName: "MCCategoryTest", context: context, resultType: .ManagedObjectResultType)
+                
+                XCTAssertTrue(results?.count == 1000)
+                
+                self.expectation.fulfill()
+            })
+        }
         
         self.waitForExpectationsWithTimeout(10) { (error) -> Void in
             XCTAssertNil(error);
@@ -276,10 +271,8 @@ class MCCoreDataRepositoryTest: XCTestCase
         let dictionary: [String: AnyObject] = ["categoryID": "12345", "categoryName": "Test12345"]
         
         
-        
-        self.cdsManager.asyncWrite(operationBlock: { (MOC) in
-            
-            self.coreDataRepo?.create(dictionary: dictionary, entityName: "MCCategoryTest", MOC: MOC)
+        self.coreDataRepo.write(operationBlock: { (context) in
+            self.coreDataRepo?.create(dictionary: dictionary, entityName: "MCCategoryTest", context: context)
             
             for index in 1...1000 {
                 
@@ -288,42 +281,40 @@ class MCCoreDataRepositoryTest: XCTestCase
                 
                 let dictionary: [String: AnyObject] = ["categoryID": categoryID, "categoryName": categoryName]
                 
-                self.coreDataRepo?.create(dictionary: dictionary, entityName: "MCCategoryTest", MOC: MOC)
+                self.coreDataRepo?.create(dictionary: dictionary, entityName: "MCCategoryTest", context: context)
             }
+
+        }) { (error) in
             
-            }, completion: {
+            self.coreDataRepo.read(operationBlock: { (context) in
+                let results = self.coreDataRepo?.fetch(byPredicate: NSPredicate(format: "%K = %@", "categoryName", "categoryName"), entityName: "MCCategoryTest", context: context, resultType: .ManagedObjectIDResultType)
                 
-                self.cdsManager.asyncRead(operationBlock: { (MOC) in
-                    let results = self.coreDataRepo?.fetch(byPredicate: NSPredicate(format: "%K = %@", "categoryName", "categoryName"), entityName: "MCCategoryTest", MOC: MOC, resultType: .ManagedObjectIDResultType)
+                XCTAssertTrue(results?.count == 1000)
+                
+                if let array = results! as? [NSManagedObjectID] {
                     
-                    XCTAssertTrue(results?.count == 1000)
-
-                    if let array = results! as? [NSManagedObjectID] {
-
-                        let ctx = self.cdsManager.createPrivateMOC()
+                    let ctx = self.cdsManager.createPrivatecontext()
+                    
+                    //Checking that we can retrieve existingObjecsWithIds
+                    let objs = ctx.existingObjecsWithIds(managedObjects: array)
+                    
+                    XCTAssertTrue(objs.count == 1000)
+                    
+                    self.coreDataRepo.delete(containedInArray: objs, completionBlock: {
                         
-                        //Checking that we can retrieve existingObjecsWithIds
-                        let objs = ctx.existingObjecsWithIds(managedObjects: array)
-                        
-                        XCTAssertTrue(objs.count == 1000)
-
-                        self.coreDataRepo.delete(containedInArray: objs, completionBlock: {
-
-                            self.cdsManager.asyncRead(operationBlock: { (MOC) in
-                                let results = self.coreDataRepo?.fetch(byPredicate: NSPredicate(format: "%K = %@", "categoryName", "categoryName"), entityName: "MCCategoryTest", MOC: MOC, resultType: .ManagedObjectIDResultType)
-                                
-                                XCTAssertTrue(results?.count == 0)
-                                
-                                self.expectation.fulfill()
-                            })
+                        self.coreDataRepo.read(operationBlock: { (context) in
+                            let results = self.coreDataRepo?.fetch(byPredicate: NSPredicate(format: "%K = %@", "categoryName", "categoryName"), entityName: "MCCategoryTest", context: context, resultType: .ManagedObjectIDResultType)
                             
+                            XCTAssertTrue(results?.count == 0)
                             
+                            self.expectation.fulfill()
                         })
-                    }
-                })
-                
-        })
-        
+                        
+                    })
+                }
+
+            })
+        }
         
         self.waitForExpectationsWithTimeout(10) { (error) -> Void in
             XCTAssertNil(error);
@@ -338,9 +329,9 @@ class MCCoreDataRepositoryTest: XCTestCase
         let dictionary: [String: AnyObject] = ["categoryID": "12345", "categoryName": "Test12345"]
         
         
-        self.cdsManager.asyncWrite(operationBlock: { (MOC) in
-            
-            self.coreDataRepo?.create(dictionary: dictionary, entityName: "MCCategoryTest", MOC: MOC)
+        self.coreDataRepo.write(operationBlock: { (context) in
+
+            self.coreDataRepo?.create(dictionary: dictionary, entityName: "MCCategoryTest", context: context)
             
             for index in 1...5000 {
                 
@@ -349,46 +340,39 @@ class MCCoreDataRepositoryTest: XCTestCase
                 
                 let dictionary: [String: AnyObject] = ["categoryID": categoryID, "categoryName": categoryName]
                 
-                self.coreDataRepo?.create(dictionary: dictionary, entityName: "MCCategoryTest", MOC: MOC)
+                self.coreDataRepo?.create(dictionary: dictionary, entityName: "MCCategoryTest", context: context)
             }
-            
-            }, completion: {
-                
-                self.cdsManager.asyncRead(operationBlock: { (MOC) in
-                    let results = self.coreDataRepo?.fetch(byPredicate: NSPredicate(format: "%K = %@", "categoryName", "categoryName"), entityName: "MCCategoryTest", MOC: MOC, resultType: .ManagedObjectIDResultType)
-                    
-                    XCTAssertTrue(results?.count == 5000)
-                    
-                    if var array = results! as? [NSManagedObjectID] {
 
-                        let ctx = self.cdsManager.createPrivateMOC()
-                        
-                        //Checking that we can retrieve existingObjecsWithIds
-                        let objs = ctx.existingObjecsWithIds(managedObjects: array)
-                        
-                        XCTAssertTrue(objs.count == 5000)
-                        
-                        array.removeRange(0..<2500)
-                        
-                        let subArray = array as [NSManagedObjectID]
-                        
-                        self.coreDataRepo.delete(containedInArray: subArray, completionBlock: {
-                            
-                            self.cdsManager.asyncRead(operationBlock: { (MOC) in
-                                let results = self.coreDataRepo?.fetch(byPredicate: NSPredicate(format: "%K = %@", "categoryName", "categoryName"), entityName: "MCCategoryTest", MOC: MOC, resultType: .ManagedObjectIDResultType)
-                                
-                                XCTAssertTrue(results?.count == 2500)
-                                
-                                self.expectation.fulfill()
-                            })
-                            
-                            
-                        })
-                    }
-                })
+        }, completion: nil).read { (context) in
+            
+            let results = self.coreDataRepo?.fetch(byPredicate: NSPredicate(format: "%K = %@", "categoryName", "categoryName"), entityName: "MCCategoryTest", context: context, resultType: .ManagedObjectIDResultType)
+            
+            XCTAssertTrue(results?.count == 5000)
+            
+            if var array = results! as? [NSManagedObjectID] {
                 
-        })
-        
+                let ctx = self.cdsManager.createPrivatecontext()
+                //Checking that we can retrieve existingObjecsWithIds
+                let objs = ctx.existingObjecsWithIds(managedObjects: array)
+                XCTAssertTrue(objs.count == 5000)
+                
+                array.removeRange(0..<2500)
+                
+                let subArray = array as [NSManagedObjectID]
+                
+                self.coreDataRepo.delete(containedInArray: subArray, completionBlock: {
+                    
+                    self.coreDataRepo.read(operationBlock: { (context) in
+                        let results = self.coreDataRepo?.fetch(byPredicate: NSPredicate(format: "%K = %@", "categoryName", "categoryName"), entityName: "MCCategoryTest", context: context, resultType: .ManagedObjectIDResultType)
+                        
+                        XCTAssertTrue(results?.count == 2500)
+                        
+                        self.expectation.fulfill()
+                    })
+                    
+                })
+            }
+        }
         
         self.waitForExpectationsWithTimeout(10) { (error) -> Void in
             XCTAssertNil(error);

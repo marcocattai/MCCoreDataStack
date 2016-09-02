@@ -14,7 +14,7 @@
     <a title="MCCoreDataRepository Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html"> Docs</a> (87% documented)</p>
+        <p><a href="../index.html"> Docs</a> (83% documented)</p>
       </div>
     </header>
     <div class="content-wrapper">
@@ -95,9 +95,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:vC15MCCoreDataStack20MCCoreDataRepository20coreDataStackManagerGSQCS_22MCCoreDataStackManager_"></a>
-                    <a name="//apple_ref/swift/Property/coreDataStackManager" class="dashAnchor"></a>
-                    <a class="token" href="#/s:vC15MCCoreDataStack20MCCoreDataRepository20coreDataStackManagerGSQCS_22MCCoreDataStackManager_">coreDataStackManager</a>
+                    <a name="/s:vC15MCCoreDataStack20MCCoreDataRepository10cdsManagerGSQCS_22MCCoreDataStackManager_"></a>
+                    <a name="//apple_ref/swift/Property/cdsManager" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC15MCCoreDataStack20MCCoreDataRepository10cdsManagerGSQCS_22MCCoreDataStackManager_">cdsManager</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -112,7 +112,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">@objc</span> <span class="kd">private(set)</span> <span class="kd">public</span> <span class="k">var</span> <span class="nv">coreDataStackManager</span><span class="p">:</span> <span class="kt"><a href="../Classes/MCCoreDataStackManager.html">MCCoreDataStackManager</a></span><span class="o">!</span> <span class="o">=</span> <span class="kc">nil</span></code></pre>
+                          <pre class="highlight"><code><span class="kd">@objc</span> <span class="kd">private(set)</span> <span class="kd">public</span> <span class="k">var</span> <span class="nv">cdsManager</span><span class="p">:</span> <span class="kt"><a href="../Classes/MCCoreDataStackManager.html">MCCoreDataStackManager</a></span><span class="o">!</span> <span class="o">=</span> <span class="kc">nil</span></code></pre>
 
                         </div>
                       </div>
@@ -331,9 +331,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:FC15MCCoreDataStack20MCCoreDataRepository6createFT10dictionaryGVs10DictionarySSPs9AnyObject__10entityNameSS3MOCCSo22NSManagedObjectContext_GSqCSo15NSManagedObject_"></a>
-                    <a name="//apple_ref/swift/Method/create(dictionary:entityName:MOC:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:FC15MCCoreDataStack20MCCoreDataRepository6createFT10dictionaryGVs10DictionarySSPs9AnyObject__10entityNameSS3MOCCSo22NSManagedObjectContext_GSqCSo15NSManagedObject_">create(dictionary:entityName:MOC:)</a>
+                    <a name="/s:FC15MCCoreDataStack20MCCoreDataRepository6createFT10dictionaryGVs10DictionarySSPs9AnyObject__10entityNameSS7contextCSo22NSManagedObjectContext_GSqCSo15NSManagedObject_"></a>
+                    <a name="//apple_ref/swift/Method/create(dictionary:entityName:context:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC15MCCoreDataStack20MCCoreDataRepository6createFT10dictionaryGVs10DictionarySSPs9AnyObject__10entityNameSS7contextCSo22NSManagedObjectContext_GSqCSo15NSManagedObject_">create(dictionary:entityName:context:)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -349,7 +349,7 @@
 <p></div>
 <div class="aside aside-parameter">
     <p class="aside-title">Parameter</p>
-    Parameter MOC: ManagedObjectContext created in the current thread</p>
+    Parameter context: ManagedObjectContext created in the current thread</p>
 
 <p></div>
 <li>Return: New NSManagedObject or nil</li></p>
@@ -359,7 +359,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">@objc</span> <span class="kd">public</span> <span class="kd">func</span> <span class="nf">create</span><span class="p">(</span><span class="n">dictionary</span> <span class="nv">dictionary</span><span class="p">:</span> <span class="kt">Dictionary</span><span class="o">&lt;</span><span class="kt">String</span><span class="p">,</span> <span class="kt">AnyObject</span><span class="o">&gt;</span><span class="p">,</span> <span class="nv">entityName</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="kt">MOC</span> <span class="nv">moc</span><span class="p">:</span> <span class="kt">NSManagedObjectContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSManagedObject</span><span class="p">?</span></code></pre>
+                          <pre class="highlight"><code><span class="kd">@objc</span> <span class="kd">public</span> <span class="kd">func</span> <span class="nf">create</span><span class="p">(</span><span class="n">dictionary</span> <span class="nv">dictionary</span><span class="p">:</span> <span class="kt">Dictionary</span><span class="o">&lt;</span><span class="kt">String</span><span class="p">,</span> <span class="kt">AnyObject</span><span class="o">&gt;</span><span class="p">,</span> <span class="nv">entityName</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">context</span><span class="p">:</span> <span class="kt">NSManagedObjectContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSManagedObject</span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
@@ -383,12 +383,441 @@
                             <tr>
                               <td>
                                 <code>
-                                <em>MOC</em>
+                                <em>context</em>
                                 </code>
                               </td>
                               <td>
                                 <div>
                                   <p>ManagedObjectContext created in the current thread</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/read"></a>
+                <a name="//apple_ref/swift/Section/read" class="dashAnchor"></a>
+                <a href="#/read">
+                  <h3 class="section-name">read</h3>
+                </a>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC15MCCoreDataStack20MCCoreDataRepository4readFT14operationBlockFT7contextCSo22NSManagedObjectContext_T__DS0_"></a>
+                    <a name="//apple_ref/swift/Method/read(operationBlock:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC15MCCoreDataStack20MCCoreDataRepository4readFT14operationBlockFT7contextCSo22NSManagedObjectContext_T__DS0_">read(operationBlock:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p><a href='#read-on-a-background-queue' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h3 id='read-on-a-background-queue'>read on a background queue</h3>
+<div class="aside aside-parameter">
+    <p class="aside-title">Parameter</p>
+    Parameter operationBlock</p>
+
+<p></div>
+<div class="aside aside-parameter">
+    <p class="aside-title">Parameter</p>
+    Parameter completionBlock - The operation is persisted in the disk</p>
+
+<p></div>
+<li>Return: Self - (Chaining support)</li></p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">@objc</span> <span class="kd">public</span> <span class="kd">func</span> <span class="nf">read</span><span class="p">(</span><span class="n">operationBlock</span> <span class="nv">operationBlock</span><span class="p">:</span> <span class="p">(</span><span class="nv">context</span><span class="p">:</span> <span class="kt">NSManagedObjectContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>operationBlock</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>completionBlock - The operation is persisted in the disk</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/write"></a>
+                <a name="//apple_ref/swift/Section/write" class="dashAnchor"></a>
+                <a href="#/write">
+                  <h3 class="section-name">write</h3>
+                </a>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC15MCCoreDataStack20MCCoreDataRepository5writeFT14operationBlockFT7contextCSo22NSManagedObjectContext_T_10completionGSqFGSqCSo7NSError_T___DS0_"></a>
+                    <a name="//apple_ref/swift/Method/write(operationBlock:completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC15MCCoreDataStack20MCCoreDataRepository5writeFT14operationBlockFT7contextCSo22NSManagedObjectContext_T_10completionGSqFGSqCSo7NSError_T___DS0_">write(operationBlock:completion:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p><a href='#write-on-a-background-queue' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h3 id='write-on-a-background-queue'>write on a background queue</h3>
+<div class="aside aside-parameter">
+    <p class="aside-title">Parameter</p>
+    Parameter operationBlock</p>
+
+<p></div>
+<div class="aside aside-parameter">
+    <p class="aside-title">Parameter</p>
+    Parameter completionBlock - The operation is persisted in the disk</p>
+
+<p></div>
+<li>Return: Self - (Chaining support)</li></p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">@objc</span> <span class="kd">public</span> <span class="kd">func</span> <span class="nf">write</span><span class="p">(</span><span class="n">operationBlock</span> <span class="nv">operationBlock</span><span class="p">:</span> <span class="p">(</span><span class="nv">context</span><span class="p">:</span> <span class="kt">NSManagedObjectContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">,</span> <span class="n">completion</span> <span class="nv">completionBlock</span><span class="p">:</span> <span class="p">(</span><span class="kt">NSError</span><span class="p">?</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?)</span> <span class="o">-&gt;</span> <span class="k">Self</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>operationBlock</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>completionBlock - The operation is persisted in the disk</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/read_MT"></a>
+                <a name="//apple_ref/swift/Section/read_MT" class="dashAnchor"></a>
+                <a href="#/read_MT">
+                  <h3 class="section-name">read_MT</h3>
+                </a>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC15MCCoreDataStack20MCCoreDataRepository7read_MTFT14operationBlockFT7contextCSo22NSManagedObjectContext_T__T_"></a>
+                    <a name="//apple_ref/swift/Method/read_MT(operationBlock:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC15MCCoreDataStack20MCCoreDataRepository7read_MTFT14operationBlockFT7contextCSo22NSManagedObjectContext_T__T_">read_MT(operationBlock:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p><a href='#read-from-the-maincontext-on-the-mainthread' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h3 id='read-from-the-maincontext-on-the-mainthread'>read from the mainContext on the mainThread</h3>
+<div class="aside aside-parameter">
+    <p class="aside-title">Parameter</p>
+    Parameter operationBlock</p>
+
+<p></div></p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">@objc</span> <span class="kd">public</span> <span class="kd">func</span> <span class="nf">read_MT</span><span class="p">(</span><span class="n">operationBlock</span> <span class="nv">operationBlock</span><span class="p">:</span> <span class="p">(</span><span class="nv">context</span><span class="p">:</span> <span class="kt">NSManagedObjectContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>operationBlock</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Fetching"></a>
+                <a name="//apple_ref/swift/Section/Fetching" class="dashAnchor"></a>
+                <a href="#/Fetching">
+                  <h3 class="section-name">Fetching</h3>
+                </a>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC15MCCoreDataStack20MCCoreDataRepository5fetchFT10entityNameSS7contextCSo22NSManagedObjectContext10resultTypeVSC24NSFetchRequestResultType_GSqGSaPs9AnyObject___"></a>
+                    <a name="//apple_ref/swift/Method/fetch(entityName:context:resultType:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC15MCCoreDataStack20MCCoreDataRepository5fetchFT10entityNameSS7contextCSo22NSManagedObjectContext10resultTypeVSC24NSFetchRequestResultType_GSqGSaPs9AnyObject___">fetch(entityName:context:resultType:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p><a href='#fetch-all-the-objects-by-entityname-in-the-current-thread' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h3 id='fetch-all-the-objects-by-entityname-in-the-current-thread'>fetch all the objects by EntityName in the current thread</h3>
+<div class="aside aside-parameter">
+    <p class="aside-title">Parameter</p>
+    Parameter entityName: Name of the corresponding entity</p>
+
+<p></div>
+<div class="aside aside-parameter">
+    <p class="aside-title">Parameter</p>
+    Parameter context: ManagedObjectContext created in the current thread. If nil the call should be from the main Thread</p>
+
+<p></div>
+<div class="aside aside-parameter">
+    <p class="aside-title">Parameter</p>
+    Parameter resultType: this can be  .ManagedObject .ManagedObjectID .Dictionary .Count</p>
+
+<p></div>
+<li>Return: New NSManagedObject or nil</li></p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">fetch</span><span class="p">(</span><span class="n">entityName</span> <span class="nv">entityName</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">context</span><span class="p">:</span> <span class="kt">NSManagedObjectContext</span><span class="p">,</span> <span class="nv">resultType</span><span class="p">:</span> <span class="kt">NSFetchRequestResultType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">AnyObject</span><span class="p">]?</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>entityName</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Name of the corresponding entity</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>context</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>ManagedObjectContext created in the current thread. If nil the call should be from the main Thread</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>resultType</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>this can be  .ManagedObject .ManagedObjectID .Dictionary .Count</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC15MCCoreDataStack20MCCoreDataRepository5fetchFT11byPredicateCSo11NSPredicate10entityNameSS7contextCSo22NSManagedObjectContext10resultTypeVSC24NSFetchRequestResultType_GSqGSaPs9AnyObject___"></a>
+                    <a name="//apple_ref/swift/Method/fetch(byPredicate:entityName:context:resultType:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC15MCCoreDataStack20MCCoreDataRepository5fetchFT11byPredicateCSo11NSPredicate10entityNameSS7contextCSo22NSManagedObjectContext10resultTypeVSC24NSFetchRequestResultType_GSqGSaPs9AnyObject___">fetch(byPredicate:entityName:context:resultType:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p><a href='#fetch-all-the-object-of-a-specific-entityname-by-predicate-in-the-current-thread' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h3 id='fetch-all-the-object-of-a-specific-entityname-by-predicate-in-the-current-thread'>fetch all the object of a specific entityName, by Predicate, in the current thread</h3>
+<div class="aside aside-parameter">
+    <p class="aside-title">Parameter</p>
+    Parameter predicate: NSPredicate object</p>
+
+<p></div>
+<div class="aside aside-parameter">
+    <p class="aside-title">Parameter</p>
+    Parameter entityName: Name of the corresponding entity</p>
+
+<p></div>
+<div class="aside aside-parameter">
+    <p class="aside-title">Parameter</p>
+    Parameter context: ManagedObjectContext created in the current thread. If nil the call should be from the main Thread</p>
+
+<p></div>
+<div class="aside aside-parameter">
+    <p class="aside-title">Parameter</p>
+    Parameter resultType: this can be  .ManagedObject .ManagedObjectID .Dictionary .Count</p>
+
+<p></div>
+<li>Return: array of results</li></p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">fetch</span><span class="p">(</span><span class="n">byPredicate</span> <span class="nv">predicate</span><span class="p">:</span> <span class="kt">NSPredicate</span><span class="p">,</span> <span class="nv">entityName</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">context</span><span class="p">:</span> <span class="kt">NSManagedObjectContext</span><span class="p">,</span> <span class="nv">resultType</span><span class="p">:</span> <span class="kt">NSFetchRequestResultType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">AnyObject</span><span class="p">]?</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>predicate</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>NSPredicate object</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>entityName</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Name of the corresponding entity</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>context</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>ManagedObjectContext created in the current thread. If nil the call should be from the main Thread</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>resultType</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>this can be  .ManagedObject .ManagedObjectID .Dictionary .Count</p>
 
                                 </div>
                               </td>
@@ -483,9 +912,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:FC15MCCoreDataStack20MCCoreDataRepository6deleteFT16containedInArrayGSaPs9AnyObject__3MOCCSo22NSManagedObjectContext_T_"></a>
-                    <a name="//apple_ref/swift/Method/delete(containedInArray:MOC:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:FC15MCCoreDataStack20MCCoreDataRepository6deleteFT16containedInArrayGSaPs9AnyObject__3MOCCSo22NSManagedObjectContext_T_">delete(containedInArray:MOC:)</a>
+                    <a name="/s:FC15MCCoreDataStack20MCCoreDataRepository6deleteFT16containedInArrayGSaPs9AnyObject__7contextCSo22NSManagedObjectContext_T_"></a>
+                    <a name="//apple_ref/swift/Method/delete(containedInArray:context:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC15MCCoreDataStack20MCCoreDataRepository6deleteFT16containedInArrayGSaPs9AnyObject__7contextCSo22NSManagedObjectContext_T_">delete(containedInArray:context:)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -501,7 +930,7 @@
 <p></div>
 <div class="aside aside-parameter">
     <p class="aside-title">Parameter</p>
-    Parameter MOC: a specific NSManagedObjectContext</p>
+    Parameter context: a specific NSManagedObjectContext</p>
 
 <p></div></p>
 
@@ -510,7 +939,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">@objc</span> <span class="kd">public</span> <span class="kd">func</span> <span class="nf">delete</span><span class="p">(</span><span class="n">containedInArray</span> <span class="nv">array</span><span class="p">:</span> <span class="p">[</span><span class="kt">AnyObject</span><span class="p">],</span> <span class="kt">MOC</span> <span class="nv">moc</span><span class="p">:</span> <span class="kt">NSManagedObjectContext</span><span class="p">)</span></code></pre>
+                          <pre class="highlight"><code><span class="kd">@objc</span> <span class="kd">public</span> <span class="kd">func</span> <span class="nf">delete</span><span class="p">(</span><span class="n">containedInArray</span> <span class="nv">array</span><span class="p">:</span> <span class="p">[</span><span class="kt">AnyObject</span><span class="p">],</span> <span class="nv">context</span><span class="p">:</span> <span class="kt">NSManagedObjectContext</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -534,7 +963,7 @@
                             <tr>
                               <td>
                                 <code>
-                                <em>MOC</em>
+                                <em>context</em>
                                 </code>
                               </td>
                               <td>
@@ -552,306 +981,10 @@
                 </li>
               </ul>
             </div>
-            <div class="task-group">
-              <div class="task-name-container">
-                <a name="/Fetching"></a>
-                <a name="//apple_ref/swift/Section/Fetching" class="dashAnchor"></a>
-                <a href="#/Fetching">
-                  <h3 class="section-name">Fetching</h3>
-                </a>
-              </div>
-              <ul>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:FC15MCCoreDataStack20MCCoreDataRepository8fetchAllFT12byEntityNameSS3MOCGSqCSo22NSManagedObjectContext_10resultTypeVSC24NSFetchRequestResultType_GSqGSaPs9AnyObject___"></a>
-                    <a name="//apple_ref/swift/Method/fetchAll(byEntityName:MOC:resultType:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:FC15MCCoreDataStack20MCCoreDataRepository8fetchAllFT12byEntityNameSS3MOCGSqCSo22NSManagedObjectContext_10resultTypeVSC24NSFetchRequestResultType_GSqGSaPs9AnyObject___">fetchAll(byEntityName:MOC:resultType:)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p><a href='#fetch-all-the-objects-by-entityname-in-the-current-thread' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h3 id='fetch-all-the-objects-by-entityname-in-the-current-thread'>fetch all the objects by EntityName in the current thread</h3>
-<div class="aside aside-parameter">
-    <p class="aside-title">Parameter</p>
-    Parameter entityName: Name of the corresponding entity</p>
-
-<p></div>
-<div class="aside aside-parameter">
-    <p class="aside-title">Parameter</p>
-    Parameter MOC: ManagedObjectContext created in the current thread. If nil the call should be from the main Thread</p>
-
-<p></div>
-<div class="aside aside-parameter">
-    <p class="aside-title">Parameter</p>
-    Parameter resultType: this can be  .ManagedObject .ManagedObjectID .Dictionary .Count</p>
-
-<p></div>
-<li>Return: New NSManagedObject or nil</li></p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">@objc</span> <span class="kd">public</span> <span class="kd">func</span> <span class="nf">fetchAll</span><span class="p">(</span><span class="n">byEntityName</span> <span class="nv">entityName</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="kt">MOC</span><span class="p">:</span> <span class="kt">NSManagedObjectContext</span><span class="p">?,</span> <span class="nv">resultType</span><span class="p">:</span> <span class="kt">NSFetchRequestResultType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">AnyObject</span><span class="p">]?</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div>
-                        <h4>Parameters</h4>
-                        <table class="graybox">
-                          <tbody>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>entityName</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>Name of the corresponding entity</p>
-
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>MOC</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>ManagedObjectContext created in the current thread. If nil the call should be from the main Thread</p>
-
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>resultType</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>this can be  .ManagedObject .ManagedObjectID .Dictionary .Count</p>
-
-                                </div>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:FC15MCCoreDataStack20MCCoreDataRepository5fetchFT11byPredicateCSo11NSPredicate10entityNameSS3MOCGSqCSo22NSManagedObjectContext__GSqGSaPs9AnyObject___"></a>
-                    <a name="//apple_ref/swift/Method/fetch(byPredicate:entityName:MOC:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:FC15MCCoreDataStack20MCCoreDataRepository5fetchFT11byPredicateCSo11NSPredicate10entityNameSS3MOCGSqCSo22NSManagedObjectContext__GSqGSaPs9AnyObject___">fetch(byPredicate:entityName:MOC:)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p><a href='#fetch-all-the-object-of-a-specific-entityname-by-predicate-in-the-current-thread' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h3 id='fetch-all-the-object-of-a-specific-entityname-by-predicate-in-the-current-thread'>fetch all the object of a specific entityName, by Predicate, in the current thread</h3>
-<div class="aside aside-parameter">
-    <p class="aside-title">Parameter</p>
-    Parameter predicate: NSPredicate object</p>
-
-<p></div>
-<div class="aside aside-parameter">
-    <p class="aside-title">Parameter</p>
-    Parameter entityName: Name of the corresponding entity</p>
-
-<p></div>
-<div class="aside aside-parameter">
-    <p class="aside-title">Parameter</p>
-    Parameter MOC: ManagedObjectContext created in the current thread. If nil the call should be from the main Thread</p>
-
-<p></div>
-<li>Return: array of results</li></p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">@objc</span> <span class="kd">public</span> <span class="kd">func</span> <span class="nf">fetch</span><span class="p">(</span><span class="n">byPredicate</span> <span class="nv">predicate</span><span class="p">:</span> <span class="kt">NSPredicate</span><span class="p">,</span> <span class="nv">entityName</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="kt">MOC</span><span class="p">:</span> <span class="kt">NSManagedObjectContext</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">AnyObject</span><span class="p">]?</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div>
-                        <h4>Parameters</h4>
-                        <table class="graybox">
-                          <tbody>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>predicate</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>NSPredicate object</p>
-
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>entityName</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>Name of the corresponding entity</p>
-
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>MOC</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>ManagedObjectContext created in the current thread. If nil the call should be from the main Thread</p>
-
-                                </div>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:FC15MCCoreDataStack20MCCoreDataRepository5fetchFT11byPredicateCSo11NSPredicate10entityNameSS3MOCGSqCSo22NSManagedObjectContext_10resultTypeVSC24NSFetchRequestResultType_GSqGSaPs9AnyObject___"></a>
-                    <a name="//apple_ref/swift/Method/fetch(byPredicate:entityName:MOC:resultType:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:FC15MCCoreDataStack20MCCoreDataRepository5fetchFT11byPredicateCSo11NSPredicate10entityNameSS3MOCGSqCSo22NSManagedObjectContext_10resultTypeVSC24NSFetchRequestResultType_GSqGSaPs9AnyObject___">fetch(byPredicate:entityName:MOC:resultType:)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p><a href='#fetch-all-the-object-of-a-specific-entityname-by-predicate-in-the-current-thread' class='anchor' aria-hidden=true><span class="header-anchor"></span></a><h3 id='fetch-all-the-object-of-a-specific-entityname-by-predicate-in-the-current-thread'>fetch all the object of a specific entityName, by Predicate, in the current thread</h3>
-<div class="aside aside-parameter">
-    <p class="aside-title">Parameter</p>
-    Parameter predicate: NSPredicate object</p>
-
-<p></div>
-<div class="aside aside-parameter">
-    <p class="aside-title">Parameter</p>
-    Parameter entityName: Name of the corresponding entity</p>
-
-<p></div>
-<div class="aside aside-parameter">
-    <p class="aside-title">Parameter</p>
-    Parameter MOC: ManagedObjectContext created in the current thread. If nil the call should be from the main Thread</p>
-
-<p></div>
-<div class="aside aside-parameter">
-    <p class="aside-title">Parameter</p>
-    Parameter resultType: this can be  .ManagedObject .ManagedObjectID .Dictionary .Count</p>
-
-<p></div>
-<li>Return: array of results</li></p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight"><code><span class="kd">@objc</span> <span class="kd">public</span> <span class="kd">func</span> <span class="nf">fetch</span><span class="p">(</span><span class="n">byPredicate</span> <span class="nv">predicate</span><span class="p">:</span> <span class="kt">NSPredicate</span><span class="p">,</span> <span class="nv">entityName</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="kt">MOC</span><span class="p">:</span> <span class="kt">NSManagedObjectContext</span><span class="p">?,</span> <span class="nv">resultType</span><span class="p">:</span> <span class="kt">NSFetchRequestResultType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">AnyObject</span><span class="p">]?</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div>
-                        <h4>Parameters</h4>
-                        <table class="graybox">
-                          <tbody>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>predicate</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>NSPredicate object</p>
-
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>entityName</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>Name of the corresponding entity</p>
-
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>MOC</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>ManagedObjectContext created in the current thread. If nil the call should be from the main Thread</p>
-
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>resultType</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>this can be  .ManagedObject .ManagedObjectID .Dictionary .Count</p>
-
-                                </div>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-              </ul>
-            </div>
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2016 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2016-08-25)</p>
+          <p>&copy; 2016 <a class="link" href="" target="_blank" rel="external"></a>. All rights reserved. (Last updated: 2016-09-02)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.7.0</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
         </section>
       </article>
