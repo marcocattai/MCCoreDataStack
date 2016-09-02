@@ -228,7 +228,7 @@ class MCCoreDataRepositoryTest: XCTestCase
         
     }
     
-    func testPersist1000CategoriesWithCommonCategoryNameAndRetrieveThemByCategoryName()
+    func testPersist1000CategoriesWithCommonCategoryNameAndRetrieveThemByCategoryName_05()
     {
         self.expectation = expectationWithDescription("Saving 1000 categories in a background queue")
         
@@ -264,7 +264,7 @@ class MCCoreDataRepositoryTest: XCTestCase
         }
     }
 
-    func testPersist1000CategoriesAndDelete400OfThem()
+    func testPersist1000CategoriesAndDelete400OfThem_06()
     {
         self.expectation = expectationWithDescription("Saving 1000 categories in a background queue")
         
@@ -322,7 +322,7 @@ class MCCoreDataRepositoryTest: XCTestCase
 
     }
 
-    func testPersist5000CategoriesAndDelete2500OfThem()
+    func testPersist5000CategoriesAndDelete2500OfThem_07()
     {
         self.expectation = expectationWithDescription("Saving 1000 categories in a background queue")
         
@@ -379,4 +379,73 @@ class MCCoreDataRepositoryTest: XCTestCase
         }
         
     }
+    
+    func testCoreDataRepositoryObjectCreationAndReadOnMT_PlusUpdateOnBkgAndReadOnMT_08()
+    {
+        
+        self.expectation = expectationWithDescription("Create and read on Main Thread - Update in Background and read on Main Thread")
+        
+        var dataSource: [AnyObject]? = nil
+        
+        self.coreDataRepo.write(operationBlock: { (context) in
+            
+            for index in 0..<5000 {
+                
+                let categoryID = String(index)
+                let categoryName = "categoryName"
+                
+                let dictionary: [String: AnyObject] = ["categoryID": categoryID, "categoryName": categoryName]
+                
+                let createdObject = self.coreDataRepo?.create(dictionary: dictionary, entityName: "MCCategoryTest", context: context)
+                XCTAssertFalse(createdObject == nil)
+
+            }
+
+            
+        }) { (error) in
+            
+            
+            }.read { (context) in
+                dataSource = self.coreDataRepo?.fetch(entityName: "MCCategoryTest", context: context, resultType: .ManagedObjectResultType)
+                
+                XCTAssertTrue(dataSource?.count > 0)
+        }
+        
+        //Here we Update the dataSource in background
+        
+        self.coreDataRepo.write(operationBlock: { (context) in
+            
+            let objs = context.moveInContext(managedObjects: dataSource as! [NSManagedObject])
+
+            for obj in objs
+            {
+                if let category = obj as? MCCategoryTest {
+                    category.categoryName = "UPDATED"
+                }
+            }
+            
+            }) { (error) in
+                
+        }.read_MT { (context) in
+            dataSource = self.coreDataRepo?.fetch(entityName: "MCCategoryTest", context: context, resultType: .ManagedObjectResultType)
+
+            for obj in dataSource!
+            {
+                if let category = obj as? MCCategoryTest {
+                    XCTAssertTrue(category.categoryName == "UPDATED")
+                }
+            }
+
+            XCTAssertTrue(dataSource?.count > 0)
+            
+            self.expectation.fulfill()
+        }
+        
+        
+        self.waitForExpectationsWithTimeout(10) { (error) -> Void in
+            XCTAssertNil(error);
+        }
+        
+    }
+    
 }
