@@ -262,6 +262,14 @@ public struct StackManagerHelper {
         self.syncBkgRead(context, operationBlock: operationBlock);
     }
     
+    ///### Helper to perform an operation on the main context in the mainThread
+    ///- Parameter operationBlock: The operation block to be performed in background
+    
+    @objc public func read_MT(operationBlock operationBlock: ((context: NSManagedObjectContext) -> Void)?)
+    {
+        self.syncBkgRead(self.maincontext!, operationBlock: operationBlock);
+    }
+
     //MARK: Write
 
     ///### Helper to perform a background operation, on a new privatecontext, and automatically save the changes
@@ -273,14 +281,6 @@ public struct StackManagerHelper {
         self.syncBkgWrite(context, operationBlock: operationBlock, completion: completionBlock);
     }
     
-    ///### Helper to perform an operation on the main context in the mainThread
-    ///- Parameter operationBlock: The operation block to be performed in background
-    
-    @objc public func read_MT(operationBlock operationBlock: ((context: NSManagedObjectContext) -> Void)?)
-    {
-        self.syncBkgRead(self.maincontext!, operationBlock: operationBlock);
-    }
-
     ///### Helper to perform an operation on the main context, mainThread, and automatically save the changes
     ///- Parameter operationBlock: The operation block to be performed in background
 

@@ -89,7 +89,7 @@ import CoreData
         return NSManagedObject.instanceWithDictionary(dictionary: dictionary, entityName: entityName, context: context)
     }
  
-    //MARK: read_MT
+    //MARK: read
     ///### read on a background queue
     ///- Parameter operationBlock
     ///- Parameter completionBlock - The operation is persisted in the disk
@@ -104,7 +104,7 @@ import CoreData
         return self
     }
 
-    //MARK: write_MT
+    //MARK: write
     ///### write on a background queue
     ///- Parameter operationBlock
     ///- Parameter completionBlock - The operation is persisted in the disk
