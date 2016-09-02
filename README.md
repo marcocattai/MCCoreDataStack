@@ -46,7 +46,7 @@ This library supports chaining of write - read - read_MT operations. For more in
 
 ##How to use:
 
-###Setup CoreDataStack
+####Setup CoreDataStack
 ```swift
 MCCoreDataRepository.sharedInstance.setup(storeName: "TestDB.sqlite", domainName: "co.uk.tests")
 ```
@@ -78,7 +78,7 @@ self.coreDataRepo.read_MT { (context) in
 }
 
 ```
-###Let's try to Create 5000 fake objects in background and then fetch them, using chaining, to populate the UI
+####Let's try to Create 5000 fake objects in background and then fetch them, using chaining, to populate the UI
 
 ```swift
 
@@ -103,8 +103,8 @@ self.coreDataRepo.write(operationBlock: { (context) in
 	dataSource = self.coreDataRepo?.fetch(entityName: "MCCategoryTest", context: context, resultType: .ManagedObjectResultType)
 }
 ```
-###Now We want to update the dataSource of the above example
-###After the update, we want to fetch it on the main context (used by the main Thread)
+####Now We want to update the dataSource of the above example
+####After the update, we want to fetch it on the main context (used by the main Thread)
 
 ```swift
 
