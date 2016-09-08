@@ -57,9 +57,9 @@ MCCoreDataRepository.sharedInstance.setup(storeName: "TestDB.sqlite", domainName
 let subDictionary: [String: AnyObject] = ["subCategoryID": "sub12345", "subCategoryName": "subTest12345"]
 let dictionary: [String: AnyObject] = ["categoryID": "12345", "categoryName": "Test12345", "subCategory": subDictionary]
 
-self.coreDataRepo.write(operationBlock: { (context) in
+MCCoreDataRepository.sharedInstance.write(operationBlock: { (context) in
 
-   	self.coreDataRepo?.create(dictionary: dictionary, entityName: "MCCategoryTest", context: context)
+   	MCCoreDataRepository.sharedInstance?.create(dictionary: dictionary, entityName: "MCCategoryTest", context: context)
  
    }) { (error) in
    
@@ -69,12 +69,12 @@ self.coreDataRepo.write(operationBlock: { (context) in
 
 //Here we don't use chaining
 
-self.coreDataRepo.read_MT { (context) in
+MCCoreDataRepository.sharedInstance.read_MT { (context) in
    
-	let results = self.coreDataRepo?.fetch(entityName: "MCCategoryTest", context: context, resultType: .ManagedObjectResultType) as? [NSManagedObject]
+	let results = MCCoreDataRepository.sharedInstance?.fetch(entityName: "MCCategoryTest", context: context, resultType: .ManagedObjectResultType) as? [NSManagedObject]
 
    	// Objects will be deleted in a background thread. Deletion will fetch the objects from the background context
-   	self.coreDataRepo?.delete(containedInArray: results, completionBlock: nil)
+   	MCCoreDataRepository.sharedInstance?.delete(containedInArray: results, completionBlock: nil)
 }
 
 ```
@@ -84,14 +84,14 @@ self.coreDataRepo.read_MT { (context) in
 
 var dataSource: [AnyObject]? = nil
         
-self.coreDataRepo.write(operationBlock: { (context) in
+MCCoreDataRepository.sharedInstance.write(operationBlock: { (context) in
             
             for index in 0..<5000 {
                 
                 let categoryID = String(index)
                 let categoryName = "categoryName"
                 let dictionary: [String: AnyObject] = ["categoryID": categoryID, "categoryName": categoryName]
-                self.coreDataRepo?.create(dictionary: dictionary, entityName: "MCCategoryTest", context: context)
+                MCCoreDataRepository.sharedInstance?.create(dictionary: dictionary, entityName: "MCCategoryTest", context: context)
             }
 
             
@@ -100,7 +100,7 @@ self.coreDataRepo.write(operationBlock: { (context) in
         	
 }.read_MT { (context) in
 
-	dataSource = self.coreDataRepo?.fetch(entityName: "MCCategoryTest", context: context, resultType: .ManagedObjectResultType)
+	dataSource = MCCoreDataRepository.sharedInstance?.fetch(entityName: "MCCategoryTest", context: context, resultType: .ManagedObjectResultType)
 }
 ```
 ####Now We want to update the dataSource of the above example
@@ -108,7 +108,7 @@ self.coreDataRepo.write(operationBlock: { (context) in
 
 ```swift
 
-self.coreDataRepo.write(operationBlock: { (context) in
+MCCoreDataRepository.sharedInstance.write(operationBlock: { (context) in
             
 	let objs = context.moveInContext(managedObjects: dataSource as! [NSManagedObject])
 
@@ -121,7 +121,7 @@ self.coreDataRepo.write(operationBlock: { (context) in
 }) { (error) in
             //Here they are persisted
 }.read_MT { (context) in
-	dataSource = self.coreDataRepo?.fetch(entityName: "MCCategoryTest", context: context, resultType: .ManagedObjectResultType)
+	dataSource = MCCoreDataRepository.sharedInstance?.fetch(entityName: "MCCategoryTest", context: context, resultType: .ManagedObjectResultType)
 
 	//Here we have our updated objects
 
@@ -132,8 +132,8 @@ self.coreDataRepo.write(operationBlock: { (context) in
 
 ```swift
 
-	self.coreDataRepo.write(operationBlock: { (context) in
-		let results = self.coreDataRepo?.fetch(byPredicate: NSPredicate(format: "%K = %@", "categoryName", "categoryName"), entityName: "MCCategoryTest", context: context, resultType: .ManagedObjectResultType)
+	MCCoreDataRepository.sharedInstance.write(operationBlock: { (context) in
+		let results = MCCoreDataRepository.sharedInstance?.fetch(byPredicate: NSPredicate(format: "%K = %@", "categoryName", "categoryName"), entityName: "MCCategoryTest", context: context, resultType: .ManagedObjectResultType)
 		
 		//Here we update our objects in BKG
 	
