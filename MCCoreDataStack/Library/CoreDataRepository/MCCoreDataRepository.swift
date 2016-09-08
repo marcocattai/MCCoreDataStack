@@ -54,7 +54,6 @@ import CoreData
         let bundle = NSBundle(forClass: self.dynamicType)
         let managedObjectModel = NSManagedObjectModel.mergedModelFromBundles([bundle])!
         
-        print(defaultStoreURL.path)
         self.cdsManager = MCCoreDataStackManager(domain: domainName, model: managedObjectModel)
         
         return self.cdsManager.configure(storeURL: defaultStoreURL, configuration: nil)
