@@ -48,7 +48,10 @@ This library supports chaining of write - read - read_MT operations. For more in
 
 ####Setup CoreDataStack
 ```swift
-MCCoreDataRepository.sharedInstance.setup(storeName: "TestDB.sqlite", domainName: "co.uk.tests")
+self.coreDataRepo = MCCoreDataRepository()
+let success = self.coreDataRepo.setup(storeName: "TestDB.sqlite", domainName: "co.uk.tests")
+
+self.coreDataRepo.setup(storeName: "TestDB.sqlite", domainName: "co.uk.tests")
 ```
 ####Create one object in background, fetch it on the main queue and delete it in background
 ```swift
@@ -57,9 +60,9 @@ MCCoreDataRepository.sharedInstance.setup(storeName: "TestDB.sqlite", domainName
 let subDictionary: [String: AnyObject] = ["subCategoryID": "sub12345", "subCategoryName": "subTest12345"]
 let dictionary: [String: AnyObject] = ["categoryID": "12345", "categoryName": "Test12345", "subCategory": subDictionary]
 
-MCCoreDataRepository.sharedInstance.write(operationBlock: { (context) in
+self.coreDataRepo.write(operationBlock: { (context) in
 
-   	MCCoreDataRepository.sharedInstance?.create(dictionary: dictionary, entityName: "MCCategoryTest", context: context)
+   	self.coreDataRepo.create(dictionary: dictionary, entityName: "MCCategoryTest", context: context)
  
    }) { (error) in
    
@@ -69,12 +72,12 @@ MCCoreDataRepository.sharedInstance.write(operationBlock: { (context) in
 
 //Here we don't use chaining
 
-MCCoreDataRepository.sharedInstance.read_MT { (context) in
+self.coreDataRepo.read_MT { (context) in
    
-	let results = MCCoreDataRepository.sharedInstance?.fetch(entityName: "MCCategoryTest", context: context, resultType: .ManagedObjectResultType) as? [NSManagedObject]
+	let results = self.coreDataRepo.fetch(entityName: "MCCategoryTest", context: context, resultType: .ManagedObjectResultType) as? [NSManagedObject]
 
    	// Objects will be deleted in a background thread. Deletion will fetch the objects from the background context
-   	MCCoreDataRepository.sharedInstance?.delete(containedInArray: results, completionBlock: nil)
+   	self.coreDataRepo.delete(containedInArray: results, completionBlock: nil)
 }
 
 ```
@@ -84,14 +87,14 @@ MCCoreDataRepository.sharedInstance.read_MT { (context) in
 
 var dataSource: [AnyObject]? = nil
         
-MCCoreDataRepository.sharedInstance.write(operationBlock: { (context) in
+self.coreDataRepo.write(operationBlock: { (context) in
             
             for index in 0..<5000 {
                 
                 let categoryID = String(index)
                 let categoryName = "categoryName"
                 let dictionary: [String: AnyObject] = ["categoryID": categoryID, "categoryName": categoryName]
-                MCCoreDataRepository.sharedInstance?.create(dictionary: dictionary, entityName: "MCCategoryTest", context: context)
+                self.coreDataRepo.create(dictionary: dictionary, entityName: "MCCategoryTest", context: context)
             }
 
             
@@ -100,7 +103,7 @@ MCCoreDataRepository.sharedInstance.write(operationBlock: { (context) in
         	
 }.read_MT { (context) in
 
-	dataSource = MCCoreDataRepository.sharedInstance?.fetch(entityName: "MCCategoryTest", context: context, resultType: .ManagedObjectResultType)
+	dataSource = self.coreDataRepo.fetch(entityName: "MCCategoryTest", context: context, resultType: .ManagedObjectResultType)
 }
 ```
 ####Now We want to update the dataSource of the above example
@@ -108,7 +111,7 @@ MCCoreDataRepository.sharedInstance.write(operationBlock: { (context) in
 
 ```swift
 
-MCCoreDataRepository.sharedInstance.write(operationBlock: { (context) in
+self.coreDataRepo.write(operationBlock: { (context) in
             
 	let objs = context.moveInContext(managedObjects: dataSource as! [NSManagedObject])
 
@@ -121,7 +124,7 @@ MCCoreDataRepository.sharedInstance.write(operationBlock: { (context) in
 }) { (error) in
             //Here they are persisted
 }.read_MT { (context) in
-	dataSource = MCCoreDataRepository.sharedInstance?.fetch(entityName: "MCCategoryTest", context: context, resultType: .ManagedObjectResultType)
+	dataSource = self.coreDataRepo.fetch(entityName: "MCCategoryTest", context: context, resultType: .ManagedObjectResultType)
 
 	//Here we have our updated objects
 
@@ -132,8 +135,8 @@ MCCoreDataRepository.sharedInstance.write(operationBlock: { (context) in
 
 ```swift
 
-	MCCoreDataRepository.sharedInstance.write(operationBlock: { (context) in
-		let results = MCCoreDataRepository.sharedInstance?.fetch(byPredicate: NSPredicate(format: "%K = %@", "categoryName", "categoryName"), entityName: "MCCategoryTest", context: context, resultType: .ManagedObjectResultType)
+	self.coreDataRepo.write(operationBlock: { (context) in
+		let results = self.coreDataRepo.fetch(byPredicate: NSPredicate(format: "%K = %@", "categoryName", "categoryName"), entityName: "MCCategoryTest", context: context, resultType: .ManagedObjectResultType)
 		
 		//Here we update our objects in BKG
 	
