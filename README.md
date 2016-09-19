@@ -50,8 +50,6 @@ This library supports chaining of write - read - read_MT operations. For more in
 ```swift
 self.coreDataRepo = MCCoreDataRepository()
 let success = self.coreDataRepo.setup(storeName: "TestDB.sqlite", domainName: "co.uk.tests")
-
-self.coreDataRepo.setup(storeName: "TestDB.sqlite", domainName: "co.uk.tests")
 ```
 ####Create one object in background, fetch it on the main queue and delete it in background
 ```swift
