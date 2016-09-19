@@ -28,7 +28,7 @@ internal extension MCCoreDataStackManager
                 shouldCreateStack = true;
             } else {
                 
-                let found = unwrappedPSC.persistentStores.filter{ $0.URL == self.storeURL }.first
+                let found = unwrappedPSC.persistentStores.filter{ $0.url == self.storeURL }.first
                 
                 if found == nil {
                     shouldCreateStack = true
@@ -43,42 +43,42 @@ internal extension MCCoreDataStackManager
         }
     }
     
-    internal func createPathToStoreFileIfNeccessary(URL: NSURL)
+    internal func createPathToStoreFileIfNeccessary(_ URL: Foundation.URL)
     {
-        let pathToStore = URL.URLByDeletingLastPathComponent!
+        let pathToStore = URL.deletingLastPathComponent()
         
         do {
-            try NSFileManager.defaultManager().createDirectoryAtPath(pathToStore.path!, withIntermediateDirectories: true, attributes: nil)
+            try FileManager.default.createDirectory(atPath: pathToStore.path, withIntermediateDirectories: true, attributes: nil)
         } catch let error as NSError {
             NSLog("\(error.localizedDescription)")
         }
     }
     
-    internal func autoMigrationWithJournalMode(mode: String) -> Dictionary<NSObject, AnyObject>
+    internal func autoMigrationWithJournalMode(_ mode: String) -> Dictionary<String, AnyObject>
     {
         
-        var sqliteOptions = Dictionary<NSObject, AnyObject>()
-        sqliteOptions["journal_mode"] = mode
+        var sqliteOptions = Dictionary<String, AnyObject>()
+        sqliteOptions["journal_mode"] = mode as AnyObject?
         
-        var persistentStoreOptions = Dictionary<NSObject, AnyObject>()
-        persistentStoreOptions[NSMigratePersistentStoresAutomaticallyOption] = true
-        persistentStoreOptions[NSInferMappingModelAutomaticallyOption] = true
-        persistentStoreOptions[NSSQLitePragmasOption] = sqliteOptions
+        var persistentStoreOptions = Dictionary<String, AnyObject>()
+        persistentStoreOptions[NSMigratePersistentStoresAutomaticallyOption] = true as AnyObject?
+        persistentStoreOptions[NSInferMappingModelAutomaticallyOption] = true as AnyObject?
+        persistentStoreOptions[NSSQLitePragmasOption] = sqliteOptions as AnyObject?
         return persistentStoreOptions
     }
     
-    internal func addSqliteStore(storeURL: NSURL, configuration: String?, completion: MCCoreDataAsyncCompletion?) -> Bool
+    internal func addSqliteStore(_ storeURL: URL, configuration: String?, completion: MCCoreDataAsyncCompletion?) -> Bool
     {
         
         var options = self.autoMigrationWithJournalMode("WAL")
         
         self.createPathToStoreFileIfNeccessary(storeURL);
-        
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)) {
+        //lass func global(qos: DispatchQoS.QoSClass)
+        DispatchQueue.global().async {
             
             do {
                 
-                let sourceMetadata = try? NSPersistentStoreCoordinator.metadataForPersistentStoreOfType(NSSQLiteStoreType, URL: storeURL, options:nil)
+                let sourceMetadata = try? NSPersistentStoreCoordinator.metadataForPersistentStore(ofType: NSSQLiteStoreType, at: storeURL, options:nil)
                 
                 let destinationModel = self.PSC?.managedObjectModel
                 
@@ -87,7 +87,7 @@ internal extension MCCoreDataStackManager
                     
                     if let metadata = sourceMetadata {
                         
-                        let isModelCompatible = _destinationModel.isConfiguration(nil, compatibleWithStoreMetadata: metadata);
+                        let isModelCompatible = _destinationModel.isConfiguration(withName: nil, compatibleWithStoreMetadata: metadata);
                         
                         if (!isModelCompatible)
                         {
@@ -97,7 +97,7 @@ internal extension MCCoreDataStackManager
                 }
                 
                 
-                try self.PSC!.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: storeURL, options: options)
+                try self.PSC!.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: storeURL, options: options)
                 
                 self.isReady = true
                 
@@ -112,15 +112,15 @@ internal extension MCCoreDataStackManager
         //https://www.cocoanetics.com/2012/07/multi-context-coredata/
         // create main thread context
         
-        self.rootcontext = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
+        self.rootcontext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
         
-        self.rootcontext!.performBlockAndWait({ [weak self] in
+        self.rootcontext!.performAndWait({ [weak self] in
             self!.rootcontext!.persistentStoreCoordinator = self!.PSC;
-            self!.rootcontext!.mergePolicy = NSMergePolicy(mergeType: .MergeByPropertyObjectTrumpMergePolicyType)
+            self!.rootcontext!.mergePolicy = NSMergePolicy(merge: .mergeByPropertyObjectTrumpMergePolicyType)
         });
         
-        self.maincontext = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
-        self.maincontext?.parentContext = self.rootcontext
+        self.maincontext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+        self.maincontext?.parent = self.rootcontext
         
         return true;
     }

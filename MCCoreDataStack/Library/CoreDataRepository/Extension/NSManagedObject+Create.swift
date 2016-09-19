@@ -20,11 +20,11 @@ extension NSManagedObject: EUManagedObjectProtocol
     ///- Parameter context: NSManagedObjectContext
     ///- Return: NSManagedObject
 
-    @objc public class func instanceWithDictionary(dictionary dictionary: Dictionary<String, AnyObject>,
+    @objc public class func instanceWithDictionary(dictionary: Dictionary<String, AnyObject>,
                                                    entityName: String,
                                                    context: NSManagedObjectContext) -> NSManagedObject?
     {
-        let entity = NSEntityDescription.insertNewObjectForEntityForName(entityName, inManagedObjectContext: context)
+        let entity = NSEntityDescription.insertNewObject(forEntityName: entityName, into: context)
         entity.updateWithDictionary(dictionary: dictionary)
         
         return entity
@@ -33,7 +33,7 @@ extension NSManagedObject: EUManagedObjectProtocol
     ///### Update current NSManagedObject with a dictionary
     ///- Parameter dictionary: dictionary
 
-    @objc public func updateWithDictionary(dictionary dictionary: Dictionary<String, AnyObject>)
+    @objc public func updateWithDictionary(dictionary: Dictionary<String, AnyObject>)
     {
         for (key, value) in dictionary {
             let keyName = key
@@ -46,14 +46,14 @@ extension NSManagedObject: EUManagedObjectProtocol
                 
                 let array = [value]
                 self.update(keyName: keyName, array: array as! Array<Dictionary<String, AnyObject>>)
-            } else if (self.respondsToSelector(NSSelectorFromString(keyName))) {
+            } else if (self.responds(to: NSSelectorFromString(keyName))) {
                 
                 if keyValue is String {
                    let keyValueString = keyValue as! String
                     self.setValue(keyValueString, forKey: keyName)
-                } else if keyValue is NSDateComponents {
-                    let dateComponents = keyValue as! NSDateComponents
-                    self.setValue(dateComponents.date, forKey: keyName)
+                } else if keyValue is DateComponents {
+                    let dateComponents = keyValue as! DateComponents
+                    self.setValue((dateComponents as NSDateComponents).date, forKey: keyName)
                 } else {
                     self.setValue(keyValue, forKey: keyName)
                 }
@@ -64,7 +64,7 @@ extension NSManagedObject: EUManagedObjectProtocol
     ///### called when a value is an array of NSManagedObjects. To be overridden
     ///- Parameter array: array of dictionaries
 
-    public func update(keyName keyName: String, array: Array<Dictionary<String, AnyObject>>)
+    public func update(keyName: String, array: Array<Dictionary<String, AnyObject>>)
     {
         // To be overridden by subclasses
     }

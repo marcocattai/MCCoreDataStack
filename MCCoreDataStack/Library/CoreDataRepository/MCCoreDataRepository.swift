@@ -9,35 +9,13 @@
 import Foundation
 import CoreData
 
-@objc public class MCCoreDataRepository : NSObject
+@objc open class MCCoreDataRepository : NSObject
 {
     
     //MARK: Public vars
     ///### Internal CoreDataStackManager
 
-    @objc private(set) public var cdsManager: MCCoreDataStackManager! = nil
-
-    ///### Shared Instance
-
-    @objc public class var sharedInstance: MCCoreDataRepository {
-        
-        struct Static {
-            static var onceToken: dispatch_once_t = 0
-            static var instance: MCCoreDataRepository? = nil
-        }
-        dispatch_once(&Static.onceToken) {
-            Static.instance = MCCoreDataRepository(CoreDataStackManager: nil)
-        }
-        return Static.instance!
-    }
-    
-    //MARK: Init
-    
-    @objc private init?(CoreDataStackManager stack: MCCoreDataStackManager?) {
-        if let stackUnwrapped = stack {
-            self.cdsManager = stackUnwrapped
-        }
-    }
+    @objc fileprivate(set) open var cdsManager: MCCoreDataStackManager! = nil
     
     //MARK: Setup
     
@@ -46,13 +24,13 @@ import CoreData
     ///- Parameter domainName: Domain Name
     ///- Return: Bool
     
-    @objc public func setup(storeName storeName: String, domainName: String) -> Bool
+    @objc open func setup(storeName: String, domainName: String) -> Bool
     {
         let dirPath = StackManagerHelper.Path.DocumentsFolder
-        let defaultStoreURL = NSURL(fileURLWithPath: dirPath.stringByAppendingString("/"+storeName))
+        let defaultStoreURL = URL(fileURLWithPath: dirPath + ("/"+storeName))
         
-        let bundle = NSBundle(forClass: self.dynamicType)
-        let managedObjectModel = NSManagedObjectModel.mergedModelFromBundles([bundle])!
+        let bundle = Bundle(for: type(of: self))
+        let managedObjectModel = NSManagedObjectModel.mergedModel(from: [bundle])!
         
         self.cdsManager = MCCoreDataStackManager(domain: domainName, model: managedObjectModel)
         
@@ -65,12 +43,12 @@ import CoreData
     ///- Parameter domainName: Domain Name
     ///- Return: Bool
     
-    @objc public func setup(storeName storeName: String, modelName: String, domainName: String) -> Bool
+    @objc open func setup(storeName: String, modelName: String, domainName: String) -> Bool
     {
         
         let dirPath = StackManagerHelper.Path.DocumentsFolder
-        let defaultStoreURL = NSURL(fileURLWithPath: dirPath.stringByAppendingString("/"+storeName))
-        let defaultModelURL = NSBundle(forClass: MCCoreDataRepository.self).URLForResource(modelName, withExtension: "momd")!
+        let defaultStoreURL = URL(fileURLWithPath: dirPath + ("/"+storeName))
+        let defaultModelURL = Bundle(for: MCCoreDataRepository.self).url(forResource: modelName, withExtension: "momd")!
 
         self.cdsManager = MCCoreDataStackManager(domainName: domainName, model: defaultModelURL)!
         
@@ -83,7 +61,7 @@ import CoreData
     ///- Parameter context: ManagedObjectContext created in the current thread
     ///- Return: New NSManagedObject or nil
     
-    @objc public func create(dictionary dictionary: Dictionary<String, AnyObject>, entityName: String, context: NSManagedObjectContext) -> NSManagedObject?
+    @discardableResult @objc open func create(dictionary: Dictionary<String, AnyObject>, entityName: String, context: NSManagedObjectContext) -> NSManagedObject?
     {
         return NSManagedObject.instanceWithDictionary(dictionary: dictionary, entityName: entityName, context: context)
     }
@@ -94,10 +72,10 @@ import CoreData
     ///- Parameter completionBlock - The operation is persisted in the disk
     ///- Return: Self - (Chaining support)
 
-    @objc public func read(operationBlock operationBlock: (context: NSManagedObjectContext) -> Void) -> Self
+    @discardableResult @objc open func read(operationBlock: @escaping (_ context: NSManagedObjectContext) -> Void) -> Self
     {
         self.cdsManager.read(operationBlock: { (context) in
-            operationBlock(context: context)
+            operationBlock(context)
         })
         
         return self
@@ -109,10 +87,10 @@ import CoreData
     ///- Parameter completionBlock - The operation is persisted in the disk
     ///- Return: Self - (Chaining support)
 
-    @objc public func write(operationBlock operationBlock: (context: NSManagedObjectContext) -> Void, completion completionBlock: (NSError? -> Void)?) -> Self
+    @discardableResult @objc open func write(operationBlock: @escaping (_ context: NSManagedObjectContext) -> Void, completion completionBlock: ((NSError?) -> Void)?) -> Self
     {
         self.cdsManager.write(operationBlock: { (context) in
-            operationBlock(context: context)
+            operationBlock(context)
         }) { (error) in
             
             if let block = completionBlock {
@@ -126,11 +104,11 @@ import CoreData
     ///### read from the mainContext on the mainThread
     ///- Parameter operationBlock
 
-    @objc public func read_MT(operationBlock operationBlock: (context: NSManagedObjectContext) -> Void) -> Void
+    @discardableResult @objc open func read_MT(operationBlock: @escaping (_ context: NSManagedObjectContext) -> Void) -> Void
     {
-        dispatch_async(dispatch_get_main_queue(), {
+        DispatchQueue.main.async(execute: {
             self.cdsManager.read_MT { (context) in
-                    operationBlock(context: context)
+                    operationBlock(context)
             }
         })
     }

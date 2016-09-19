@@ -49,7 +49,7 @@ internal extension MCCoreDataRepository
         
         for object: NSManagedObject in objs {
             
-            context.deleteObject(object)
+            context.delete(object)
         }        
     }
     
@@ -59,12 +59,12 @@ internal extension MCCoreDataRepository
         
         for object: NSManagedObject in objs {
             
-            context.deleteObject(object)
+            context.delete(object)
         }
     }
     
     internal func _delete(containedInArray array: [NSManagedObject],
-                                           completionBlock: (Void -> Void)?) {
+                                           completionBlock: ((Void) -> Void)?) {
         
         weak var weakSelf = self
         
@@ -81,7 +81,7 @@ internal extension MCCoreDataRepository
     }
 
     internal func _deleteIDs(containedInArray array: [NSManagedObjectID],
-                                         completionBlock: (Void -> Void)?) {
+                                         completionBlock: ((Void) -> Void)?) {
         
         weak var weakSelf = self
         

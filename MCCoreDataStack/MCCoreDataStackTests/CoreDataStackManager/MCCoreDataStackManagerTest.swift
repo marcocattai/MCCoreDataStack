@@ -13,14 +13,13 @@ import CoreData
 
 class MCCoreDataStackManagerTest: XCTestCase
 {
-    private var defaultStoreURL: NSURL!
-    private var defaultModelURL: NSURL!
-    private var coreDataRepo: MCCoreDataRepository!
-    private var expectation: XCTestExpectation!
+    fileprivate var defaultStoreURL: URL!
+    fileprivate var coreDataRepo: MCCoreDataRepository!
+    fileprivate var expectation: XCTestExpectation!
     
     lazy var backgroundcontext: NSManagedObjectContext = {
-        let bkgQueue = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
-        bkgQueue.mergePolicy = NSMergePolicy(mergeType: .OverwriteMergePolicyType)
+        let bkgQueue = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+        bkgQueue.mergePolicy = NSMergePolicy(merge: .overwriteMergePolicyType)
         return bkgQueue
     }()
     
@@ -29,9 +28,7 @@ class MCCoreDataStackManagerTest: XCTestCase
         super.setUp();
         let dirPath = StackManagerHelper.Path.DocumentsFolder
         
-        self.defaultStoreURL = NSURL(fileURLWithPath: dirPath.stringByAppendingString("/UnitTestsModel.sqlite"))
-
-        self.defaultModelURL = NSBundle(forClass: MCCoreDataStackManagerTest.self).URLForResource("TestModel", withExtension: "momd")!
+        self.defaultStoreURL = URL(fileURLWithPath: dirPath + "/UnitTestsModel.sqlite")
     }
     
     override func tearDown() {
@@ -39,9 +36,9 @@ class MCCoreDataStackManagerTest: XCTestCase
         super.tearDown()
         let dirPath = StackManagerHelper.Path.DocumentsFolder
         
-        if NSFileManager.defaultManager().fileExistsAtPath(dirPath.stringByAppendingString("/UnitTestsModel.sqlite")) {
+        if FileManager.default.fileExists(atPath: dirPath + "/UnitTestsModel.sqlite") {
             do {
-                try NSFileManager.defaultManager().removeItemAtPath(dirPath.stringByAppendingString("/UnitTestsModel.sqlite"))
+                try FileManager.default.removeItem(atPath: dirPath + "/UnitTestsModel.sqlite")
             }catch {
                 
             }
@@ -50,11 +47,14 @@ class MCCoreDataStackManagerTest: XCTestCase
     
     func testCoreDataStackCreation01()
     {
-        let coreDataStackManager = MCCoreDataStackManager(domainName: "co.uk.test.cdsManager", model: self.defaultModelURL)
         
-        let configured = coreDataStackManager!.configure(storeURL: self.defaultStoreURL, configuration: "TestConfiguration")
-        XCTAssertTrue(configured)
+        let bundle = Bundle(for: type(of: self))
+        let managedObjectModel = NSManagedObjectModel.mergedModel(from: [bundle])!
+        
+        let cdsManager = MCCoreDataStackManager(domain: "uk.co.mccoredtastack.test", model: managedObjectModel)
+        
+        let _ = cdsManager?.configure(storeURL: self.defaultStoreURL, configuration: nil)
     
-        XCTAssertTrue(NSFileManager.defaultManager().fileExistsAtPath(self.defaultStoreURL.path!))
+        XCTAssertTrue(FileManager.default.fileExists(atPath: self.defaultStoreURL.path))
     }
 }

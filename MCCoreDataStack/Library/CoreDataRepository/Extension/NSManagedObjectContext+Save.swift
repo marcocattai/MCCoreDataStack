@@ -16,12 +16,12 @@ extension NSManagedObjectContext {
     ///### Save the current context in a background queue
     ///- Parameter completionBlock: The completion Block
 
-    public func save(completionBlock completionBlock: MCCoreDataAsyncResult) -> Void {
+    public func save(completionBlock: @escaping MCCoreDataAsyncResult) -> Void {
         
-        self.performBlockAndWait({ [weak self] in
+        self.performAndWait({ [weak self] in
             
             guard let strongSelf = self else {
-                completionBlock(inner: { })
+                completionBlock({ })
                 return
             }
             
@@ -31,15 +31,15 @@ extension NSManagedObjectContext {
                     
                     try strongSelf.save()
                     
-                    completionBlock(inner: { })
+                    completionBlock({ })
                     
                 } catch {
-                    completionBlock (inner: {
-                        throw CoreDataStackError.InternalError(description: "We encountered a problem. Changes could not be saved.")
+                    completionBlock ({
+                        throw CoreDataStackError.internalError(description: "We encountered a problem. Changes could not be saved.")
                     })
                 }
             } else {
-                completionBlock(inner: { })
+                completionBlock({ })
             }
             
         })
@@ -47,12 +47,12 @@ extension NSManagedObjectContext {
     
     ///### Save the current context and wait
 
-    public func saveAndWait(completionBlock completionBlock: MCCoreDataAsyncResult) -> Void {
+    public func saveAndWait(completionBlock: @escaping MCCoreDataAsyncResult) -> Void {
         
-        self.performBlockAndWait({ [weak self] in
+        self.performAndWait({ [weak self] in
             
             guard let strongSelf = self else {
-                completionBlock(inner: { })
+                completionBlock({ })
                 return
             }
             
@@ -62,15 +62,15 @@ extension NSManagedObjectContext {
                     
                     try strongSelf.save()
                     
-                    completionBlock(inner: { })
+                    completionBlock({ })
                     
                 } catch {
-                    completionBlock (inner: {
-                        throw CoreDataStackError.InternalError(description: "We encountered a problem. Changes could not be saved.")
+                    completionBlock ({
+                        throw CoreDataStackError.internalError(description: "We encountered a problem. Changes could not be saved.")
                     })
                 }
             } else {
-                completionBlock(inner: { })
+                completionBlock({ })
             }
         })
     }
