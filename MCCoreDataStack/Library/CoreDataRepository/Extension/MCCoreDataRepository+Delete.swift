@@ -45,34 +45,26 @@ internal extension MCCoreDataRepository
     
     internal func _delete(containedInArray array: [NSManagedObject], context: NSManagedObjectContext) {
         
-        for object: NSManagedObject in array {
+        let objs = context.moveInContext(managedObjects: array)
+        
+        for object: NSManagedObject in objs {
             
-            do {
-                let managedObject = try context.existingObjectWithID(object.objectID)
-                context.deleteObject(managedObject)
-            } catch {
-                let fetchError = error as NSError
-                print("\(fetchError), \(fetchError.userInfo)")
-            }
-        }
+            context.delete(object)
+        }        
     }
     
     internal func _deleteIDs(containedInArray array: [NSManagedObjectID], context: NSManagedObjectContext) {
+
+        let objs = context.existingObjecsWithIds(managedObjects: array)
         
-        for objectID: NSManagedObjectID in array {
+        for object: NSManagedObject in objs {
             
-            do {
-                let managedObject = try context.existingObjectWithID(objectID)
-                context.deleteObject(managedObject)
-            } catch {
-                let fetchError = error as NSError
-                print("\(fetchError), \(fetchError.userInfo)")
-            }
+            context.delete(object)
         }
     }
     
     internal func _delete(containedInArray array: [NSManagedObject],
-                                           completionBlock: (Void -> Void)?) {
+                                           completionBlock: ((Void) -> Void)?) {
         
         weak var weakSelf = self
         
@@ -89,7 +81,7 @@ internal extension MCCoreDataRepository
     }
 
     internal func _deleteIDs(containedInArray array: [NSManagedObjectID],
-                                         completionBlock: (Void -> Void)?) {
+                                         completionBlock: ((Void) -> Void)?) {
         
         weak var weakSelf = self
         

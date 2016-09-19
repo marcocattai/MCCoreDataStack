@@ -21,9 +21,9 @@ public extension MCCoreDataRepository
     ///- Parameter resultType: this can be  .ManagedObject .ManagedObjectID .Dictionary .Count
     ///- Return: New NSManagedObject or nil
     
-    public func fetch(entityName entityName: String, context: NSManagedObjectContext, resultType: NSFetchRequestResultType) -> [AnyObject]?
+    public func fetch(entityName: String, context: NSManagedObjectContext, resultType: NSFetchRequestResultType) -> [AnyObject]?
     {
-        let fetchRequest = NSFetchRequest.init(entityName: entityName)
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
         fetchRequest.resultType = resultType
         
         #if DEBUG
@@ -31,9 +31,9 @@ public extension MCCoreDataRepository
         #endif
         
         do {
-            let results = try context.executeFetchRequest(fetchRequest)
+            let results = try context.fetch(fetchRequest)
             
-            return results;
+            return results as [AnyObject];
         } catch {
             //Nothing to do here
         }
@@ -50,11 +50,11 @@ public extension MCCoreDataRepository
     
     public func fetch(byPredicate predicate: NSPredicate, entityName: String, context: NSManagedObjectContext, resultType: NSFetchRequestResultType) -> [AnyObject]?
     {
-        let fetchRequest = NSFetchRequest.init()
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>()
         fetchRequest.predicate = predicate
         fetchRequest.resultType = resultType
         
-        let entityDescription = NSEntityDescription.entityForName(entityName, inManagedObjectContext: context)
+        let entityDescription = NSEntityDescription.entity(forEntityName: entityName, in: context)
         
         #if DEBUG
             fetchRequest.returnsObjectsAsFaults = false;
@@ -64,7 +64,7 @@ public extension MCCoreDataRepository
         fetchRequest.entity = entityDescription;
         
         do {
-            results = try context.executeFetchRequest(fetchRequest)
+            results = try context.fetch(fetchRequest)
             
             return results
         } catch let error as NSError {

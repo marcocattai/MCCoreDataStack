@@ -23,9 +23,9 @@ extension NSManagedObjectContext {
         
         for objectID in objectIDArray {
             
-            if objectID.isKindOfClass(NSManagedObjectID) {
+            if objectID.isKind(of: NSManagedObjectID.self) {
                 
-                let mo = self.objectWithID(objectID)
+                let mo = self.object(with: objectID)
                 objects.append(mo)
                 
             }
@@ -43,7 +43,7 @@ extension NSManagedObjectContext {
         
         for object in objectIDArray {
             
-            if object.isKindOfClass(NSManagedObject) {
+            if object.isKind(of: NSManagedObject.self) {
                 
                 objects.append(object.objectID)
                 
@@ -62,9 +62,9 @@ extension NSManagedObjectContext {
         
         for object in objectIDArray {
             
-            if object.isKindOfClass(NSManagedObject) {
+            if object.isKind(of: NSManagedObject.self) {
                 
-                let mo = self.objectWithID(object.objectID)
+                let mo = self.object(with: object.objectID)
                 objects.append(mo)
                 
             }

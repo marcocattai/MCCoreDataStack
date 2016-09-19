@@ -9,12 +9,12 @@
 import Foundation
 import CoreData
 
-public typealias MCCoreDataAsyncResult = (inner: () throws -> ()) -> Void
+public typealias MCCoreDataAsyncResult = (_ inner: () throws -> ()) -> Void
 public typealias MCCoreDataAsyncCompletion = () -> ()
 
 ///### Internal Error
-public enum CoreDataStackError: ErrorType {
-    case InternalError(description: String)
+public enum CoreDataStackError: Error {
+    case internalError(description: String)
 }
 
 struct Constants {
@@ -26,34 +26,34 @@ struct Constants {
 public struct StackManagerHelper {
     
     struct Path {
-        static let LibraryFolder = NSSearchPathForDirectoriesInDomains(.LibraryDirectory, .UserDomainMask, true)[0] as String
-        static let DocumentsFolder = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as String
+        static let LibraryFolder = NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true)[0] as String
+        static let DocumentsFolder = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as String
         static let TmpFolder = NSTemporaryDirectory()
     }
 }
 
-@objc public class MCCoreDataStackManager : NSObject {
+@objc open class MCCoreDataStackManager : NSObject {
     
     //MARK: Public vars
     
     ///### Root ManagedObjectContext where the persistentStore is attached (PrivateQueueConcurrencyType)
-    public var rootcontext: NSManagedObjectContext? = nil
+    open var rootcontext: NSManagedObjectContext? = nil
 
     ///### Main ManagedObjectContext. Iis parentContext is rootcontext
-    public var maincontext: NSManagedObjectContext? = nil
+    open var maincontext: NSManagedObjectContext? = nil
     
     //MARK: Private vars
     
-    @objc let accessSemaphore = dispatch_group_create()
+    @objc let accessSemaphore = DispatchGroup()
 
-    private var name: String = ""
+    fileprivate var name: String = ""
 
-    internal(set) public var isReady: Bool = false
+    internal(set) open var isReady: Bool = false
     
     //MARK: Internal vars
     
     ///### Current Store URL
-    private(set) public var storeURL: NSURL? = nil
+    fileprivate(set) open var storeURL: URL? = nil
     internal var model: NSManagedObjectModel? = nil
     internal var PSC: NSPersistentStoreCoordinator? = nil
     
@@ -87,9 +87,9 @@ public struct StackManagerHelper {
     ///- Parameter domainName: completion Block
     ///- Parameter model: URL for the current data model
 
-    @objc public convenience init?(domainName: String, model URL: NSURL?)
+    @objc public convenience init?(domainName: String, model URL: Foundation.URL?)
     {
-        guard let model = NSManagedObjectModel.init(contentsOfURL: URL!) else {
+        guard let model = NSManagedObjectModel.init(contentsOf: URL!) else {
             
             fatalError("Error initializing mom from: \(URL)")
         }
@@ -100,17 +100,17 @@ public struct StackManagerHelper {
     ///### This method delete the current persistent Store
     ///- Parameter completionBlock: completion Block
 
-    @objc public func deleteStore(completionBlock completionBlock: (() -> Void)?)
+    @objc open func deleteStore(completionBlock: (() -> Void)?)
     {
-        let store = self.PSC?.persistentStoreForURL(self.storeURL!)
+        let store = self.PSC?.persistentStore(for: self.storeURL!)
         if let storeUnwrapped = store {
             do {
-                try self.PSC?.removePersistentStore(storeUnwrapped)
+                try self.PSC?.remove(storeUnwrapped)
             } catch {}
             
-            if NSFileManager.defaultManager().fileExistsAtPath((self.storeURL?.path)!) {
+            if FileManager.default.fileExists(atPath: (self.storeURL?.path)!) {
                 do {
-                    try NSFileManager.defaultManager().removeItemAtPath((self.storeURL?.path)!)
+                    try FileManager.default.removeItem(atPath: (self.storeURL?.path)!)
                     
                     if let completionUnWrapped = completionBlock {
                         completionUnWrapped();
@@ -122,17 +122,19 @@ public struct StackManagerHelper {
     
     //MARK: Private
     
-    private func isPersistentStoreAvailable(completionBlock:MCCoreDataAsyncCompletion?)
+    fileprivate func isPersistentStoreAvailable(_ completionBlock:MCCoreDataAsyncCompletion?)
     {
         if self.isReady {
             if let completionBlockUnwrapped = completionBlock {
                 completionBlockUnwrapped();
             }
         } else {
-            dispatch_group_wait(self.accessSemaphore, 10)
+            let timeout: DispatchTime = DispatchTime.now() + Double(Int64(0.1 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
+
+            let _ = self.accessSemaphore.wait(timeout: timeout)
             //FIXME: PersistentStore needs
-            let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0.2 * Double(NSEC_PER_SEC)))
-            dispatch_after(delayTime, dispatch_get_main_queue()) {
+            let delayTime = DispatchTime.now() + Double(Int64(0.2 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
+            DispatchQueue.main.asyncAfter(deadline: delayTime) {
                 if let completionBlockUnwrapped = completionBlock {
                     completionBlockUnwrapped();
                 }
@@ -146,7 +148,7 @@ public struct StackManagerHelper {
     ///- Parameter storeURL: the URL of your sqlite file. See StackManagerHelper for Help
     ///- Parameter configuration: configuration Name
     ///- Return: Bool
-    @objc public func configure(storeURL storeURL: NSURL, configuration: String?) -> Bool {
+    @objc open func configure(storeURL: URL, configuration: String?) -> Bool {
         
         guard storeURL.absoluteString.isEmpty == false else {
             return false
@@ -156,11 +158,11 @@ public struct StackManagerHelper {
         
         self.createPersistentStoreIfNeeded()
         
-        dispatch_group_enter(self.accessSemaphore);
+        self.accessSemaphore.enter();
 
         let success = self.addSqliteStore(self.storeURL!, configuration: configuration, completion: {
             self.isReady = true
-            dispatch_group_leave(self.accessSemaphore);
+            self.accessSemaphore.leave();
         })
 
         
@@ -172,18 +174,18 @@ public struct StackManagerHelper {
     ///### Create a private NSManagedObjectContext of type PrivateQueueConcurrencyType with maincontext as parentContext
     ///- Return: New NSManagedObjectContext
 
-    @objc public func createPrivatecontext() -> NSManagedObjectContext
+    @objc open func createPrivatecontext() -> NSManagedObjectContext
     {
         
-        let context = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
+        let context = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
         
-        context.performBlockAndWait({ [weak self] in
+        context.performAndWait({ [weak self] in
             
             guard let strongSelf = self else { return }
             
-            context.mergePolicy = NSMergePolicy(mergeType: .MergeByPropertyObjectTrumpMergePolicyType)
+            context.mergePolicy = NSMergePolicy(merge: .mergeByPropertyObjectTrumpMergePolicyType)
             if ((strongSelf.maincontext) != nil) {
-                context.parentContext = strongSelf.maincontext
+                context.parent = strongSelf.maincontext
             }
             });
         
@@ -195,56 +197,56 @@ public struct StackManagerHelper {
     ///### Helper to perform a background operation on a new privatecontext
     ///- Parameter operationBlock: The operation block to be performed in background
 
-    @objc private func syncBkgRead(context:NSManagedObjectContext, operationBlock: ((context: NSManagedObjectContext) -> Void)?)
+    @objc fileprivate func syncBkgRead(_ context:NSManagedObjectContext, operationBlock: ((_ context: NSManagedObjectContext) -> Void)?)
     {
         self.isPersistentStoreAvailable {
             
-            context.performBlockAndWait({ () -> Void in
+            context.performAndWait({ () -> Void in
                 
                 if let operationBlockUnWrapped = operationBlock {
-                    operationBlockUnWrapped(context: context)
+                    operationBlockUnWrapped(context)
                 }
             })
         }
     }
 
-    @objc private func syncBkgWrite(context:NSManagedObjectContext, operationBlock: ((context: NSManagedObjectContext) -> Void)?, completion completionBlock: ((NSError?) -> Void)?)
+    @objc fileprivate func syncBkgWrite(_ context:NSManagedObjectContext, operationBlock: ((_ context: NSManagedObjectContext) -> Void)?, completion completionBlock: ((NSError?) -> Void)?)
     {
         self.isPersistentStoreAvailable {
             
-            context.performBlockAndWait({ [weak self] in
+            context.performAndWait({ [weak self] in
                 guard let strongSelf = self else { return }
                 
                 if let operationBlockUnWrapped = operationBlock {
-                    operationBlockUnWrapped(context: context)
+                    operationBlockUnWrapped(context)
                 }
                 strongSelf.save(context: context, completionBlock: completionBlock)
             })
         }
     }
 
-    @objc private func asyncBkgRead(context:NSManagedObjectContext, operationBlock: ((context: NSManagedObjectContext) -> Void)?)
+    @objc fileprivate func asyncBkgRead(_ context:NSManagedObjectContext, operationBlock: ((_ context: NSManagedObjectContext) -> Void)?)
     {
         self.isPersistentStoreAvailable {
             
-            context.performBlock({ () -> Void in
+            context.perform({ () -> Void in
                 
                 if let operationBlockUnWrapped = operationBlock {
-                    operationBlockUnWrapped(context: context)
+                    operationBlockUnWrapped(context)
                 }
             })
         }
     }
     
-    @objc private func asyncBkgWrite(context:NSManagedObjectContext, operationBlock: ((context: NSManagedObjectContext) -> Void)?, completion completionBlock: ((NSError?) -> Void)?)
+    @objc fileprivate func asyncBkgWrite(_ context:NSManagedObjectContext, operationBlock: ((_ context: NSManagedObjectContext) -> Void)?, completion completionBlock: ((NSError?) -> Void)?)
     {
         self.isPersistentStoreAvailable {
             
-            context.performBlock({ [weak self] in
+            context.perform({ [weak self] in
                 guard let strongSelf = self else { return }
                 
                 if let operationBlockUnWrapped = operationBlock {
-                    operationBlockUnWrapped(context: context)
+                    operationBlockUnWrapped(context)
                 }
                 strongSelf.save(context: context, completionBlock: completionBlock)
                 })
@@ -256,7 +258,7 @@ public struct StackManagerHelper {
     ///### Helper to perform a background read operation, on a new privatecontext
     ///- Parameter operationBlock: The operation block to be performed in background
 
-    @objc public func read(operationBlock operationBlock: ((context: NSManagedObjectContext) -> Void)?)
+    @objc open func read(operationBlock: ((_ context: NSManagedObjectContext) -> Void)?)
     {
         let context = self.createPrivatecontext()
         self.syncBkgRead(context, operationBlock: operationBlock);
@@ -265,7 +267,7 @@ public struct StackManagerHelper {
     ///### Helper to perform an operation on the main context in the mainThread
     ///- Parameter operationBlock: The operation block to be performed in background
     
-    @objc public func read_MT(operationBlock operationBlock: ((context: NSManagedObjectContext) -> Void)?)
+    @objc open func read_MT(operationBlock: ((_ context: NSManagedObjectContext) -> Void)?)
     {
         self.syncBkgRead(self.maincontext!, operationBlock: operationBlock);
     }
@@ -275,7 +277,7 @@ public struct StackManagerHelper {
     ///### Helper to perform a background operation, on a new privatecontext, and automatically save the changes
     ///- Parameter operationBlock: The operation block to be performed in background
     
-    @objc public func write(operationBlock operationBlock: ((context: NSManagedObjectContext) -> Void)?, completion completionBlock:((NSError?) -> Void)?)
+    @objc open func write(operationBlock: ((_ context: NSManagedObjectContext) -> Void)?, completion completionBlock:((NSError?) -> Void)?)
         {
         let context = self.createPrivatecontext()
         self.syncBkgWrite(context, operationBlock: operationBlock, completion: completionBlock);
@@ -284,7 +286,7 @@ public struct StackManagerHelper {
     ///### Helper to perform an operation on the main context, mainThread, and automatically save the changes
     ///- Parameter operationBlock: The operation block to be performed in background
 
-    @objc public func write_MT(operationBlock operationBlock: ((context: NSManagedObjectContext) -> Void)?, completion completionBlock: ((NSError?) -> Void)?)
+    @objc open func write_MT(operationBlock: ((_ context: NSManagedObjectContext) -> Void)?, completion completionBlock: ((NSError?) -> Void)?)
     {
         self.asyncBkgWrite(self.maincontext!, operationBlock: operationBlock, completion: completionBlock);
     }
@@ -294,7 +296,7 @@ public struct StackManagerHelper {
     ///### Save the specified context and all its parents
     ///- Parameter completionBlock: completion Block
     
-    @objc public func save(context context: NSManagedObjectContext, completionBlock: ((NSError?) -> Void)?) -> Void {
+    @objc open func save(context: NSManagedObjectContext, completionBlock: ((NSError?) -> Void)?) -> Void {
         
         weak var weakSelf = self
         
@@ -321,13 +323,13 @@ public struct StackManagerHelper {
                             do {
                                 try inner()
                                 
-                                dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                                DispatchQueue.main.async(execute: { () -> Void in
                                     if let exCompletionBlock = completionBlock {
                                         exCompletionBlock(nil);
                                     }
                                 })
                                 
-                            } catch CoreDataStackError.InternalError(let descr) {
+                            } catch CoreDataStackError.internalError(let descr) {
 
                                 if let exCompletionBlock = completionBlock {
                                     exCompletionBlock(NSError   (domain:Constants.DomainName, code:-1, userInfo:[
@@ -339,7 +341,7 @@ public struct StackManagerHelper {
                             
                         })
                         
-                    } catch CoreDataStackError.InternalError(let descr) {
+                    } catch CoreDataStackError.internalError(let descr) {
                         
                         if let exCompletionBlock = completionBlock {
                             exCompletionBlock(NSError   (domain:Constants.DomainName, code:-1, userInfo:[
@@ -350,7 +352,7 @@ public struct StackManagerHelper {
                     
                 })
                 
-            } catch CoreDataStackError.InternalError(let descr) {
+            } catch CoreDataStackError.internalError(let descr) {
                 
                 if let exCompletionBlock = completionBlock {
                     exCompletionBlock(NSError   (domain:Constants.DomainName, code:-1, userInfo:[
@@ -363,12 +365,12 @@ public struct StackManagerHelper {
     
     //MARK: Notifications
     
-    @objc private func contextWillSave()
+    @objc fileprivate func contextWillSave()
     {
         //Not implemented yet
     }
     
-    @objc private func contextDidSave(notification: NSNotification)
+    @objc fileprivate func contextDidSave(_ notification: Notification)
     {
         //Not implemented yet
     }

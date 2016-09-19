@@ -11,5 +11,5 @@ import Foundation
 @objc public protocol EUManagedObjectProtocol {
     
     ///### Protocol automatically implemented by NSManagedObject extension
-    func updateWithDictionary(dictionary dictionary: Dictionary<String, AnyObject>)
+    func updateWithDictionary(dictionary: Dictionary<String, AnyObject>)
 }
