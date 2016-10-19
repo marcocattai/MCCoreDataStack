@@ -7,10 +7,9 @@
 //
 
 import Foundation
-import Swift
 import CoreData
 
-enum CDJournalMode: String {
+fileprivate enum CDJournalMode: String {
     case WAL = "WAL"
     case DELETE = "DELETE"
 }
@@ -44,7 +43,7 @@ internal extension MCCoreDataStackManager {
 
             do {
                 if let storeCoordinator = self.storeCoordinator {
-                    var options = self.autoMigrationWithJournalMode("WAL")
+                    var options = self.autoMigrationWithJournalMode(CDJournalMode.WAL.rawValue)
                     let sourceMetadata = try? NSPersistentStoreCoordinator.metadataForPersistentStore(ofType: NSSQLiteStoreType,
                                                                                                       at: storeURL,
                                                                                                       options: nil)
@@ -53,7 +52,7 @@ internal extension MCCoreDataStackManager {
                     if let metadata = sourceMetadata {
                         let destinationModel = storeCoordinator.managedObjectModel
                         if (!destinationModel.isConfiguration(withName: nil, compatibleWithStoreMetadata: metadata)) {
-                            options = self.autoMigrationWithJournalMode("DELETE")
+                            options = self.autoMigrationWithJournalMode(CDJournalMode.DELETE.rawValue)
                         }
                     }
 
