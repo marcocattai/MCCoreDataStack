@@ -35,28 +35,6 @@ internal extension MCCoreDataStackManager {
         self.storeCoordinator = NSPersistentStoreCoordinator(managedObjectModel: model)
     }
     
-    internal func createPathToStoreFileIfNeccessary(_ URL: Foundation.URL) {
-        let pathToStore = URL.deletingLastPathComponent()
-        
-        do {
-            try FileManager.default.createDirectory(atPath: pathToStore.path, withIntermediateDirectories: true, attributes: nil)
-        } catch let error as NSError {
-            NSLog("\(error.localizedDescription)")
-        }
-    }
-    
-    internal func autoMigrationWithJournalMode(_ mode: String) -> Dictionary<String, AnyObject> {
-        
-        var sqliteOptions = Dictionary<String, AnyObject>()
-        sqliteOptions["journal_mode"] = mode as AnyObject?
-        
-        var persistentStoreOptions = Dictionary<String, AnyObject>()
-        persistentStoreOptions[NSMigratePersistentStoresAutomaticallyOption] = true as AnyObject?
-        persistentStoreOptions[NSInferMappingModelAutomaticallyOption] = true as AnyObject?
-        persistentStoreOptions[NSSQLitePragmasOption] = sqliteOptions as AnyObject?
-        return persistentStoreOptions
-    }
-    
     internal func addSqliteStore(_ storeURL: URL, configuration: String?, completion: MCCoreDataAsyncCompletion?) {
         
         var options = self.autoMigrationWithJournalMode("WAL")
@@ -112,4 +90,29 @@ internal extension MCCoreDataStackManager {
         self.maincontext?.parent = self.rootcontext
     }
 
+}
+
+fileprivate extension MCCoreDataStackManager {
+
+    fileprivate func createPathToStoreFileIfNeccessary(_ url: URL) {
+        let path = url.deletingLastPathComponent().path
+
+        do {
+            try FileManager.default.createDirectory(atPath: path, withIntermediateDirectories: true, attributes: nil)
+        } catch let error as NSError {
+            NSLog("\(error.localizedDescription)")
+        }
+    }
+
+    fileprivate func autoMigrationWithJournalMode(_ mode: String) -> Dictionary<String, AnyObject> {
+        var sqliteOptions = Dictionary<String, AnyObject>()
+        sqliteOptions["journal_mode"] = mode as AnyObject?
+
+        var persistentStoreOptions = Dictionary<String, AnyObject>()
+        persistentStoreOptions[NSMigratePersistentStoresAutomaticallyOption] = true as AnyObject?
+        persistentStoreOptions[NSInferMappingModelAutomaticallyOption] = true as AnyObject?
+        persistentStoreOptions[NSSQLitePragmasOption] = sqliteOptions as AnyObject?
+
+        return persistentStoreOptions
+    }
 }
