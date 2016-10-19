@@ -36,60 +36,41 @@ internal extension MCCoreDataStackManager {
     }
     
     internal func addSqliteStore(_ storeURL: URL, configuration: String?, completion: MCCoreDataAsyncCompletion?) {
-        
-        var options = self.autoMigrationWithJournalMode("WAL")
-        
-        self.createPathToStoreFileIfNeccessary(storeURL);
+        createPathToStoreFileIfNeccessary(storeURL);
+        createContexts()
+
         //lass func global(qos: DispatchQoS.QoSClass)
         DispatchQueue.global().async {
-            
+
             do {
-                
-                let sourceMetadata = try? NSPersistentStoreCoordinator.metadataForPersistentStore(ofType: NSSQLiteStoreType, at: storeURL, options:nil)
-                
-                let destinationModel = self.storeCoordinator?.managedObjectModel
-                
-                if let _destinationModel = destinationModel {
+                if let storeCoordinator = self.storeCoordinator {
+                    var options = self.autoMigrationWithJournalMode("WAL")
+                    let sourceMetadata = try? NSPersistentStoreCoordinator.metadataForPersistentStore(ofType: NSSQLiteStoreType,
+                                                                                                      at: storeURL,
+                                                                                                      options: nil)
+
                     // Check if we need a migration
-                    
                     if let metadata = sourceMetadata {
-                        
-                        let isModelCompatible = _destinationModel.isConfiguration(withName: nil, compatibleWithStoreMetadata: metadata);
-                        
-                        if (!isModelCompatible)
-                        {
+                        let destinationModel = storeCoordinator.managedObjectModel
+                        if (!destinationModel.isConfiguration(withName: nil, compatibleWithStoreMetadata: metadata)) {
                             options = self.autoMigrationWithJournalMode("DELETE")
                         }
                     }
-                }
-                
-                
-                try self.storeCoordinator!.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: storeURL, options: options)
-                
-                self.isReady = true
 
-                
+                    try storeCoordinator.addPersistentStore(ofType: NSSQLiteStoreType,
+                                                            configurationName: nil,
+                                                            at: storeURL,
+                                                            options: options)
+
+                    self.isReady = true
+                }
             } catch {
                 print("Error migrating store")
             }
 
             completion?()
         }
-
-        //https://www.cocoanetics.com/2012/07/multi-context-coredata/
-        // create main thread context
-
-        self.rootcontext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
-        
-        self.rootcontext!.performAndWait({ [weak self] in
-            self!.rootcontext!.persistentStoreCoordinator = self!.storeCoordinator;
-            self!.rootcontext!.mergePolicy = NSMergePolicy(merge: .mergeByPropertyObjectTrumpMergePolicyType)
-        });
-        
-        self.maincontext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
-        self.maincontext?.parent = self.rootcontext
     }
-
 }
 
 fileprivate extension MCCoreDataStackManager {
@@ -114,5 +95,26 @@ fileprivate extension MCCoreDataStackManager {
         persistentStoreOptions[NSSQLitePragmasOption] = sqliteOptions as AnyObject?
 
         return persistentStoreOptions
+    }
+
+    fileprivate func createContexts() {
+        // https://www.cocoanetics.com/2012/07/multi-context-coredata/
+        // create main thread context
+
+        rootcontext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
+        rootcontext?.performAndWait { [weak self] in
+            guard
+                let weakSelf = self,
+                let rootContext = weakSelf.rootcontext else
+            {
+                return
+            }
+
+            rootContext.persistentStoreCoordinator = weakSelf.storeCoordinator;
+            rootContext.mergePolicy = NSMergePolicy(merge: .mergeByPropertyObjectTrumpMergePolicyType)
+        }
+
+        maincontext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+        maincontext?.parent = rootcontext
     }
 }
