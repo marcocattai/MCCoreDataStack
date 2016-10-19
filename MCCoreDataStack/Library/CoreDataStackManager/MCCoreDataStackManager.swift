@@ -70,30 +70,33 @@ public struct StackManagerHelper {
     }
     #endif
     
-    //MARK: Initializers
+    // MARK: - Initializers
     
-    ///### Init method
-    ///- Parameter domain: name of the current domain
-    ///- Parameter model: NSManagedObjectModel
+    /// Init method
+    /// - Parameter name: name of the current domain
+    /// - Parameter model: a given NSManagedObjectModel
 
-    @objc public init?(domain name: String, model: NSManagedObjectModel) {
+    @objc public init?(name: String, model: NSManagedObjectModel) {
+        guard !name.isEmpty else {
+            return nil
+        }
+
         self.name = name
         self.model = model
-        
-        if self.name.isEmpty { return nil }
     }
     
-    ///### Init method
-    ///- Parameter domainName: completion Block
-    ///- Parameter model: URL for the current data model
+    /// Init method
+    /// - Parameter name: name of the current domain
+    /// - Parameter url: URL for the current data model
 
-    @objc public convenience init?(domainName: String, model URL: Foundation.URL?) {
-        guard let model = NSManagedObjectModel.init(contentsOf: URL!) else {
-            
-            fatalError("Error initializing mom from: \(URL)")
+    @objc public convenience init?(name: String, url: URL?) {
+        guard
+            let url = url,
+            let model = NSManagedObjectModel(contentsOf: url) else {
+            return nil
         }
         
-        self.init(domain: domainName, model: model)
+        self.init(name: name, model: model)
     }
     
     ///### This method delete the current persistent Store
