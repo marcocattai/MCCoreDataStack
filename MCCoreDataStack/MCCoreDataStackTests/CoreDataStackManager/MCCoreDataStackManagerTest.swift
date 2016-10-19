@@ -54,7 +54,7 @@ class MCCoreDataStackManagerTest: XCTestCase
 
         let asyncExpectation = expectation(description: "CoreDataStackCreation")
 
-        cdsManager?.configure(storeURL: self.defaultStoreURL, configuration: nil) {
+        cdsManager?.configure(url: self.defaultStoreURL, configuration: nil) {
             XCTAssertTrue(FileManager.default.fileExists(atPath: self.defaultStoreURL.path))
             asyncExpectation.fulfill()
         }

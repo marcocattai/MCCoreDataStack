@@ -98,6 +98,30 @@ public struct StackManagerHelper {
         
         self.init(domain: domain, model: model)
     }
+
+    // MARK: - Public methods
+
+    /// Configure the current CoreDataStack
+    /// - Parameter url: the URL of your sqlite file. See StackManagerHelper for help.
+    /// - Parameter configuration: configuration name
+    @objc open func configure(url: URL, configuration: String?, completion: MCCoreDataAsyncCompletion?) {
+        guard !url.absoluteString.isEmpty else {
+            return
+        }
+
+        self.storeURL = url
+
+        self.createPersistentStoreIfNeeded()
+
+        self.accessSemaphore.enter();
+
+        self.addSqliteStore(self.storeURL!, configuration: configuration) {
+            self.isReady = true
+            self.accessSemaphore.leave();
+
+            completion?()
+        }
+    }
     
     /// Delete the current persistent store
     /// - Parameter completion: completion block
@@ -126,52 +150,6 @@ public struct StackManagerHelper {
         
         completion?()
     }
-    
-    //MARK: Private
-    
-    fileprivate func isPersistentStoreAvailable(_ completionBlock:MCCoreDataAsyncCompletion?) {
-        if self.isReady {
-            if let completionBlockUnwrapped = completionBlock {
-                completionBlockUnwrapped();
-            }
-        } else {
-            let timeout: DispatchTime = DispatchTime.now() + Double(Int64(0.1 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
-
-            let _ = self.accessSemaphore.wait(timeout: timeout)
-            //FIXME: PersistentStore needs
-            let delayTime = DispatchTime.now() + Double(Int64(0.2 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
-            DispatchQueue.main.asyncAfter(deadline: delayTime) {
-                if let completionBlockUnwrapped = completionBlock {
-                    completionBlockUnwrapped();
-                }
-            }
-        }
-    }
-    
-    //MARK: Configuration
-    
-    ///### Configure the current coreDataStack
-    ///- Parameter storeURL: the URL of your sqlite file. See StackManagerHelper for Help
-    ///- Parameter configuration: configuration Name
-    ///- Return: Bool
-    @objc open func configure(storeURL: URL, configuration: String?, completion: MCCoreDataAsyncCompletion?) {
-        guard !storeURL.absoluteString.isEmpty else {
-            return
-        }
-        
-        self.storeURL = storeURL
-        
-        self.createPersistentStoreIfNeeded()
-        
-        self.accessSemaphore.enter();
-
-        self.addSqliteStore(self.storeURL!, configuration: configuration) {
-            self.isReady = true
-            self.accessSemaphore.leave();
-
-            completion?()
-        }
-    }
 
     //MARK: Private context Creation
 
@@ -193,6 +171,27 @@ public struct StackManagerHelper {
             });
         
         return context
+    }
+
+    //MARK: Private
+
+    fileprivate func isPersistentStoreAvailable(_ completionBlock:MCCoreDataAsyncCompletion?) {
+        if self.isReady {
+            if let completionBlockUnwrapped = completionBlock {
+                completionBlockUnwrapped();
+            }
+        } else {
+            let timeout: DispatchTime = DispatchTime.now() + Double(Int64(0.1 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
+
+            let _ = self.accessSemaphore.wait(timeout: timeout)
+            //FIXME: PersistentStore needs
+            let delayTime = DispatchTime.now() + Double(Int64(0.2 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
+            DispatchQueue.main.asyncAfter(deadline: delayTime) {
+                if let completionBlockUnwrapped = completionBlock {
+                    completionBlockUnwrapped();
+                }
+            }
+        }
     }
     
     //MARK: Read

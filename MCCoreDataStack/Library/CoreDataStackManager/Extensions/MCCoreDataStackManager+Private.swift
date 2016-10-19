@@ -10,7 +10,7 @@ import Foundation
 import Swift
 import CoreData
 
-enum CDJournalMode  : String {
+enum CDJournalMode: String {
     case WAL = "WAL"
     case DELETE = "DELETE"
 }
@@ -18,27 +18,21 @@ enum CDJournalMode  : String {
 internal extension MCCoreDataStackManager {
     
     internal func createPersistentStoreIfNeeded() {
-        var shouldCreateStack: Bool = false
-        
-        if let unwrappedPSC = storeCoordinator {
-            
-            if unwrappedPSC.persistentStores.count == 0 {
-                shouldCreateStack = true;
-            } else {
-                
-                let found = unwrappedPSC.persistentStores.filter{ $0.url == self.storeURL }.first
-                
-                if found == nil {
-                    shouldCreateStack = true
-                }
+        guard let model = model else {
+            return
+        }
+
+        if let storeCoordinator = storeCoordinator {
+            let stores = storeCoordinator.persistentStores
+            let store = stores.filter{ $0.url == self.storeURL }.first
+
+            if store != nil {
+                return
             }
-        } else {
-            shouldCreateStack = true
+
         }
-        
-        if shouldCreateStack {
-            storeCoordinator = NSPersistentStoreCoordinator(managedObjectModel: self.model!)
-        }
+
+        self.storeCoordinator = NSPersistentStoreCoordinator(managedObjectModel: model)
     }
     
     internal func createPathToStoreFileIfNeccessary(_ URL: Foundation.URL) {
