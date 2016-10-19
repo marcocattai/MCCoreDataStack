@@ -20,7 +20,7 @@ internal extension MCCoreDataStackManager {
     internal func createPersistentStoreIfNeeded() {
         var shouldCreateStack: Bool = false
         
-        if let unwrappedPSC = self.PSC {
+        if let unwrappedPSC = storeCoordinator {
             
             if unwrappedPSC.persistentStores.count == 0 {
                 shouldCreateStack = true;
@@ -37,7 +37,7 @@ internal extension MCCoreDataStackManager {
         }
         
         if shouldCreateStack {
-            self.PSC = NSPersistentStoreCoordinator(managedObjectModel: self.model!)
+            storeCoordinator = NSPersistentStoreCoordinator(managedObjectModel: self.model!)
         }
     }
     
@@ -75,7 +75,7 @@ internal extension MCCoreDataStackManager {
                 
                 let sourceMetadata = try? NSPersistentStoreCoordinator.metadataForPersistentStore(ofType: NSSQLiteStoreType, at: storeURL, options:nil)
                 
-                let destinationModel = self.PSC?.managedObjectModel
+                let destinationModel = self.storeCoordinator?.managedObjectModel
                 
                 if let _destinationModel = destinationModel {
                     // Check if we need a migration
@@ -92,7 +92,7 @@ internal extension MCCoreDataStackManager {
                 }
                 
                 
-                try self.PSC!.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: storeURL, options: options)
+                try self.storeCoordinator!.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: storeURL, options: options)
                 
                 self.isReady = true
 
@@ -110,7 +110,7 @@ internal extension MCCoreDataStackManager {
         self.rootcontext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
         
         self.rootcontext!.performAndWait({ [weak self] in
-            self!.rootcontext!.persistentStoreCoordinator = self!.PSC;
+            self!.rootcontext!.persistentStoreCoordinator = self!.storeCoordinator;
             self!.rootcontext!.mergePolicy = NSMergePolicy(merge: .mergeByPropertyObjectTrumpMergePolicyType)
         });
         

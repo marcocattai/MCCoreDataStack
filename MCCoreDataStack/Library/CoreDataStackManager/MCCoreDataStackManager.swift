@@ -46,7 +46,7 @@ public struct StackManagerHelper {
     
     @objc let accessSemaphore = DispatchGroup()
 
-    fileprivate var name: String = ""
+    fileprivate var domain: String = ""
 
     internal(set) open var isReady: Bool = false
     
@@ -55,7 +55,7 @@ public struct StackManagerHelper {
     ///### Current Store URL
     fileprivate(set) open var storeURL: URL? = nil
     internal var model: NSManagedObjectModel? = nil
-    internal var PSC: NSPersistentStoreCoordinator? = nil
+    internal var storeCoordinator: NSPersistentStoreCoordinator? = nil
     
     #if TARGET_OS_IPHONE
     internal var bkgPersistTask: UIBackgroundTaskIdentifier? = nil
@@ -73,52 +73,58 @@ public struct StackManagerHelper {
     // MARK: - Initializers
     
     /// Init method
-    /// - Parameter name: name of the current domain
-    /// - Parameter model: a given NSManagedObjectModel
+    /// - Parameter domain: name of the current domain
+    /// - Parameter model: the given object model
 
-    @objc public init?(name: String, model: NSManagedObjectModel) {
-        guard !name.isEmpty else {
+    @objc public init?(domain: String, model: NSManagedObjectModel) {
+        guard !domain.isEmpty else {
             return nil
         }
 
-        self.name = name
+        self.domain = domain
         self.model = model
     }
     
     /// Init method
-    /// - Parameter name: name of the current domain
+    /// - Parameter domain: name of the current domain
     /// - Parameter url: URL for the current data model
 
-    @objc public convenience init?(name: String, url: URL?) {
+    @objc public convenience init?(domain: String, url: URL?) {
         guard
             let url = url,
             let model = NSManagedObjectModel(contentsOf: url) else {
             return nil
         }
         
-        self.init(name: name, model: model)
+        self.init(domain: domain, model: model)
     }
     
-    ///### This method delete the current persistent Store
-    ///- Parameter completionBlock: completion Block
+    /// Delete the current persistent store
+    /// - Parameter completion: completion block
 
-    @objc open func deleteStore(completionBlock: (() -> Void)?) {
-        let store = self.PSC?.persistentStore(for: self.storeURL!)
-        if let storeUnwrapped = store {
-            do {
-                try self.PSC?.remove(storeUnwrapped)
-            } catch {}
-            
-            if FileManager.default.fileExists(atPath: (self.storeURL?.path)!) {
-                do {
-                    try FileManager.default.removeItem(atPath: (self.storeURL?.path)!)
-                    
-                    if let completionUnWrapped = completionBlock {
-                        completionUnWrapped();
-                    }
-                } catch { }
-            }
+    @objc open func deleteStore(completion: MCCoreDataAsyncCompletion?) {
+        guard
+            let url = storeURL,
+            let storeCoordinator = storeCoordinator,
+            let persistentStore = storeCoordinator.persistentStore(for: url) else
+        {
+            completion?()
+            return
         }
+
+        do {
+            try storeCoordinator.remove(persistentStore)
+
+            let fileManager = FileManager.default
+            if fileManager.fileExists(atPath: url.path) {
+                try fileManager.removeItem(atPath: url.path)
+            }
+
+        } catch {
+            // TODO: improve error handler
+        }
+        
+        completion?()
     }
     
     //MARK: Private

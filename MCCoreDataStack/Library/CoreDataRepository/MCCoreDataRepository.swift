@@ -30,7 +30,7 @@ import CoreData
         let bundle = Bundle(for: type(of: self))
         let managedObjectModel = NSManagedObjectModel.mergedModel(from: [bundle])!
         
-        self.cdsManager = MCCoreDataStackManager(name: domainName, model: managedObjectModel)
+        self.cdsManager = MCCoreDataStackManager(domain: domainName, model: managedObjectModel)
         
         self.cdsManager.configure(storeURL: defaultStoreURL, configuration: nil, completion: completion)
     }
@@ -47,7 +47,7 @@ import CoreData
         let defaultStoreURL = URL(fileURLWithPath: dirPath + ("/"+storeName))
         let defaultModelURL = Bundle(for: MCCoreDataRepository.self).url(forResource: modelName, withExtension: "momd")!
 
-        self.cdsManager = MCCoreDataStackManager(name: domainName, url: defaultModelURL)!
+        self.cdsManager = MCCoreDataStackManager(domain: domainName, url: defaultModelURL)!
         
         self.cdsManager.configure(storeURL: defaultStoreURL, configuration: nil, completion: completion)
     }
