@@ -15,11 +15,9 @@ enum CDJournalMode  : String {
     case DELETE = "DELETE"
 }
 
-internal extension MCCoreDataStackManager
-{
+internal extension MCCoreDataStackManager {
     
-    internal func createPersistentStoreIfNeeded()
-    {
+    internal func createPersistentStoreIfNeeded() {
         var shouldCreateStack: Bool = false
         
         if let unwrappedPSC = self.PSC {
@@ -43,8 +41,7 @@ internal extension MCCoreDataStackManager
         }
     }
     
-    internal func createPathToStoreFileIfNeccessary(_ URL: Foundation.URL)
-    {
+    internal func createPathToStoreFileIfNeccessary(_ URL: Foundation.URL) {
         let pathToStore = URL.deletingLastPathComponent()
         
         do {
@@ -54,8 +51,7 @@ internal extension MCCoreDataStackManager
         }
     }
     
-    internal func autoMigrationWithJournalMode(_ mode: String) -> Dictionary<String, AnyObject>
-    {
+    internal func autoMigrationWithJournalMode(_ mode: String) -> Dictionary<String, AnyObject> {
         
         var sqliteOptions = Dictionary<String, AnyObject>()
         sqliteOptions["journal_mode"] = mode as AnyObject?
@@ -67,8 +63,7 @@ internal extension MCCoreDataStackManager
         return persistentStoreOptions
     }
     
-    internal func addSqliteStore(_ storeURL: URL, configuration: String?, completion: MCCoreDataAsyncCompletion?) -> Bool
-    {
+    internal func addSqliteStore(_ storeURL: URL, configuration: String?, completion: MCCoreDataAsyncCompletion?) {
         
         var options = self.autoMigrationWithJournalMode("WAL")
         
@@ -100,18 +95,18 @@ internal extension MCCoreDataStackManager
                 try self.PSC!.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: storeURL, options: options)
                 
                 self.isReady = true
-                
-                if let completionBlock = completion {
-                    completionBlock();
-                }
+
                 
             } catch {
                 print("Error migrating store")
             }
+
+            completion?()
         }
+
         //https://www.cocoanetics.com/2012/07/multi-context-coredata/
         // create main thread context
-        
+
         self.rootcontext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
         
         self.rootcontext!.performAndWait({ [weak self] in
@@ -121,8 +116,6 @@ internal extension MCCoreDataStackManager
         
         self.maincontext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
         self.maincontext?.parent = self.rootcontext
-        
-        return true;
     }
 
 }

@@ -50,11 +50,19 @@ class MCCoreDataStackManagerTest: XCTestCase
         
         let bundle = Bundle(for: type(of: self))
         let managedObjectModel = NSManagedObjectModel.mergedModel(from: [bundle])!
-        
         let cdsManager = MCCoreDataStackManager(domain: "uk.co.mccoredtastack.test", model: managedObjectModel)
-        
-        let _ = cdsManager?.configure(storeURL: self.defaultStoreURL, configuration: nil)
-    
-        XCTAssertTrue(FileManager.default.fileExists(atPath: self.defaultStoreURL.path))
+
+        let asyncExpectation = expectation(description: "CoreDataStackCreation")
+
+        cdsManager?.configure(storeURL: self.defaultStoreURL, configuration: nil) {
+            XCTAssertTrue(FileManager.default.fileExists(atPath: self.defaultStoreURL.path))
+            asyncExpectation.fulfill()
+        }
+
+        waitForExpectations(timeout: 5) { error in
+            if let error = error {
+                XCTFail("Error: \(error)")
+            }
+        }
     }
 }

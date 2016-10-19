@@ -87,8 +87,7 @@ public struct StackManagerHelper {
     ///- Parameter domainName: completion Block
     ///- Parameter model: URL for the current data model
 
-    @objc public convenience init?(domainName: String, model URL: Foundation.URL?)
-    {
+    @objc public convenience init?(domainName: String, model URL: Foundation.URL?) {
         guard let model = NSManagedObjectModel.init(contentsOf: URL!) else {
             
             fatalError("Error initializing mom from: \(URL)")
@@ -100,8 +99,7 @@ public struct StackManagerHelper {
     ///### This method delete the current persistent Store
     ///- Parameter completionBlock: completion Block
 
-    @objc open func deleteStore(completionBlock: (() -> Void)?)
-    {
+    @objc open func deleteStore(completionBlock: (() -> Void)?) {
         let store = self.PSC?.persistentStore(for: self.storeURL!)
         if let storeUnwrapped = store {
             do {
@@ -122,8 +120,7 @@ public struct StackManagerHelper {
     
     //MARK: Private
     
-    fileprivate func isPersistentStoreAvailable(_ completionBlock:MCCoreDataAsyncCompletion?)
-    {
+    fileprivate func isPersistentStoreAvailable(_ completionBlock:MCCoreDataAsyncCompletion?) {
         if self.isReady {
             if let completionBlockUnwrapped = completionBlock {
                 completionBlockUnwrapped();
@@ -148,10 +145,9 @@ public struct StackManagerHelper {
     ///- Parameter storeURL: the URL of your sqlite file. See StackManagerHelper for Help
     ///- Parameter configuration: configuration Name
     ///- Return: Bool
-    @objc open func configure(storeURL: URL, configuration: String?) -> Bool {
-        
-        guard storeURL.absoluteString.isEmpty == false else {
-            return false
+    @objc open func configure(storeURL: URL, configuration: String?, completion: MCCoreDataAsyncCompletion?) {
+        guard !storeURL.absoluteString.isEmpty else {
+            return
         }
         
         self.storeURL = storeURL
@@ -160,13 +156,12 @@ public struct StackManagerHelper {
         
         self.accessSemaphore.enter();
 
-        let success = self.addSqliteStore(self.storeURL!, configuration: configuration, completion: {
+        self.addSqliteStore(self.storeURL!, configuration: configuration) {
             self.isReady = true
             self.accessSemaphore.leave();
-        })
 
-        
-        return success
+            completion?()
+        }
     }
 
     //MARK: Private context Creation
@@ -174,8 +169,7 @@ public struct StackManagerHelper {
     ///### Create a private NSManagedObjectContext of type PrivateQueueConcurrencyType with maincontext as parentContext
     ///- Return: New NSManagedObjectContext
 
-    @objc open func createPrivatecontext() -> NSManagedObjectContext
-    {
+    @objc open func createPrivatecontext() -> NSManagedObjectContext {
         
         let context = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
         
@@ -197,8 +191,7 @@ public struct StackManagerHelper {
     ///### Helper to perform a background operation on a new privatecontext
     ///- Parameter operationBlock: The operation block to be performed in background
 
-    @objc fileprivate func syncBkgRead(_ context:NSManagedObjectContext, operationBlock: ((_ context: NSManagedObjectContext) -> Void)?)
-    {
+    @objc fileprivate func syncBkgRead(_ context:NSManagedObjectContext, operationBlock: ((_ context: NSManagedObjectContext) -> Void)?) {
         self.isPersistentStoreAvailable {
             
             context.performAndWait({ () -> Void in
@@ -210,8 +203,7 @@ public struct StackManagerHelper {
         }
     }
 
-    @objc fileprivate func syncBkgWrite(_ context:NSManagedObjectContext, operationBlock: ((_ context: NSManagedObjectContext) -> Void)?, completion completionBlock: ((NSError?) -> Void)?)
-    {
+    @objc fileprivate func syncBkgWrite(_ context:NSManagedObjectContext, operationBlock: ((_ context: NSManagedObjectContext) -> Void)?, completion completionBlock: ((NSError?) -> Void)?) {
         self.isPersistentStoreAvailable {
             
             context.performAndWait({ [weak self] in
@@ -225,8 +217,7 @@ public struct StackManagerHelper {
         }
     }
 
-    @objc fileprivate func asyncBkgRead(_ context:NSManagedObjectContext, operationBlock: ((_ context: NSManagedObjectContext) -> Void)?)
-    {
+    @objc fileprivate func asyncBkgRead(_ context:NSManagedObjectContext, operationBlock: ((_ context: NSManagedObjectContext) -> Void)?) {
         self.isPersistentStoreAvailable {
             
             context.perform({ () -> Void in
@@ -238,8 +229,7 @@ public struct StackManagerHelper {
         }
     }
     
-    @objc fileprivate func asyncBkgWrite(_ context:NSManagedObjectContext, operationBlock: ((_ context: NSManagedObjectContext) -> Void)?, completion completionBlock: ((NSError?) -> Void)?)
-    {
+    @objc fileprivate func asyncBkgWrite(_ context:NSManagedObjectContext, operationBlock: ((_ context: NSManagedObjectContext) -> Void)?, completion completionBlock: ((NSError?) -> Void)?) {
         self.isPersistentStoreAvailable {
             
             context.perform({ [weak self] in
@@ -258,8 +248,7 @@ public struct StackManagerHelper {
     ///### Helper to perform a background read operation, on a new privatecontext
     ///- Parameter operationBlock: The operation block to be performed in background
 
-    @objc open func read(operationBlock: ((_ context: NSManagedObjectContext) -> Void)?)
-    {
+    @objc open func read(operationBlock: ((_ context: NSManagedObjectContext) -> Void)?) {
         let context = self.createPrivatecontext()
         self.syncBkgRead(context, operationBlock: operationBlock);
     }
@@ -267,8 +256,7 @@ public struct StackManagerHelper {
     ///### Helper to perform an operation on the main context in the mainThread
     ///- Parameter operationBlock: The operation block to be performed in background
     
-    @objc open func read_MT(operationBlock: ((_ context: NSManagedObjectContext) -> Void)?)
-    {
+    @objc open func read_MT(operationBlock: ((_ context: NSManagedObjectContext) -> Void)?) {
         self.syncBkgRead(self.maincontext!, operationBlock: operationBlock);
     }
 
@@ -286,8 +274,7 @@ public struct StackManagerHelper {
     ///### Helper to perform an operation on the main context, mainThread, and automatically save the changes
     ///- Parameter operationBlock: The operation block to be performed in background
 
-    @objc open func write_MT(operationBlock: ((_ context: NSManagedObjectContext) -> Void)?, completion completionBlock: ((NSError?) -> Void)?)
-    {
+    @objc open func write_MT(operationBlock: ((_ context: NSManagedObjectContext) -> Void)?, completion completionBlock: ((NSError?) -> Void)?) {
         self.asyncBkgWrite(self.maincontext!, operationBlock: operationBlock, completion: completionBlock);
     }
     
@@ -365,13 +352,11 @@ public struct StackManagerHelper {
     
     //MARK: Notifications
     
-    @objc fileprivate func contextWillSave()
-    {
+    @objc fileprivate func contextWillSave() {
         //Not implemented yet
     }
     
-    @objc fileprivate func contextDidSave(_ notification: Notification)
-    {
+    @objc fileprivate func contextDidSave(_ notification: Notification) {
         //Not implemented yet
     }
 }

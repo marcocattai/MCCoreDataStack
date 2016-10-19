@@ -9,8 +9,7 @@
 import Foundation
 import CoreData
 
-extension NSManagedObject: EUManagedObjectProtocol
-{
+extension NSManagedObject: EUManagedObjectProtocol {
     
     //MARK: Extension to auto populate properties from a dictionary
     
@@ -22,8 +21,7 @@ extension NSManagedObject: EUManagedObjectProtocol
 
     @objc public class func instanceWithDictionary(dictionary: Dictionary<String, AnyObject>,
                                                    entityName: String,
-                                                   context: NSManagedObjectContext) -> NSManagedObject?
-    {
+                                                   context: NSManagedObjectContext) -> NSManagedObject? {
         let entity = NSEntityDescription.insertNewObject(forEntityName: entityName, into: context)
         entity.updateWithDictionary(dictionary: dictionary)
         
@@ -33,8 +31,7 @@ extension NSManagedObject: EUManagedObjectProtocol
     ///### Update current NSManagedObject with a dictionary
     ///- Parameter dictionary: dictionary
 
-    @objc public func updateWithDictionary(dictionary: Dictionary<String, AnyObject>)
-    {
+    @objc public func updateWithDictionary(dictionary: Dictionary<String, AnyObject>) {
         for (key, value) in dictionary {
             let keyName = key
             let keyValue: AnyObject = value
@@ -64,8 +61,7 @@ extension NSManagedObject: EUManagedObjectProtocol
     ///### called when a value is an array of NSManagedObjects. To be overridden
     ///- Parameter array: array of dictionaries
 
-    public func update(keyName: String, array: Array<Dictionary<String, AnyObject>>)
-    {
+    public func update(keyName: String, array: Array<Dictionary<String, AnyObject>>) {
         // To be overridden by subclasses
     }
 

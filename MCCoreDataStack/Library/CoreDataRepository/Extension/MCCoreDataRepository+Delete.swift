@@ -9,16 +9,14 @@
 import Foundation
 import CoreData
 
-public extension MCCoreDataRepository
-{
+public extension MCCoreDataRepository {
     //MARK: Deletion
     
     ///### Delete objects contained into the specified array in a background thread
     ///- Parameter array: Specify an array of NSManagedObject or NSManagedObjectID
     ///- Parameter completionBlock: Completion block
     
-    @objc public func delete(containedInArray array: [AnyObject], completionBlock: (() -> Void)?)
-    {
+    @objc public func delete(containedInArray array: [AnyObject], completionBlock: (() -> Void)?) {
         if array is [NSManagedObject] {
             self._delete(containedInArray: array as! [NSManagedObject], completionBlock: completionBlock)
         } else if array is [NSManagedObjectID] {
@@ -30,8 +28,7 @@ public extension MCCoreDataRepository
     ///- Parameter array: Specify an array of NSManagedObject or NSManagedObjectID
     ///- Parameter context: a specific NSManagedObjectContext
     
-    @objc public func delete(containedInArray array: [AnyObject], context: NSManagedObjectContext)
-    {
+    @objc public func delete(containedInArray array: [AnyObject], context: NSManagedObjectContext) {
         if array is [NSManagedObject] {
             self._delete(containedInArray: array as! [NSManagedObject], context: context)
         } else if array is [NSManagedObjectID] {
@@ -40,8 +37,7 @@ public extension MCCoreDataRepository
     }
 }
 
-internal extension MCCoreDataRepository
-{
+internal extension MCCoreDataRepository {
     
     internal func _delete(containedInArray array: [NSManagedObject], context: NSManagedObjectContext) {
         
