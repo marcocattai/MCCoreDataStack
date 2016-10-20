@@ -9,8 +9,7 @@
 import Foundation
 import CoreData
 
-@objc open class MCCoreDataRepository : NSObject
-{
+@objc open class MCCoreDataRepository : NSObject {
     
     //MARK: Public vars
     ///### Internal CoreDataStackManager
@@ -24,8 +23,7 @@ import CoreData
     ///- Parameter domainName: Domain Name
     ///- Return: Bool
     
-    @objc open func setup(storeName: String, domainName: String) -> Bool
-    {
+    @objc open func setup(storeName: String, domainName: String, completion: MCCoreDataAsyncCompletion?) {
         let dirPath = StackManagerHelper.Path.DocumentsFolder
         let defaultStoreURL = URL(fileURLWithPath: dirPath + ("/"+storeName))
         
@@ -34,7 +32,7 @@ import CoreData
         
         self.cdsManager = MCCoreDataStackManager(domain: domainName, model: managedObjectModel)
         
-        return self.cdsManager.configure(storeURL: defaultStoreURL, configuration: nil)
+        self.cdsManager.configure(storeURL: defaultStoreURL, configuration: nil, completion: completion)
     }
 
     ///### Setup a coreDataRepository
@@ -43,8 +41,7 @@ import CoreData
     ///- Parameter domainName: Domain Name
     ///- Return: Bool
     
-    @objc open func setup(storeName: String, modelName: String, domainName: String) -> Bool
-    {
+    @objc open func setup(storeName: String, modelName: String, domainName: String, completion: MCCoreDataAsyncCompletion?) {
         
         let dirPath = StackManagerHelper.Path.DocumentsFolder
         let defaultStoreURL = URL(fileURLWithPath: dirPath + ("/"+storeName))
@@ -52,7 +49,7 @@ import CoreData
 
         self.cdsManager = MCCoreDataStackManager(domainName: domainName, model: defaultModelURL)!
         
-        return self.cdsManager.configure(storeURL: defaultStoreURL, configuration: nil)
+        self.cdsManager.configure(storeURL: defaultStoreURL, configuration: nil, completion: completion)
     }
     
     //MARK: Creation
@@ -61,8 +58,7 @@ import CoreData
     ///- Parameter context: ManagedObjectContext created in the current thread
     ///- Return: New NSManagedObject or nil
     
-    @discardableResult @objc open func create(dictionary: Dictionary<String, AnyObject>, entityName: String, context: NSManagedObjectContext) -> NSManagedObject?
-    {
+    @discardableResult @objc open func create(dictionary: Dictionary<String, AnyObject>, entityName: String, context: NSManagedObjectContext) -> NSManagedObject? {
         return NSManagedObject.instanceWithDictionary(dictionary: dictionary, entityName: entityName, context: context)
     }
  
@@ -72,8 +68,7 @@ import CoreData
     ///- Parameter completionBlock - The operation is persisted in the disk
     ///- Return: Self - (Chaining support)
 
-    @discardableResult @objc open func read(operationBlock: @escaping (_ context: NSManagedObjectContext) -> Void) -> Self
-    {
+    @discardableResult @objc open func read(operationBlock: @escaping (_ context: NSManagedObjectContext) -> Void) -> Self {
         self.cdsManager.read(operationBlock: { (context) in
             operationBlock(context)
         })
@@ -87,8 +82,7 @@ import CoreData
     ///- Parameter completionBlock - The operation is persisted in the disk
     ///- Return: Self - (Chaining support)
 
-    @discardableResult @objc open func write(operationBlock: @escaping (_ context: NSManagedObjectContext) -> Void, completion completionBlock: ((NSError?) -> Void)?) -> Self
-    {
+    @discardableResult @objc open func write(operationBlock: @escaping (_ context: NSManagedObjectContext) -> Void, completion completionBlock: ((NSError?) -> Void)?) -> Self {
         self.cdsManager.write(operationBlock: { (context) in
             operationBlock(context)
         }) { (error) in
@@ -104,8 +98,7 @@ import CoreData
     ///### read from the mainContext on the mainThread
     ///- Parameter operationBlock
 
-    @discardableResult @objc open func read_MT(operationBlock: @escaping (_ context: NSManagedObjectContext) -> Void) -> Void
-    {
+    @discardableResult @objc open func read_MT(operationBlock: @escaping (_ context: NSManagedObjectContext) -> Void) -> Void {
         DispatchQueue.main.async(execute: {
             self.cdsManager.read_MT { (context) in
                     operationBlock(context)

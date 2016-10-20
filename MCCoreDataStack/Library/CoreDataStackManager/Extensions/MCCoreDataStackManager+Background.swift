@@ -12,11 +12,9 @@ import CoreData
 
 #if TARGET_OS_IPHONE
 
-internal extension MCCoreDataStackManager
-{
+internal extension MCCoreDataStackManager {
     
-    internal func deregisterObservers()
-    {
+    internal func deregisterObservers() {
         if self.areObserversRegistered {
             NSNotificationCenter.defaultCenter().removeObserver(self, name: UIApplicationWillResignActiveNotification, object: nil)
             NSNotificationCenter.defaultCenter().removeObserver(self, name: UIApplicationDidEnterBackgroundNotification, object: nil)
@@ -26,8 +24,7 @@ internal extension MCCoreDataStackManager
         }
     }
     
-    internal func registerObservers()
-    {
+    internal func registerObservers() {
         if self.areObserversRegistered == false {
             NSNotificationCenter.defaultCenter().addObserver(self, selector: "_applicationWillResignActive:", name: UIApplicationWillResignActiveNotification, object: nil)
             NSNotificationCenter.defaultCenter().addObserver(self, selector: "_applicationDidEnterBackground:", name: UIApplicationDidEnterBackgroundNotification, object: nil)
@@ -38,18 +35,15 @@ internal extension MCCoreDataStackManager
     
     //MARK: Observers
     
-    internal func _applicationWillResignActive(notification: NSNotification)
-    {
+    internal func _applicationWillResignActive(notification: NSNotification) {
         self.persistbkgcontext()
     }
     
-    internal func _applicationDidEnterBackground(notification: NSNotification)
-    {
+    internal func _applicationDidEnterBackground(notification: NSNotification) {
         self.persistbkgcontext()
     }
     
-    internal func _applicationWillTerminate(notification: NSNotification)
-    {
+    internal func _applicationWillTerminate(notification: NSNotification) {
         self.persistbkgcontext()
     }
     
@@ -60,8 +54,7 @@ internal extension MCCoreDataStackManager
         }
     }
     
-    internal func _doBackgroundTask(notification: NSNotification)
-    {
+    internal func _doBackgroundTask(notification: NSNotification) {
         let app: UIApplication = UIApplication.sharedApplication()
         weak var weakSelf = self
         if app.respondsToSelector("beginBackgroundTaskWithExpirationHandler:") {
@@ -80,8 +73,7 @@ internal extension MCCoreDataStackManager
         }
     }
     
-    internal func terminateBackgroundTask()
-    {
+    internal func terminateBackgroundTask() {
         let app: UIApplication = UIApplication.sharedApplication()
         if app.respondsToSelector("endBackgroundTask:") {
             if bkgPersistTask != UIBackgroundTaskInvalid {

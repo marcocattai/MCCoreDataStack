@@ -34,7 +34,7 @@ class MCCoreDataRepositoryTest: XCTestCase
         self.defaultStoreURL = URL(fileURLWithPath: dirPath + "/TestDB.sqlite")
         
         self.coreDataRepo = MCCoreDataRepository()
-        let _ = self.coreDataRepo.setup(storeName: "TestDB.sqlite", domainName: "co.uk.tests")
+        self.coreDataRepo.setup(storeName: "TestDB.sqlite", domainName: "co.uk.tests", completion: nil)
         
         self.cdsManager = self.coreDataRepo.cdsManager
         

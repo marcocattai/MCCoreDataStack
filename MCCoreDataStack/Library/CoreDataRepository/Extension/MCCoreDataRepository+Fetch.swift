@@ -9,8 +9,7 @@
 import Foundation
 import CoreData
 
-public extension MCCoreDataRepository
-{
+public extension MCCoreDataRepository {
         
     //MARK Fetching in currentQueue
     
@@ -21,8 +20,7 @@ public extension MCCoreDataRepository
     ///- Parameter resultType: this can be  .ManagedObject .ManagedObjectID .Dictionary .Count
     ///- Return: New NSManagedObject or nil
     
-    public func fetch(entityName: String, context: NSManagedObjectContext, resultType: NSFetchRequestResultType) -> [AnyObject]?
-    {
+    public func fetch(entityName: String, context: NSManagedObjectContext, resultType: NSFetchRequestResultType) -> [AnyObject]? {
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
         fetchRequest.resultType = resultType
         
@@ -48,8 +46,7 @@ public extension MCCoreDataRepository
     ///- Parameter resultType: this can be  .ManagedObject .ManagedObjectID .Dictionary .Count
     ///- Return: array of results
     
-    public func fetch(byPredicate predicate: NSPredicate, entityName: String, context: NSManagedObjectContext, resultType: NSFetchRequestResultType) -> [AnyObject]?
-    {
+    public func fetch(byPredicate predicate: NSPredicate, entityName: String, context: NSManagedObjectContext, resultType: NSFetchRequestResultType) -> [AnyObject]? {
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>()
         fetchRequest.predicate = predicate
         fetchRequest.resultType = resultType
