@@ -202,8 +202,8 @@
 		F68FD4F01D6C8C3F00E2A56C /* CoreDataRepository */ = {
 			isa = PBXGroup;
 			children = (
-				F68FD4F11D6C8C3F00E2A56C /* Extension */,
 				F68FD4F71D6C8C3F00E2A56C /* MCCoreDataRepository.swift */,
+				F68FD4F11D6C8C3F00E2A56C /* Extension */,
 				F68FD4F81D6C8C3F00E2A56C /* Protocols */,
 			);
 			path = CoreDataRepository;
@@ -232,8 +232,8 @@
 		F68FD4FA1D6C8C3F00E2A56C /* CoreDataStackManager */ = {
 			isa = PBXGroup;
 			children = (
-				F68FD4FB1D6C8C3F00E2A56C /* Extensions */,
 				F68FD4FE1D6C8C3F00E2A56C /* MCCoreDataStackManager.swift */,
+				F68FD4FB1D6C8C3F00E2A56C /* Extensions */,
 			);
 			path = CoreDataStackManager;
 			sourceTree = "<group>";

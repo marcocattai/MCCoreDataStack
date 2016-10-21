@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import Swift
 import CoreData
 
 #if TARGET_OS_IPHONE

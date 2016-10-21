@@ -32,7 +32,7 @@ import CoreData
         
         self.cdsManager = MCCoreDataStackManager(domain: domainName, model: managedObjectModel)
         
-        self.cdsManager.configure(storeURL: defaultStoreURL, configuration: nil, completion: completion)
+        self.cdsManager.configure(url: defaultStoreURL, configuration: nil, completion: completion)
     }
 
     ///### Setup a coreDataRepository
@@ -47,9 +47,9 @@ import CoreData
         let defaultStoreURL = URL(fileURLWithPath: dirPath + ("/"+storeName))
         let defaultModelURL = Bundle(for: MCCoreDataRepository.self).url(forResource: modelName, withExtension: "momd")!
 
-        self.cdsManager = MCCoreDataStackManager(domainName: domainName, model: defaultModelURL)!
+        self.cdsManager = MCCoreDataStackManager(domain: domainName, url: defaultModelURL)!
         
-        self.cdsManager.configure(storeURL: defaultStoreURL, configuration: nil, completion: completion)
+        self.cdsManager.configure(url: defaultStoreURL, configuration: nil, completion: completion)
     }
     
     //MARK: Creation

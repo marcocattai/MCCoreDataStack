@@ -46,7 +46,7 @@ public struct StackManagerHelper {
     
     @objc let accessSemaphore = DispatchGroup()
 
-    fileprivate var name: String = ""
+    fileprivate var domain: String = ""
 
     internal(set) open var isReady: Bool = false
     
@@ -55,7 +55,7 @@ public struct StackManagerHelper {
     ///### Current Store URL
     fileprivate(set) open var storeURL: URL? = nil
     internal var model: NSManagedObjectModel? = nil
-    internal var PSC: NSPersistentStoreCoordinator? = nil
+    internal var storeCoordinator: NSPersistentStoreCoordinator? = nil
     
     #if TARGET_OS_IPHONE
     internal var bkgPersistTask: UIBackgroundTaskIdentifier? = nil
@@ -70,90 +70,49 @@ public struct StackManagerHelper {
     }
     #endif
     
-    //MARK: Initializers
+    // MARK: - Initializers
     
-    ///### Init method
-    ///- Parameter domain: name of the current domain
-    ///- Parameter model: NSManagedObjectModel
+    /// Init method
+    /// - Parameter domain: name of the current domain
+    /// - Parameter model: the given object model
 
-    @objc public init?(domain name: String, model: NSManagedObjectModel) {
-        self.name = name
+    @objc public init?(domain: String, model: NSManagedObjectModel) {
+        guard !domain.isEmpty else {
+            return nil
+        }
+
+        self.domain = domain
         self.model = model
-        
-        if self.name.isEmpty { return nil }
     }
     
-    ///### Init method
-    ///- Parameter domainName: completion Block
-    ///- Parameter model: URL for the current data model
+    /// Init method
+    /// - Parameter domain: name of the current domain
+    /// - Parameter url: URL for the current data model
 
-    @objc public convenience init?(domainName: String, model URL: Foundation.URL?) {
-        guard let model = NSManagedObjectModel.init(contentsOf: URL!) else {
-            
-            fatalError("Error initializing mom from: \(URL)")
+    @objc public convenience init?(domain: String, url: URL?) {
+        guard
+            let url = url,
+            let model = NSManagedObjectModel(contentsOf: url) else {
+            return nil
         }
         
-        self.init(domain: domainName, model: model)
+        self.init(domain: domain, model: model)
     }
-    
-    ///### This method delete the current persistent Store
-    ///- Parameter completionBlock: completion Block
 
-    @objc open func deleteStore(completionBlock: (() -> Void)?) {
-        let store = self.PSC?.persistentStore(for: self.storeURL!)
-        if let storeUnwrapped = store {
-            do {
-                try self.PSC?.remove(storeUnwrapped)
-            } catch {}
-            
-            if FileManager.default.fileExists(atPath: (self.storeURL?.path)!) {
-                do {
-                    try FileManager.default.removeItem(atPath: (self.storeURL?.path)!)
-                    
-                    if let completionUnWrapped = completionBlock {
-                        completionUnWrapped();
-                    }
-                } catch { }
-            }
-        }
-    }
-    
-    //MARK: Private
-    
-    fileprivate func isPersistentStoreAvailable(_ completionBlock:MCCoreDataAsyncCompletion?) {
-        if self.isReady {
-            if let completionBlockUnwrapped = completionBlock {
-                completionBlockUnwrapped();
-            }
-        } else {
-            let timeout: DispatchTime = DispatchTime.now() + Double(Int64(0.1 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
+    // MARK: - Public methods
 
-            let _ = self.accessSemaphore.wait(timeout: timeout)
-            //FIXME: PersistentStore needs
-            let delayTime = DispatchTime.now() + Double(Int64(0.2 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
-            DispatchQueue.main.asyncAfter(deadline: delayTime) {
-                if let completionBlockUnwrapped = completionBlock {
-                    completionBlockUnwrapped();
-                }
-            }
-        }
-    }
-    
-    //MARK: Configuration
-    
-    ///### Configure the current coreDataStack
-    ///- Parameter storeURL: the URL of your sqlite file. See StackManagerHelper for Help
-    ///- Parameter configuration: configuration Name
-    ///- Return: Bool
-    @objc open func configure(storeURL: URL, configuration: String?, completion: MCCoreDataAsyncCompletion?) {
-        guard !storeURL.absoluteString.isEmpty else {
+    /// Configure the current CoreDataStack
+    /// - Parameter url: the URL of your sqlite file. See StackManagerHelper for help.
+    /// - Parameter configuration: configuration name
+    @objc open func configure(url: URL, configuration: String?, completion: MCCoreDataAsyncCompletion?) {
+        guard !url.absoluteString.isEmpty else {
             return
         }
-        
-        self.storeURL = storeURL
-        
+
+        self.storeURL = url
+
         self.createPersistentStoreIfNeeded()
-        
+
         self.accessSemaphore.enter();
 
         self.addSqliteStore(self.storeURL!, configuration: configuration) {
@@ -162,6 +121,34 @@ public struct StackManagerHelper {
 
             completion?()
         }
+    }
+    
+    /// Delete the current persistent store
+    /// - Parameter completion: completion block
+
+    @objc open func deleteStore(completion: MCCoreDataAsyncCompletion?) {
+        guard
+            let url = storeURL,
+            let storeCoordinator = storeCoordinator,
+            let persistentStore = storeCoordinator.persistentStore(for: url) else
+        {
+            completion?()
+            return
+        }
+
+        do {
+            try storeCoordinator.remove(persistentStore)
+
+            let fileManager = FileManager.default
+            if fileManager.fileExists(atPath: url.path) {
+                try fileManager.removeItem(atPath: url.path)
+            }
+
+        } catch {
+            // TODO: improve error handler
+        }
+        
+        completion?()
     }
 
     //MARK: Private context Creation
@@ -184,6 +171,27 @@ public struct StackManagerHelper {
             });
         
         return context
+    }
+
+    //MARK: Private
+
+    fileprivate func isPersistentStoreAvailable(_ completionBlock:MCCoreDataAsyncCompletion?) {
+        if self.isReady {
+            if let completionBlockUnwrapped = completionBlock {
+                completionBlockUnwrapped();
+            }
+        } else {
+            let timeout: DispatchTime = DispatchTime.now() + Double(Int64(0.1 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
+
+            let _ = self.accessSemaphore.wait(timeout: timeout)
+            //FIXME: PersistentStore needs
+            let delayTime = DispatchTime.now() + Double(Int64(0.2 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
+            DispatchQueue.main.asyncAfter(deadline: delayTime) {
+                if let completionBlockUnwrapped = completionBlock {
+                    completionBlockUnwrapped();
+                }
+            }
+        }
     }
     
     //MARK: Read
