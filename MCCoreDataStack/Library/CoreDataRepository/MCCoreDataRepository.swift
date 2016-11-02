@@ -19,11 +19,24 @@ import CoreData
     //MARK: Setup
     
     ///### Setup a coreDataRepository. It looks up all models in the specified bundles and merges them
-    ///- Parameter storeName: Name of the sql store
+    ///- Parameter storeNameURL: URL of the sql store
+    ///- Parameter modelNameURL: URL of the model
     ///- Parameter domainName: Domain Name
     ///- Return: Bool
     
-    @objc open func setup(storeName: String, domainName: String, completion: MCCoreDataAsyncCompletion?) {
+    @objc open func setup(storeNameURL: URL, modelNameURL: URL, domainName: String, completion: MCCoreDataAsyncCompletion?) {
+        
+        self.cdsManager = MCCoreDataStackManager(domain: domainName, url: modelNameURL)!
+        
+        self.cdsManager.configure(url: storeNameURL, configuration: nil, completion: completion)
+    }
+
+    ///### Setup a coreDataRepository. It looks up all models in the specified bundles and merges them
+    ///- Parameter storeName: Name of the sql store
+    ///- Parameter domainName: Domain Name
+    ///- Return: Bool
+
+    @available(*, deprecated) @objc open func setup(storeName: String, domainName: String, completion: MCCoreDataAsyncCompletion?) {
         let dirPath = StackManagerHelper.Path.DocumentsFolder
         let defaultStoreURL = URL(fileURLWithPath: dirPath + ("/"+storeName))
         
