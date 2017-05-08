@@ -111,7 +111,7 @@ import CoreData
     ///### read from the mainContext on the mainThread
     ///- Parameter operationBlock
 
-    @discardableResult @objc open func read_MT(operationBlock: @escaping (_ context: NSManagedObjectContext) -> Void) -> Void {
+    @objc open func read_MT(operationBlock: @escaping (_ context: NSManagedObjectContext) -> Void) -> Void {
         DispatchQueue.main.async(execute: {
             self.cdsManager.read_MT { (context) in
                     operationBlock(context)
