@@ -30,11 +30,12 @@ class MCCoreDataRepositoryTest: XCTestCase
         super.setUp();
         
         let dirPath = StackManagerHelper.Path.DocumentsFolder
-        
         self.defaultStoreURL = URL(fileURLWithPath: dirPath + "/TestDB.sqlite")
-        
+        let modelName = "TestModel"
+        let defaultModelURL = Bundle(for: MCCoreDataRepository.self).url(forResource: modelName, withExtension: "momd")!
+
         self.coreDataRepo = MCCoreDataRepository()
-        self.coreDataRepo.setup(storeName: "TestDB.sqlite", domainName: "co.uk.tests", completion: nil)
+        self.coreDataRepo.setup(storeNameURL: self.defaultStoreURL, modelNameURL: defaultModelURL, domainName: "co.uk.tests", completion: nil)
         
         self.cdsManager = self.coreDataRepo.cdsManager
         
