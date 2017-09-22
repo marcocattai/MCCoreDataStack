@@ -10,69 +10,61 @@ import Foundation
 import CoreData
 
 extension NSManagedObjectContext {
-    
-    //MARK: Save new objects
-    
+
+    // MARK: Save new objects
+
     ///### Save the current context in a background queue
     ///- Parameter completionBlock: The completion Block
 
-    public func save(completionBlock: @escaping MCCoreDataAsyncResult) -> Void {
-        
-        self.performAndWait({ [weak self] in
-            
+    public func save(completionBlock: @escaping MCCoreDataAsyncResult) {
+
+        self.performAndWait { [weak self] in
             guard let strongSelf = self else {
                 completionBlock({ })
                 return
             }
-            
+
             if strongSelf.hasChanges {
-                
                 do {
-                    
                     try strongSelf.save()
-                    
-                    completionBlock({ })
-                    
                 } catch {
                     completionBlock ({
-                        throw CoreDataStackError.internalError(description: "We encountered a problem. Changes could not be saved.")
+                        let error = "We encountered a problem. Changes could not be saved."
+                        throw CoreDataStackError.Error(description: error)
                     })
+
+                    return
                 }
-            } else {
-                completionBlock({ })
             }
-            
-        })
+
+            completionBlock({ })
+        }
     }
-    
+
     ///### Save the current context and wait
 
-    public func saveAndWait(completionBlock: @escaping MCCoreDataAsyncResult) -> Void {
-        
-        self.performAndWait({ [weak self] in
-            
+    public func saveAndWait(completionBlock: @escaping MCCoreDataAsyncResult) {
+
+        self.performAndWait { [weak self] in
             guard let strongSelf = self else {
                 completionBlock({ })
                 return
             }
-            
+
             if strongSelf.hasChanges {
-                
                 do {
-                    
                     try strongSelf.save()
-                    
-                    completionBlock({ })
-                    
                 } catch {
                     completionBlock ({
-                        throw CoreDataStackError.internalError(description: "We encountered a problem. Changes could not be saved.")
+                        let error = "We encountered a problem. Changes could not be saved."
+                        throw CoreDataStackError.Error(description: error)
                     })
+
+                    return
                 }
-            } else {
-                completionBlock({ })
             }
-        })
+
+            completionBlock({ })
+        }
     }
-    
 }

@@ -11,43 +11,40 @@ import CoreData
 
 @testable import MCCoreDataStack
 
-class MCCoreDataStackManagerTest: XCTestCase
-{
+class MCCoreDataStackManagerTest: XCTestCase {
     fileprivate var defaultStoreURL: URL!
     fileprivate var coreDataRepo: MCCoreDataRepository!
     fileprivate var expectation: XCTestExpectation!
-    
+
     lazy var backgroundcontext: NSManagedObjectContext = {
         let bkgQueue = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
         bkgQueue.mergePolicy = NSMergePolicy(merge: .overwriteMergePolicyType)
         return bkgQueue
     }()
-    
-    override func setUp()
-    {
-        super.setUp();
+
+    override func setUp() {
+        super.setUp()
         let dirPath = StackManagerHelper.Path.DocumentsFolder
-        
+
         self.defaultStoreURL = URL(fileURLWithPath: dirPath + "/UnitTestsModel.sqlite")
     }
-    
+
     override func tearDown() {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
         super.tearDown()
         let dirPath = StackManagerHelper.Path.DocumentsFolder
-        
+
         if FileManager.default.fileExists(atPath: dirPath + "/UnitTestsModel.sqlite") {
             do {
                 try FileManager.default.removeItem(atPath: dirPath + "/UnitTestsModel.sqlite")
-            }catch {
-                
+            } catch {
+
             }
         }
     }
-    
-    func testCoreDataStackCreation01()
-    {
-        
+
+    func testCoreDataStackCreation01() {
+
         let bundle = Bundle(for: type(of: self))
         let managedObjectModel = NSManagedObjectModel.mergedModel(from: [bundle])!
         let cdsManager = MCCoreDataStackManager(domain: "uk.co.mccoredtastack.test", model: managedObjectModel)
