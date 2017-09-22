@@ -61,7 +61,7 @@ extension NSManagedObject: EUManagedObjectProtocol {
     ///### called when a value is an array of NSManagedObjects. To be overridden
     ///- Parameter array: array of dictionaries
 
-    public func update(keyName: String, array: Array<Dictionary<String, AnyObject>>) {
+    @objc public func update(keyName: String, array: Array<Dictionary<String, AnyObject>>) {
         // To be overridden by subclasses
     }
 
