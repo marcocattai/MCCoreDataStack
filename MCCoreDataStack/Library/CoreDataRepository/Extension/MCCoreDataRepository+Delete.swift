@@ -60,7 +60,7 @@ internal extension MCCoreDataRepository {
     }
     
     internal func _delete(containedInArray array: [NSManagedObject],
-                                           completionBlock: ((Void) -> Void)?) {
+                          completionBlock: (() -> Void)?) {
         
         weak var weakSelf = self
         
@@ -77,7 +77,7 @@ internal extension MCCoreDataRepository {
     }
 
     internal func _deleteIDs(containedInArray array: [NSManagedObjectID],
-                                         completionBlock: ((Void) -> Void)?) {
+                             completionBlock: (() -> Void)?) {
         
         weak var weakSelf = self
         
