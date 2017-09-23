@@ -15,7 +15,7 @@ public typealias MCCoreDataOperationBlock = (_ context: NSManagedObjectContext) 
 
 ///###  Error
 public enum CoreDataStackError: Error {
-    case Error(description: String)
+    case error(description: String)
 }
 
 struct Constants {
@@ -333,7 +333,7 @@ public struct StackManagerHelper {
                                     }
                                 })
 
-                            } catch CoreDataStackError.Error(let descr) {
+                            } catch CoreDataStackError.error(let descr) {
 
                                 if let exCompletionBlock = completionBlock {
                                     exCompletionBlock(NSError   (domain:Constants.DomainName, code:-1, userInfo:[
@@ -345,7 +345,7 @@ public struct StackManagerHelper {
 
                         })
 
-                    } catch CoreDataStackError.Error(let descr) {
+                    } catch CoreDataStackError.error(let descr) {
 
                         if let exCompletionBlock = completionBlock {
                             exCompletionBlock(NSError   (domain:Constants.DomainName, code:-1, userInfo:[
@@ -356,7 +356,7 @@ public struct StackManagerHelper {
 
                 })
 
-            } catch CoreDataStackError.Error(let descr) {
+            } catch CoreDataStackError.error(let descr) {
 
                 if let exCompletionBlock = completionBlock {
                     exCompletionBlock(NSError   (domain:Constants.DomainName, code:-1, userInfo:[

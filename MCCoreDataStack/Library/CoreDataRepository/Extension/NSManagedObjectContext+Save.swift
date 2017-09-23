@@ -30,7 +30,7 @@ extension NSManagedObjectContext {
                 } catch {
                     completionBlock ({
                         let error = "We encountered a problem. Changes could not be saved."
-                        throw CoreDataStackError.Error(description: error)
+                        throw CoreDataStackError.error(description: error)
                     })
 
                     return
@@ -57,7 +57,7 @@ extension NSManagedObjectContext {
                 } catch {
                     completionBlock ({
                         let error = "We encountered a problem. Changes could not be saved."
-                        throw CoreDataStackError.Error(description: error)
+                        throw CoreDataStackError.error(description: error)
                     })
 
                     return

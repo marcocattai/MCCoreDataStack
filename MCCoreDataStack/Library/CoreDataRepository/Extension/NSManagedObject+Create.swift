@@ -35,10 +35,12 @@ extension NSManagedObject: EUManagedObjectProtocol {
         for (key, value) in dictionary {
 
             if value is [[String: AnyObject]] {
+                // swiftlint:disable:next force_cast
                 self.update(keyName: key, array: value as! [[String: AnyObject]])
 
             } else if value is [String: AnyObject] {
                 let array = [value]
+                // swiftlint:disable:next force_cast
                 self.update(keyName: key, array: array as! [[String: AnyObject]])
 
             } else if self.responds(to: NSSelectorFromString(key)) {
@@ -47,6 +49,7 @@ extension NSManagedObject: EUManagedObjectProtocol {
                     self.setValue(value, forKey: key)
                 case is DateComponents:
                     let dateComponents = value
+                    // swiftlint:disable:next force_cast
                     self.setValue((dateComponents as! NSDateComponents).date, forKey: key)
                 default:
                     self.setValue(value, forKey: key)

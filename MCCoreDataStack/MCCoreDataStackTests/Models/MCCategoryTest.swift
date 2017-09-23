@@ -25,6 +25,7 @@ class MCCategoryTest: NSManagedObject {
 
                 switch entityName {
                 case "MCSubCategoryTest":
+                    // swiftlint:disable:next force_cast
                     self.subCategory = (entity as! MCSubCategoryTest)
 
                     break
