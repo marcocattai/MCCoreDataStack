@@ -44,9 +44,10 @@ private enum CDJournalMode: String {
             do {
                 if let storeCoordinator = self.storeCoordinator {
                     var options = self.autoMigrationWithJournalMode(CDJournalMode.WAL.rawValue)
-                    let sourceMetadata = try? NSPersistentStoreCoordinator.metadataForPersistentStore(ofType: NSSQLiteStoreType,
-                                                                                                      at: storeURL,
-                                                                                                      options: nil)
+                    let coordinator = NSPersistentStoreCoordinator.self
+                    let sourceMetadata = try? coordinator.metadataForPersistentStore(ofType: NSSQLiteStoreType,
+                                                                                     at: storeURL,
+                                                                                     options: nil)
 
                     // Check if we need a migration
                     if let metadata = sourceMetadata {
@@ -84,7 +85,7 @@ fileprivate extension MCCoreDataStackManager {
         }
     }
 
-    fileprivate func autoMigrationWithJournalMode(_ mode: String) -> Dictionary<String, AnyObject> {
+    fileprivate func autoMigrationWithJournalMode(_ mode: String) -> [String: AnyObject] {
         var sqliteOptions = [String: AnyObject]()
         sqliteOptions["journal_mode"] = mode as AnyObject?
 

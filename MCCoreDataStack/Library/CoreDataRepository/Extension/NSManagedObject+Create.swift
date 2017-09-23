@@ -37,11 +37,11 @@ extension NSManagedObject: EUManagedObjectProtocol {
             if value is [[String: AnyObject]] {
                 self.update(keyName: key, array: value as! [[String: AnyObject]])
 
-            } else if (value is [String: AnyObject]) {
+            } else if value is [String: AnyObject] {
                 let array = [value]
                 self.update(keyName: key, array: array as! [[String: AnyObject]])
 
-            } else if (self.responds(to: NSSelectorFromString(key))) {
+            } else if self.responds(to: NSSelectorFromString(key)) {
                 switch value {
                 case is String:
                     self.setValue(value, forKey: key)

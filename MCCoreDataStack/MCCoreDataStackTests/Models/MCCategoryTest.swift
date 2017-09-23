@@ -14,12 +14,13 @@ class MCCategoryTest: NSManagedObject {
 
 // Insert code here to add functionality to your managed object subclass
 
-    override  func update(keyName: String, array: Array<Dictionary<String, AnyObject>>) {
+    override  func update(keyName: String, array: [[String: AnyObject]]) {
         if let entityName = self.getEntity(keyName) {
 
             for dict in array {
 
-                let entity = NSEntityDescription.insertNewObject(forEntityName: entityName, into: self.managedObjectContext!)
+                let entity = NSEntityDescription.insertNewObject(forEntityName: entityName,
+                                                                 into: self.managedObjectContext!)
                 entity.updateWithDictionary(dictionary: dict)
 
                 switch entityName {

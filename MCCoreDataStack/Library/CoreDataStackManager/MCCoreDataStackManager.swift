@@ -147,7 +147,7 @@ public struct StackManagerHelper {
             }
 
         } catch {
-            // TODO: improve error handler
+            print("Error removing items")
         }
 
         completion?()
@@ -167,7 +167,7 @@ public struct StackManagerHelper {
             guard let strongSelf = self else { return }
 
             context.mergePolicy = NSMergePolicy(merge: .mergeByPropertyObjectTrumpMergePolicyType)
-            if ((strongSelf.maincontext) != nil) {
+            if strongSelf.maincontext != nil {
                 context.parent = strongSelf.maincontext
             }
         })
@@ -183,15 +183,16 @@ public struct StackManagerHelper {
                 completionBlockUnwrapped()
             }
         } else {
-            let timeout: DispatchTime = DispatchTime.now() + Double(Int64(0.1 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
+            let now = DispatchTime.now()
+            let delta = Double(Int64(0.1 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
+            let timeout: DispatchTime = now + delta
 
             _ = self.accessSemaphore.wait(timeout: timeout)
-            //FIXME: PersistentStore needs
-            let delayTime = DispatchTime.now() + Double(Int64(0.2 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
+
+            // FIXME: PersistentStore needs
+            let delayTime = now + Double(Int64(0.2 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
             DispatchQueue.main.asyncAfter(deadline: delayTime) {
-                if let completionBlockUnwrapped = completionBlock {
-                    completionBlockUnwrapped()
-                }
+                completionBlock?()
             }
         }
     }
@@ -213,7 +214,9 @@ public struct StackManagerHelper {
         }
     }
 
-    @objc fileprivate func syncBkgWrite(_ context: NSManagedObjectContext, operationBlock: (MCCoreDataOperationBlock)?, completion completionBlock: ((NSError?) -> Void)?) {
+    @objc fileprivate func syncBkgWrite(_ context: NSManagedObjectContext,
+                                        operationBlock: (MCCoreDataOperationBlock)?,
+                                        completion completionBlock: ((NSError?) -> Void)?) {
         self.isPersistentStoreAvailable {
 
             context.performAndWait({ [weak self] in
@@ -227,7 +230,8 @@ public struct StackManagerHelper {
         }
     }
 
-    @objc fileprivate func asyncBkgRead(_ context: NSManagedObjectContext, operationBlock: (MCCoreDataOperationBlock)?) {
+    @objc fileprivate func asyncBkgRead(_ context: NSManagedObjectContext,
+                                        operationBlock: (MCCoreDataOperationBlock)?) {
         self.isPersistentStoreAvailable {
 
             context.perform({ () -> Void in
@@ -239,7 +243,9 @@ public struct StackManagerHelper {
         }
     }
 
-    @objc fileprivate func asyncBkgWrite(_ context: NSManagedObjectContext, operationBlock: (MCCoreDataOperationBlock)?, completion completionBlock: ((NSError?) -> Void)?) {
+    @objc fileprivate func asyncBkgWrite(_ context: NSManagedObjectContext,
+                                         operationBlock: (MCCoreDataOperationBlock)?,
+                                         completion completionBlock: ((NSError?) -> Void)?) {
         self.isPersistentStoreAvailable {
 
             context.perform({ [weak self] in
@@ -275,7 +281,8 @@ public struct StackManagerHelper {
     ///### Helper to perform a background operation, on a new privatecontext, and automatically save the changes
     ///- Parameter operationBlock: The operation block to be performed in background
 
-    @objc open func write(operationBlock: (MCCoreDataOperationBlock)?, completion completionBlock: ((NSError?) -> Void)?) {
+    @objc open func write(operationBlock: (MCCoreDataOperationBlock)?,
+                          completion completionBlock: ((NSError?) -> Void)?) {
         let context = self.createPrivatecontext()
         self.syncBkgWrite(context, operationBlock: operationBlock, completion: completionBlock)
     }
@@ -283,7 +290,8 @@ public struct StackManagerHelper {
     ///### Helper to perform an operation on the main context, mainThread, and automatically save the changes
     ///- Parameter operationBlock: The operation block to be performed in background
 
-    @objc open func write_MT(operationBlock: (MCCoreDataOperationBlock)?, completion completionBlock: ((NSError?) -> Void)?) {
+    @objc open func write_MT(operationBlock: (MCCoreDataOperationBlock)?,
+                             completion completionBlock: ((NSError?) -> Void)?) {
         self.asyncBkgWrite(self.maincontext!, operationBlock: operationBlock, completion: completionBlock)
     }
 

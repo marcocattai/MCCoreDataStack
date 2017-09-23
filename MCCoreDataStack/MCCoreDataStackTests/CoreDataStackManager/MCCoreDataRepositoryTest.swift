@@ -60,13 +60,18 @@ class MCCoreDataRepositoryTest: XCTestCase {
 
         self.expectation = self.expectation(description: "Create and save object")
 
-        let subDictionary: [String: AnyObject] = ["subCategoryID": "sub12345" as AnyObject, "subCategoryName": "subTest12345" as AnyObject]
+        let subDictionary: [String: AnyObject] = ["subCategoryID": "sub12345" as AnyObject,
+                                                  "subCategoryName": "subTest12345" as AnyObject]
 
-        let dictionary: [String: AnyObject] = ["categoryID": "12345" as AnyObject, "categoryName": "Test12345" as AnyObject, "subCategory": subDictionary as AnyObject]
+        let dictionary: [String: AnyObject] = ["categoryID": "12345" as AnyObject,
+                                               "categoryName": "Test12345" as AnyObject,
+                                               "subCategory": subDictionary as AnyObject]
 
         self.coreDataRepo.write(operationBlock: { (context) in
 
-            let createdObject = self.coreDataRepo?.create(dictionary: dictionary, entityName: "MCCategoryTest", context: context)
+            let createdObject = self.coreDataRepo?.create(dictionary: dictionary,
+                                                          entityName: "MCCategoryTest",
+                                                          context: context)
 
             XCTAssertFalse(createdObject == nil)
 
@@ -83,7 +88,9 @@ class MCCoreDataRepositoryTest: XCTestCase {
         }) { (_) in
 
         }.read { (context) in
-            let result = self.coreDataRepo?.fetch(entityName: "MCCategoryTest", context: context, resultType: NSFetchRequestResultType())
+            let result = self.coreDataRepo?.fetch(entityName: "MCCategoryTest",
+                                                  context: context,
+                                                  resultType: NSFetchRequestResultType())
 
             for resultItem in result! {
                 let category = resultItem as! MCCategoryTest
@@ -109,12 +116,17 @@ class MCCoreDataRepositoryTest: XCTestCase {
 
         self.expectation = self.expectation(description: "Create and save object")
 
-        let subDictionary: [String: AnyObject] = ["subCategoryID": "sub12345" as AnyObject, "subCategoryName": "subTest12345" as AnyObject]
+        let subDictionary: [String: AnyObject] = ["subCategoryID": "sub12345" as AnyObject,
+                                                  "subCategoryName": "subTest12345" as AnyObject]
 
-        let dictionary: [String: AnyObject] = ["categoryID": "12345" as AnyObject, "categoryName": "Test12345" as AnyObject, "subCategory": subDictionary as AnyObject]
+        let dictionary: [String: AnyObject] = ["categoryID": "12345" as AnyObject,
+                                               "categoryName": "Test12345" as AnyObject,
+                                               "subCategory": subDictionary as AnyObject]
 
         self.coreDataRepo.write(operationBlock: { (context) in
-            let createdObject = self.coreDataRepo?.create(dictionary: dictionary, entityName: "MCCategoryTest", context: context)
+            let createdObject = self.coreDataRepo?.create(dictionary: dictionary,
+                                                          entityName: "MCCategoryTest",
+                                                          context: context)
 
             XCTAssertFalse(createdObject == nil)
 
@@ -135,7 +147,9 @@ class MCCoreDataRepositoryTest: XCTestCase {
 
         }.write(operationBlock: { (context) in
 
-                let results = self.coreDataRepo?.fetch(entityName: "MCCategoryTest", context: context, resultType: NSFetchRequestResultType()) as? [NSManagedObject]
+                let results = self.coreDataRepo?.fetch(entityName: "MCCategoryTest",
+                                                       context: context,
+                                                       resultType: NSFetchRequestResultType()) as? [NSManagedObject]
 
                 XCTAssertTrue((results?.count)! > 0)
                 self.coreDataRepo?.delete(containedInArray: results!, context: context)
@@ -145,7 +159,9 @@ class MCCoreDataRepositoryTest: XCTestCase {
         }.read_MT { (context) in
 
             self.coreDataRepo?.read_MT(operationBlock: { (context) in
-                let results = self.coreDataRepo?.fetch(entityName: "MCCategoryTest", context: context, resultType: NSFetchRequestResultType()) as? [NSManagedObject]
+                let results = self.coreDataRepo?.fetch(entityName: "MCCategoryTest",
+                                                       context: context,
+                                                       resultType: NSFetchRequestResultType()) as? [NSManagedObject]
                 XCTAssertTrue(results?.count == 0)
                 self.expectation.fulfill()
             })
@@ -162,26 +178,39 @@ class MCCoreDataRepositoryTest: XCTestCase {
 
         self.expectation = self.expectation(description: "Create and save object")
 
-        let dictionary: [String: AnyObject] = ["categoryID": "12345" as AnyObject, "categoryName": "Test12345" as AnyObject]
-        let dictionaryNew: [String: AnyObject] = ["categoryID": "12345" as AnyObject, "categoryName": "Test" as AnyObject]
+        let dictionary: [String: AnyObject] = ["categoryID": "12345" as AnyObject,
+                                               "categoryName": "Test12345" as AnyObject]
+        let dictionaryNew: [String: AnyObject] = ["categoryID": "12345" as AnyObject,
+                                                  "categoryName": "Test" as AnyObject]
 
         self.coreDataRepo.write(operationBlock: { (context) in
             var firstObject: NSManagedObject? = nil
             var duplicatedObject: NSManagedObject? = nil
 
-            var results = self.coreDataRepo?.fetch(byPredicate: NSPredicate(format: "%K = %@", "categoryID", dictionary["categoryID"] as! String), entityName: "MCCategoryTest", context: context, resultType: .countResultType)
+            let predicate = NSPredicate(format: "%K = %@", "categoryID", dictionary["categoryID"] as! String)
+            var results = self.coreDataRepo?.fetch(byPredicate: predicate,
+                                                   entityName: "MCCategoryTest",
+                                                   context: context,
+                                                   resultType: .countResultType)
 
             if let value = results {
                 if value[0] as! NSInteger == 0 {
-                    firstObject = self.coreDataRepo?.create(dictionary: dictionary, entityName: "MCCategoryTest", context: context)
+                    firstObject = self.coreDataRepo?.create(dictionary: dictionary,
+                                                            entityName: "MCCategoryTest",
+                                                            context: context)
                 }
             }
 
-            results = self.coreDataRepo?.fetch(byPredicate: NSPredicate(format: "%K = %@", "categoryID", dictionaryNew["categoryID"] as! String), entityName: "MCCategoryTest", context: context, resultType: .countResultType)
+            results = self.coreDataRepo?.fetch(byPredicate: predicate,
+                                               entityName: "MCCategoryTest",
+                                               context: context,
+                                               resultType: .countResultType)
 
             if let value = results {
                 if value[0] as! NSInteger == 0 {
-                    duplicatedObject = self.coreDataRepo?.create(dictionary: dictionaryNew, entityName: "MCCategoryTest", context: context)
+                    duplicatedObject = self.coreDataRepo?.create(dictionary: dictionaryNew,
+                                                                 entityName: "MCCategoryTest",
+                                                                 context: context)
                 }
             }
 
@@ -201,7 +230,11 @@ class MCCoreDataRepositoryTest: XCTestCase {
             XCTAssertTrue(error == nil)
 
             self.coreDataRepo.read(operationBlock: { (context) in
-                let results = self.coreDataRepo?.fetch(byPredicate: NSPredicate(format: "%K = %@", "categoryID", "12345"), entityName: "MCCategoryTest", context: context, resultType: NSFetchRequestResultType())
+                let predicate = NSPredicate(format: "%K = %@", "categoryID", "12345")
+                let results = self.coreDataRepo?.fetch(byPredicate: predicate,
+                                                       entityName: "MCCategoryTest",
+                                                       context: context,
+                                                       resultType: NSFetchRequestResultType())
 
                 if let value = results {
                     XCTAssertTrue(value.count == 1)
@@ -225,7 +258,8 @@ class MCCoreDataRepositoryTest: XCTestCase {
     func testPersist1000CategoriesWithCommonCategoryNameAndRetrieveThemByCategoryName_05() {
         self.expectation = self.expectation(description: "Saving 1000 categories in a background queue")
 
-        let dictionary: [String: AnyObject] = ["categoryID": "12345" as AnyObject, "categoryName": "Test12345" as AnyObject]
+        let dictionary: [String: AnyObject] = ["categoryID": "12345" as AnyObject,
+                                               "categoryName": "Test12345" as AnyObject]
 
         self.coreDataRepo.write(operationBlock: { (context) in
             _ = self.coreDataRepo?.create(dictionary: dictionary, entityName: "MCCategoryTest", context: context)
@@ -243,7 +277,10 @@ class MCCoreDataRepositoryTest: XCTestCase {
         }) { (_) in
 
             self.coreDataRepo.read(operationBlock: { (context) in
-                let results = self.coreDataRepo?.fetch(byPredicate: NSPredicate(format: "%K = %@", "categoryName", "categoryName"), entityName: "MCCategoryTest", context: context, resultType: NSFetchRequestResultType())
+                let predicate = NSPredicate(format: "%K = %@", "categoryName", "categoryName")
+                let results = self.coreDataRepo?.fetch(byPredicate: predicate, entityName: "MCCategoryTest",
+                                                                      context: context,
+                                                                      resultType: NSFetchRequestResultType())
 
                 XCTAssertTrue(results?.count == 1000)
 
@@ -259,7 +296,8 @@ class MCCoreDataRepositoryTest: XCTestCase {
     func testPersist1000CategoriesAndDelete400OfThem_06() {
         self.expectation = self.expectation(description: "Saving 1000 categories in a background queue")
 
-        let dictionary: [String: AnyObject] = ["categoryID": "12345" as AnyObject, "categoryName": "Test12345" as AnyObject]
+        let dictionary: [String: AnyObject] = ["categoryID": "12345" as AnyObject,
+                                               "categoryName": "Test12345" as AnyObject]
 
         self.coreDataRepo.write(operationBlock: { (context) in
             _ = self.coreDataRepo?.create(dictionary: dictionary, entityName: "MCCategoryTest", context: context)
@@ -269,7 +307,8 @@ class MCCoreDataRepositoryTest: XCTestCase {
                 let categoryID = String(index)
                 let categoryName = "categoryName" //"CategoryName" + String(index)
 
-                let dictionary: [String: AnyObject] = ["categoryID": categoryID as AnyObject, "categoryName": categoryName as AnyObject]
+                let dictionary: [String: AnyObject] = ["categoryID": categoryID as AnyObject,
+                                                       "categoryName": categoryName as AnyObject]
 
                 _ = self.coreDataRepo?.create(dictionary: dictionary, entityName: "MCCategoryTest", context: context)
             }
@@ -277,7 +316,11 @@ class MCCoreDataRepositoryTest: XCTestCase {
         }) { (_) in
 
             self.coreDataRepo.read(operationBlock: { (context) in
-                let results = self.coreDataRepo?.fetch(byPredicate: NSPredicate(format: "%K = %@", "categoryName", "categoryName"), entityName: "MCCategoryTest", context: context, resultType: .managedObjectIDResultType)
+                let predicate = NSPredicate(format: "%K = %@", "categoryName", "categoryName")
+                let results = self.coreDataRepo?.fetch(byPredicate: predicate,
+                                                       entityName: "MCCategoryTest",
+                                                       context: context,
+                                                       resultType: .managedObjectIDResultType)
 
                 XCTAssertTrue(results?.count == 1000)
 
@@ -293,7 +336,10 @@ class MCCoreDataRepositoryTest: XCTestCase {
                     self.coreDataRepo.delete(containedInArray: objs, completionBlock: {
 
                         self.coreDataRepo.read(operationBlock: { (context) in
-                            let results = self.coreDataRepo?.fetch(byPredicate: NSPredicate(format: "%K = %@", "categoryName", "categoryName"), entityName: "MCCategoryTest", context: context, resultType: .managedObjectIDResultType)
+                            let results = self.coreDataRepo?.fetch(byPredicate: predicate,
+                                                                   entityName: "MCCategoryTest",
+                                                                   context: context,
+                                                                   resultType: .managedObjectIDResultType)
 
                             XCTAssertTrue(results?.count == 0)
 
@@ -315,7 +361,8 @@ class MCCoreDataRepositoryTest: XCTestCase {
     func testPersist5000CategoriesAndDelete2500OfThem_07() {
         self.expectation = self.expectation(description: "Saving 1000 categories in a background queue")
 
-        let dictionary: [String: AnyObject] = ["categoryID": "12345" as AnyObject, "categoryName": "Test12345" as AnyObject]
+        let dictionary: [String: AnyObject] = ["categoryID": "12345" as AnyObject,
+                                               "categoryName": "Test12345" as AnyObject]
 
         self.coreDataRepo.write(operationBlock: { (context) in
 
@@ -326,14 +373,18 @@ class MCCoreDataRepositoryTest: XCTestCase {
                 let categoryID = String(index)
                 let categoryName = "categoryName" //"CategoryName" + String(index)
 
-                let dictionary: [String: AnyObject] = ["categoryID": categoryID as AnyObject, "categoryName": categoryName as AnyObject]
+                let dictionary: [String: AnyObject] = ["categoryID": categoryID as AnyObject,
+                                                       "categoryName": categoryName as AnyObject]
 
                 _ = self.coreDataRepo?.create(dictionary: dictionary, entityName: "MCCategoryTest", context: context)
             }
 
         }, completion: nil).read { (context) in
-
-            let results = self.coreDataRepo?.fetch(byPredicate: NSPredicate(format: "%K = %@", "categoryName", "categoryName"), entityName: "MCCategoryTest", context: context, resultType: .managedObjectIDResultType)
+            let predicate = NSPredicate(format: "%K = %@", "categoryName", "categoryName")
+            let results = self.coreDataRepo?.fetch(byPredicate: predicate,
+                                                   entityName: "MCCategoryTest",
+                                                   context: context,
+                                                   resultType: .managedObjectIDResultType)
 
             XCTAssertTrue(results?.count == 5000)
 
@@ -351,7 +402,11 @@ class MCCoreDataRepositoryTest: XCTestCase {
                 self.coreDataRepo.delete(containedInArray: subArray, completionBlock: {
 
                     self.coreDataRepo.read(operationBlock: { (context) in
-                        let results = self.coreDataRepo?.fetch(byPredicate: NSPredicate(format: "%K = %@", "categoryName", "categoryName"), entityName: "MCCategoryTest", context: context, resultType: .managedObjectIDResultType)
+                        let predicate = NSPredicate(format: "%K = %@", "categoryName", "categoryName")
+                        let results = self.coreDataRepo?.fetch(byPredicate: predicate,
+                                                               entityName: "MCCategoryTest",
+                                                               context: context,
+                                                               resultType: .managedObjectIDResultType)
 
                         XCTAssertTrue(results?.count == 2500)
 
@@ -369,8 +424,8 @@ class MCCoreDataRepositoryTest: XCTestCase {
     }
 
     func testCoreDataRepositoryObjectCreationAndReadOnMT_PlusUpdateOnBkgAndReadOnMT_08() {
-
-        self.expectation = self.expectation(description: "Create and read on Main Thread - Update in Background and read on Main Thread")
+        let description = "Create and read on Main Thread - Update in Background and read on Main Thread"
+        self.expectation = self.expectation(description: description)
 
         var dataSource: [AnyObject]? = nil
 
@@ -381,9 +436,11 @@ class MCCoreDataRepositoryTest: XCTestCase {
                 let categoryID = String(index)
                 let categoryName = "categoryName"
 
-                let dictionary: [String: AnyObject] = ["categoryID": categoryID as AnyObject, "categoryName": categoryName as AnyObject]
+                let dictionary: [String: AnyObject] = ["categoryID": categoryID as AnyObject,
+                                                       "categoryName": categoryName as AnyObject]
 
-                let createdObject = self.coreDataRepo?.create(dictionary: dictionary, entityName: "MCCategoryTest", context: context)
+                let createdObject = self.coreDataRepo?.create(dictionary: dictionary,
+                                                              entityName: "MCCategoryTest", context: context)
                 XCTAssertFalse(createdObject == nil)
 
             }
@@ -391,7 +448,9 @@ class MCCoreDataRepositoryTest: XCTestCase {
         }) { (_) in
 
             }.read { (context) in
-                dataSource = self.coreDataRepo?.fetch(entityName: "MCCategoryTest", context: context, resultType: NSFetchRequestResultType())
+                dataSource = self.coreDataRepo?.fetch(entityName: "MCCategoryTest",
+                                                      context: context,
+                                                      resultType: NSFetchRequestResultType())
 
                 XCTAssertTrue((dataSource?.count)! > 0)
         }
@@ -411,7 +470,9 @@ class MCCoreDataRepositoryTest: XCTestCase {
         }, { (_) in
 
         }.read_MT { (context) in
-            dataSource = self.coreDataRepo?.fetch(entityName: "MCCategoryTest", context: context, resultType: NSFetchRequestResultType())
+            dataSource = self.coreDataRepo?.fetch(entityName: "MCCategoryTest",
+                                                  context: context,
+                                                  resultType: NSFetchRequestResultType())
 
             for obj in dataSource! {
                 if let category = obj as? MCCategoryTest {
