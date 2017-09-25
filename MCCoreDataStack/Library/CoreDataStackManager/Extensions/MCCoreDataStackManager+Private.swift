@@ -9,21 +9,21 @@
 import Foundation
 import CoreData
 
-fileprivate enum CDJournalMode: String {
-    case WAL = "WAL"
-    case DELETE = "DELETE"
+private enum CDJournalMode: String {
+    case WAL
+    case DELETE
 }
 
-internal extension MCCoreDataStackManager {
-    
-    internal func createPersistentStoreIfNeeded() {
+ extension MCCoreDataStackManager {
+
+     func createPersistentStoreIfNeeded() {
         guard let model = model else {
             return
         }
 
         if let storeCoordinator = storeCoordinator {
             let stores = storeCoordinator.persistentStores
-            let store = stores.filter{ $0.url == self.storeURL }.first
+            let store = stores.filter { $0.url == self.storeURL }.first
 
             if store != nil {
                 return
@@ -33,9 +33,9 @@ internal extension MCCoreDataStackManager {
 
         self.storeCoordinator = NSPersistentStoreCoordinator(managedObjectModel: model)
     }
-    
-    internal func addSqliteStore(_ storeURL: URL, configuration: String?, completion: MCCoreDataAsyncCompletion?) {
-        createPathToStoreFileIfNeccessary(storeURL);
+
+     func addSqliteStore(_ storeURL: URL, configuration: String?, completion: MCCoreDataAsyncCompletion?) {
+        createPathToStoreFileIfNeccessary(storeURL)
         createContexts()
 
         //lass func global(qos: DispatchQoS.QoSClass)
@@ -44,9 +44,10 @@ internal extension MCCoreDataStackManager {
             do {
                 if let storeCoordinator = self.storeCoordinator {
                     var options = self.autoMigrationWithJournalMode(CDJournalMode.WAL.rawValue)
-                    let sourceMetadata = try? NSPersistentStoreCoordinator.metadataForPersistentStore(ofType: NSSQLiteStoreType,
-                                                                                                      at: storeURL,
-                                                                                                      options: nil)
+                    let coordinator = NSPersistentStoreCoordinator.self
+                    let sourceMetadata = try? coordinator.metadataForPersistentStore(ofType: NSSQLiteStoreType,
+                                                                                     at: storeURL,
+                                                                                     options: nil)
 
                     // Check if we need a migration
                     if let metadata = sourceMetadata {
@@ -84,11 +85,11 @@ fileprivate extension MCCoreDataStackManager {
         }
     }
 
-    fileprivate func autoMigrationWithJournalMode(_ mode: String) -> Dictionary<String, AnyObject> {
-        var sqliteOptions = Dictionary<String, AnyObject>()
+    fileprivate func autoMigrationWithJournalMode(_ mode: String) -> [String: AnyObject] {
+        var sqliteOptions = [String: AnyObject]()
         sqliteOptions["journal_mode"] = mode as AnyObject?
 
-        var persistentStoreOptions = Dictionary<String, AnyObject>()
+        var persistentStoreOptions = [String: AnyObject]()
         persistentStoreOptions[NSMigratePersistentStoresAutomaticallyOption] = true as AnyObject?
         persistentStoreOptions[NSInferMappingModelAutomaticallyOption] = true as AnyObject?
         persistentStoreOptions[NSSQLitePragmasOption] = sqliteOptions as AnyObject?
@@ -109,7 +110,7 @@ fileprivate extension MCCoreDataStackManager {
                 return
             }
 
-            rootContext.persistentStoreCoordinator = weakSelf.storeCoordinator;
+            rootContext.persistentStoreCoordinator = weakSelf.storeCoordinator
             rootContext.mergePolicy = NSMergePolicy(merge: .mergeByPropertyObjectTrumpMergePolicyType)
         }
 
